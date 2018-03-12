@@ -1,3 +1,5 @@
+package ru.hh.school.employerreview.employer_downloader;
+
 import org.hibernate.cfg.Configuration;
 import employer.Employer;
 

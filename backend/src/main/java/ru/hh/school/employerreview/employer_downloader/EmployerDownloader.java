@@ -1,3 +1,5 @@
+package ru.hh.school.employerreview.employer_downloader;
+
 import java.io.BufferedReader;
 import java.io.FileWriter;
 import java.io.InputStreamReader;
@@ -9,13 +11,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import employer.*;
 import org.hibernate.SessionFactory;
 import response.EmployerJSON;
 import response.ResponseJSON;
+import employer.*;
 
-public class main {
+public class EmployerDownloader {
 
     static boolean stopFlag = false;
     static SessionFactory sessionFactory;
@@ -50,7 +51,6 @@ public class main {
             con.setInstanceFollowRedirects(false);
             con.setDoOutput(true);
 
-            int status = con.getResponseCode();
             BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
             String inputLine;
             StringBuffer content = new StringBuffer();
@@ -60,11 +60,7 @@ public class main {
             in.close();
             con.disconnect();
 
-            FileWriter fw = new FileWriter("resp.html");
-            fw.write(content.toString());
-            fw.close();
             parseResponse(content.toString());
-            System.out.println(content.toString());
         }catch (Exception e){
             e.printStackTrace();
             stopFlag = true;
