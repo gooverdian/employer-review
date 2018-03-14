@@ -1,7 +1,7 @@
-package ru.hh.school.employerreview.employer_downloader;
+package ru.hh.school.employerdownloader;
 
 import org.hibernate.cfg.Configuration;
-import employer.Employer;
+import ru.hh.school.employerreview.employer.Employer;
 
 class HibernateConfigFactory {
 
