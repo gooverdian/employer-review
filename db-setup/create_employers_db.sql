@@ -1,6 +1,6 @@
-CREATE DATABASE employers_review;
+CREATE DATABASE employer_review;
 
-\c employers_review;
+\c employer_review;
 
 CREATE TABLE employer (
 	id                  SERIAL PRIMARY KEY,
