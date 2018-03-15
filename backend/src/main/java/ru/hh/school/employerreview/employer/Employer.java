@@ -76,10 +76,9 @@ public class Employer {
   }
 
   Employer() {
-
   }
 
-  public Integer id() {
+  public Integer getId() {
     return id;
   }
 
