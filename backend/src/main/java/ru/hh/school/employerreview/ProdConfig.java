@@ -1,13 +1,33 @@
 package ru.hh.school.employerreview;
 
+import javax.sql.DataSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import ru.hh.nab.core.CoreProdConfig;
+import ru.hh.nab.core.util.FileSettings;
+import ru.hh.nab.hibernate.DataSourceFactory;
+import ru.hh.nab.hibernate.HibernateCommonConfig;
+import ru.hh.nab.hibernate.HibernateProdConfig;
+import ru.hh.nab.hibernate.MappingConfig;
+import ru.hh.nab.hibernate.datasource.DataSourceType;
 
 @Configuration
-@Import({CoreProdConfig.class})
+@Import({
+    CoreProdConfig.class,
+    HibernateProdConfig.class,
+    HibernateCommonConfig.class})
 public class ProdConfig {
+
+  @Bean
+  DataSource dataSource(DataSourceFactory dataSourceFactory, FileSettings settings) {
+    return dataSourceFactory.create(DataSourceType.MASTER, settings);
+  }
+
+  @Bean
+  MappingConfig mappingConfig() {
+    return new MappingConfig(Employer.class);
+  }
 
   @Bean
   ExampleResource exampleResource() {

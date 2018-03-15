@@ -9,13 +9,14 @@
 
     <groupId>ru.hh.school</groupId>
     <artifactId>employer-review</artifactId>
+    <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>employer review service backend</name>
 
     <properties>
         <jdk.version>1.8</jdk.version>
-        <nab.version>3.2</nab.version>
+        <nab.version>3.3</nab.version>
     </properties>
 
     <dependencies>
