@@ -1,4 +1,4 @@
-package ru.hh.school.employerdownloader;
+package ru.hh.school.employerreview.downloader;
 
 import org.hibernate.cfg.Configuration;
 import ru.hh.school.employerreview.employer.Employer;
