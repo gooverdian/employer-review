@@ -10,6 +10,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import static java.util.Objects.requireNonNull;
+import org.springframework.transaction.annotation.Transactional;
 
 public class EmployerDAO {
 
@@ -19,6 +20,7 @@ public class EmployerDAO {
     this.sessionFactory = requireNonNull(sessionFactory);
   }
 
+  @Transactional
   public void save(Employer employer) {
     if (employer.id() != null) {
         throw new IllegalArgumentException("can not save " + employer + " with assigned id");
@@ -26,6 +28,7 @@ public class EmployerDAO {
     session().save(employer); // see also saveOrUpdate and persist
   }
 
+  @Transactional
   public Optional<Employer> get(int employerId) {
     Employer employer = (Employer) session().get(Employer.class, employerId);
     return Optional.ofNullable(employer);

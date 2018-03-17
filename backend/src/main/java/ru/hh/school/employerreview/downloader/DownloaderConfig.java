@@ -1,40 +1,60 @@
 package ru.hh.school.employerreview.downloader;
 
+import com.mchange.v2.c3p0.DriverManagerDataSource;
+import java.util.Properties;
+import javax.sql.DataSource;
+import org.hibernate.SessionFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
-import ru.hh.nab.core.CoreProdConfig;
+import org.springframework.orm.hibernate5.HibernateTransactionManager;
+import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 import ru.hh.nab.core.util.FileSettings;
-import ru.hh.nab.core.util.PropertiesUtils;
-import ru.hh.nab.hibernate.DataSourceFactory;
-import ru.hh.nab.hibernate.HibernateCommonConfig;
-import ru.hh.nab.hibernate.HibernateProdConfig;
+import static ru.hh.nab.core.util.PropertiesUtils.fromFilesInSettingsDir;
 import ru.hh.nab.hibernate.MappingConfig;
-import ru.hh.nab.hibernate.NabSessionFactoryBean;
-import ru.hh.nab.hibernate.datasource.DataSourceType;
-import ru.hh.school.employerreview.ExampleResource;
+import ru.hh.school.employerreview.area.Area;
 import ru.hh.school.employerreview.employer.Employer;
 
-import javax.sql.DataSource;
-import java.util.Properties;
-
-import static ru.hh.nab.core.util.PropertiesUtils.fromFilesInSettingsDir;
-
 @Configuration
-@Import({
-    CoreProdConfig.class,
-    HibernateProdConfig.class
-})
+@EnableTransactionManagement
+class DownloaderConfig {
 
-public class DownloaderConfig {
   @Bean
-  String serviceName() {
-    return "employer downloader";
+  FileSettings fileSettings() throws Exception {
+    Properties properties = fromFilesInSettingsDir("service.properties", "service.properties.dev");
+    return new FileSettings(properties);
   }
 
   @Bean
-  ExampleResource exampleResource() {
-    return new ExampleResource();
+  DataSource dataSource(FileSettings fileSettings) {
+    String dataSourceName = "master";
+    FileSettings dataSourceSettings = fileSettings.getSubSettings(dataSourceName);
+    DriverManagerDataSource driverManagerDataSource = new DriverManagerDataSource(false);
+    driverManagerDataSource.setJdbcUrl(dataSourceSettings.getString("jdbcUrl"));
+    driverManagerDataSource.setUser(dataSourceSettings.getString("user"));
+    driverManagerDataSource.setPassword(dataSourceSettings.getString("password"));
+    driverManagerDataSource.setIdentityToken(dataSourceName);
+    return driverManagerDataSource;
   }
 
+  @Bean
+  MappingConfig mappingConfig() {
+    return new MappingConfig(Employer.class, Area.class);
+  }
+
+  @Bean
+  LocalSessionFactoryBean sessionFactory(DataSource dataSource, MappingConfig mappingConfig) {
+    LocalSessionFactoryBean sessionFactoryBean = new LocalSessionFactoryBean();
+    sessionFactoryBean.setDataSource(dataSource);
+    sessionFactoryBean.setAnnotatedClasses(mappingConfig.getMappings());
+    return sessionFactoryBean;
+  }
+
+  @Bean
+  PlatformTransactionManager transactionManager(SessionFactory sessionFactory, DataSource dataSource) {
+    HibernateTransactionManager hibernateTransactionManager = new HibernateTransactionManager(sessionFactory);
+    hibernateTransactionManager.setDataSource(dataSource);
+    return hibernateTransactionManager;
+  }
 }
