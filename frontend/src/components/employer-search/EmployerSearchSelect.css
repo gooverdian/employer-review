@@ -1,0 +1,36 @@
+.employer-search-select {
+    position: relative;
+}
+
+.employer-search-select-results {
+    background: #fff;
+    box-shadow: 0 3px 10px 1px rgba(0, 0, 0, 0.3);
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 10;
+    margin-top: -20px;
+    overflow-y: auto;
+    max-height: 300px;
+}
+
+.employer-search-select-results .nothing-found {
+    font-style: italic;
+}
+
+.employer-search-select-results .nothing-found span {
+    color: #9e9e9e;
+}
+
+.employer-search-select-results .active {
+    background: #303f9f;
+}
+
+.employer-search-select-results .active > span:hover {
+    background: #25346d !important;
+}
+
+.employer-search-select-results .active span {
+    color: #fff;
+}
