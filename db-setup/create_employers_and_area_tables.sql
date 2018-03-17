@@ -15,3 +15,9 @@ CREATE TABLE employer (
 	logo_url_original   varchar,
 	area_id             integer
 );
+
+CREATE TABLE area (
+	id SERIAL PRIMARY KEY,
+	parent_id integer,
+	name varchar NOT NULL
+);

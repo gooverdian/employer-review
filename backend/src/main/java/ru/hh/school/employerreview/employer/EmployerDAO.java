@@ -27,8 +27,8 @@ public class EmployerDAO {
   }
 
   public Optional<Employer> get(int employerId) {
-    Employer user = (Employer) session().get(Employer.class, employerId);
-    return Optional.ofNullable(user);
+    Employer employer = (Employer) session().get(Employer.class, employerId);
+    return Optional.ofNullable(employer);
   }
 
   public Set<Employer> getAll() {
@@ -38,8 +38,8 @@ public class EmployerDAO {
     return new HashSet<>(employers);
   }
 
-  public void update(Employer user) {
-    session().update(user);
+  public void update(Employer employer) {
+    session().update(employer);
   }
 
   public void delete(int employerId) {
