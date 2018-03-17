@@ -1,19 +1,23 @@
 package ru.hh.school.employerreview.downloader;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import ru.hh.school.employerreview.downloader.response.EmployerJSON;
-import ru.hh.school.employerreview.downloader.response.ResponseJSON;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import ru.hh.nab.core.Launcher;
+import ru.hh.school.employerreview.ProdConfig;
+import ru.hh.school.employerreview.area.AreaDAO;
+import ru.hh.school.employerreview.area.AreaService;
+import ru.hh.school.employerreview.downloader.json.AreaJson;
+import ru.hh.school.employerreview.downloader.json.EmployerJson;
+import ru.hh.school.employerreview.downloader.json.ResponseJson;
 import ru.hh.school.employerreview.employer.EmployerDAO;
 import ru.hh.school.employerreview.employer.EmployerService;
 
@@ -22,60 +26,78 @@ public class EmployerDownloader {
   static SessionFactory sessionFactory;
   static int writeOperationsCounter = 0;
   static EmployerService employerService;
+  static AreaService areaService;
   static ObjectMapper objectMapper;
+  static AreaJson[] areaJson;
+  static int currentAreaId = 113;
 
   public static void main(String[] args) {
+
+    ApplicationContext context = new AnnotationConfigApplicationContext( ProdConfig.class );
+
+    sessionFactory = context.getBean(SessionFactory.class);
+    Session session = sessionFactory.openSession();
+
     Map<String, String> params = new HashMap<>();
+    writeOperationsCounter = 0;
+    employerService = createEmployerService(sessionFactory);
+    areaService = createAreaService(sessionFactory);
+    objectMapper = new ObjectMapper();
+
+    try { // Get Areas;
+      URL url = new URL("https://api.hh.ru/areas");
+      areaJson = objectMapper.readValue(url, AreaJson[].class);
+    }catch (Exception e){
+      e.printStackTrace();
+      return;
+    }
+
+    //for (AreaJson area : areaJson) {//Depth Search to put area id in employer entity later
+    //  areaService.save(area.toArea());
+    //  depthSearch(area);
+    //}
+
     params.put("per_page", "1000");
     params.put("page", "0");
-    writeOperationsCounter = 0;
-    sessionFactory = createSessionFactory();
-    employerService = createUserService(sessionFactory);
-    objectMapper = new ObjectMapper();
+
     int i = 0;
     while (true) {
-        params.replace("page", String.valueOf(i));
-        try {
-          getEmployers(params);
-        }catch (Exception e){
-          break;
-        }
-        ++i;
+      params.replace("page", String.valueOf(i));
+      try {
+        getEmployers("https://api.hh.ru/employers", params);
+      }catch (Exception e){
+        break;
+      }
+      ++i;
     }
     sessionFactory.close();
+    session.close();
     System.out.println(String.format("operations : %d", writeOperationsCounter));
-
   }
 
-  public static void getEmployers(Map<String, String> parameters) throws Exception{
+  private static void depthSearch(AreaJson areaJson){
+    for (AreaJson area : areaJson.areas){
+      areaService.save(area.toArea());
+      depthSearch(area);
+    }
+  }
 
+  private static void getEmployers(String urlStr, Map<String, String> params) throws Exception{
     try {
       StringBuilder reqUrlStr = new StringBuilder();
-      reqUrlStr.append("https://api.hh.ru/employers");
-      reqUrlStr.append(getParamsString(parameters));
+      reqUrlStr.append(urlStr);
+      reqUrlStr.append(getParamsString(params));
       System.out.println(reqUrlStr.toString());
 
       URL url = new URL(reqUrlStr.toString());
-      HttpURLConnection con = (HttpURLConnection) url.openConnection();
-      con.setRequestMethod("GET");
-      con.setRequestProperty("Content-Type", "application/json");
-      con.setConnectTimeout(5000);
-      con.setReadTimeout(5000);
-      con.setInstanceFollowRedirects(false);
-      con.setDoOutput(true);
+      ResponseJson responseJson = objectMapper.readValue(url, ResponseJson.class);
 
-      BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-      String inputLine;
-      StringBuffer content = new StringBuffer();
-      while ((inputLine = in.readLine()) != null) {
-        content.append(inputLine);
+      for (EmployerJson curItem : responseJson.items) {
+        employerService.save(curItem.toHibernateObj(currentAreaId));
       }
-      in.close();
-      con.disconnect();
+      writeOperationsCounter += responseJson.items.length;
 
-      parseResponse(content.toString());
-
-    } catch (Exception e) {
+    }catch (Exception e){
       e.printStackTrace();
       throw e;
     }
@@ -98,23 +120,14 @@ public class EmployerDownloader {
     return result.toString();
   }
 
-  private static void parseResponse(String response) throws IOException {
-
-    ResponseJSON responseJSON = objectMapper.readValue(response, ResponseJSON.class);
-
-    for (EmployerJSON curItem : responseJSON.items) {
-        employerService.save(curItem.toHibernateObj());
-    }
-    writeOperationsCounter += responseJSON.items.length;
+  private static EmployerService createEmployerService(final SessionFactory sessionFactory) {
+    EmployerDAO employerDAO = new EmployerDAO(sessionFactory);
+    return new EmployerService(sessionFactory, employerDAO);
   }
 
-  private static SessionFactory createSessionFactory() {
-    return HibernateConfigFactory.prod().buildSessionFactory();
-  }
-
-  private static EmployerService createUserService(final SessionFactory sessionFactory) {
-    EmployerDAO EmployerDAO = new EmployerDAO(sessionFactory);
-    return new EmployerService(sessionFactory, EmployerDAO);
+  private static AreaService createAreaService(final SessionFactory sessionFactory) {
+    AreaDAO areaDAO = new AreaDAO(sessionFactory);
+    return new AreaService(sessionFactory, areaDAO);
   }
 }
 

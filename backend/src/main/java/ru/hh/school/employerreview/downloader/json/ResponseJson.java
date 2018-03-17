@@ -1,16 +1,20 @@
-package ru.hh.school.employerreview.downloader.response;
+package ru.hh.school.employerreview.downloader.json;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class ResponseJSON {
+public class ResponseJson {
   @JsonProperty("per_page")
   public int perPage;
+
   @JsonProperty("items")
-  public EmployerJSON[] items;
+  public EmployerJson[] items;
+
   @JsonProperty("page")
   public int page;
+
   @JsonProperty("pages")
   public int pages;
+
   @JsonProperty("found")
   public int found;
 }

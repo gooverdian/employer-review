@@ -1,8 +1,7 @@
-package ru.hh.school.employerreview.downloader.response;
+package ru.hh.school.employerreview.downloader.json;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-public class LogoUrlsJSON {
+public class LogoUrlsJson {
 
   @JsonProperty("90")
   String logo90;
