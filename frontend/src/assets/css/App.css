@@ -1,0 +1,12 @@
+.page-wrap {
+    padding: 15px;
+}
+
+.page-home {
+    text-align: center;
+}
+
+span.navigation-link {
+    display: inline-block;
+    margin: 0 .2em;
+}
