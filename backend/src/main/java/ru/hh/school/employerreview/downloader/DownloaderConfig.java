@@ -14,7 +14,9 @@ import ru.hh.nab.core.util.FileSettings;
 import static ru.hh.nab.core.util.PropertiesUtils.fromFilesInSettingsDir;
 import ru.hh.nab.hibernate.MappingConfig;
 import ru.hh.school.employerreview.area.Area;
+import ru.hh.school.employerreview.area.AreaDao;
 import ru.hh.school.employerreview.employer.Employer;
+import ru.hh.school.employerreview.employer.EmployerDao;
 
 @Configuration
 @EnableTransactionManagement
@@ -56,5 +58,15 @@ class DownloaderConfig {
     HibernateTransactionManager hibernateTransactionManager = new HibernateTransactionManager(sessionFactory);
     hibernateTransactionManager.setDataSource(dataSource);
     return hibernateTransactionManager;
+  }
+
+  @Bean
+  EmployerDao employerDao(SessionFactory sessionFactory) {
+    return new EmployerDao(sessionFactory);
+  }
+
+  @Bean
+  AreaDao areaDao(SessionFactory sessionFactory) {
+    return new AreaDao(sessionFactory);
   }
 }
