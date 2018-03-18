@@ -11,11 +11,11 @@ import java.util.Set;
 
 import static java.util.Objects.requireNonNull;
 
-public class AreaDAO {
+public class AreaDao {
 
   private final SessionFactory sessionFactory;
 
-  public AreaDAO(SessionFactory sessionFactory) {
+  public AreaDao(SessionFactory sessionFactory) {
     this.sessionFactory = requireNonNull(sessionFactory);
   }
 
