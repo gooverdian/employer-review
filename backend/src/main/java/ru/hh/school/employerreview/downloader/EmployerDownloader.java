@@ -1,23 +1,24 @@
 package ru.hh.school.employerreview.downloader;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.hibernate.SessionFactory;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import ru.hh.school.employerreview.area.AreaDao;
+import ru.hh.school.employerreview.area.AreaService;
+import ru.hh.school.employerreview.downloader.json.AreaJson;
+import ru.hh.school.employerreview.downloader.json.EmployerJson;
+import ru.hh.school.employerreview.downloader.json.ResponseJson;
+import ru.hh.school.employerreview.employer.EmployerDao;
+import ru.hh.school.employerreview.employer.EmployerService;
+
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
-import org.hibernate.SessionFactory;
-import org.hibernate.internal.SessionFactoryImpl;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+
 import static ru.hh.nab.core.util.PropertiesUtils.setSystemPropertyIfAbsent;
-import ru.hh.school.employerreview.area.AreaDAO;
-import ru.hh.school.employerreview.area.AreaService;
-import ru.hh.school.employerreview.downloader.json.AreaJson;
-import ru.hh.school.employerreview.downloader.json.EmployerJson;
-import ru.hh.school.employerreview.downloader.json.ResponseJson;
-import ru.hh.school.employerreview.employer.EmployerDAO;
-import ru.hh.school.employerreview.employer.EmployerService;
 
 public class EmployerDownloader {
 
@@ -32,13 +33,14 @@ public class EmployerDownloader {
   public static void main(String[] args) {
     setSystemPropertyIfAbsent("settingsDir", "src/etc");
     ApplicationContext context = new AnnotationConfigApplicationContext(DownloaderConfig.class);
-
-    SessionFactory sessionFactory = context.getBean(SessionFactory.class);
+    doMain(context);
   }
 
   private static void doMain(ApplicationContext context) {
     Map<String, String> params = new HashMap<>();
     writeOperationsCounter = 0;
+    sessionFactory = context.getBean(SessionFactory.class);
+
     employerService = createEmployerService(sessionFactory);
     areaService = createAreaService(sessionFactory);
     objectMapper = new ObjectMapper();
@@ -63,14 +65,13 @@ public class EmployerDownloader {
     while (true) {
       params.replace("page", String.valueOf(i));
       try {
-        getEmployers("https://api.hh.ru/employers", params);
+        saveEmployers("https://api.hh.ru/employers", params);
       }catch (Exception e){
         break;
       }
       ++i;
     }
     sessionFactory.close();
-    session.close();
     System.out.println(String.format("operations : %d", writeOperationsCounter));
   }
 
@@ -81,7 +82,7 @@ public class EmployerDownloader {
     }
   }
 
-  private static void getEmployers(String urlStr, Map<String, String> params) throws Exception{
+  private static void saveEmployers(String urlStr, Map<String, String> params) throws Exception{
     try {
       StringBuilder reqUrlStr = new StringBuilder();
       reqUrlStr.append(urlStr);
@@ -120,12 +121,12 @@ public class EmployerDownloader {
   }
 
   private static EmployerService createEmployerService(final SessionFactory sessionFactory) {
-    EmployerDAO employerDAO = new EmployerDAO(sessionFactory);
-    return new EmployerService(sessionFactory, employerDAO);
+    EmployerDao employerDao = new EmployerDao(sessionFactory);
+    return new EmployerService(sessionFactory, employerDao);
   }
 
   private static AreaService createAreaService(final SessionFactory sessionFactory) {
-    AreaDAO areaDAO = new AreaDAO(sessionFactory);
+    AreaDao areaDAO = new AreaDao(sessionFactory);
     return new AreaService(sessionFactory, areaDAO);
   }
 }

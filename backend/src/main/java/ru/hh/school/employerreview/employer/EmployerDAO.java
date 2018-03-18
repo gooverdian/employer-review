@@ -3,6 +3,8 @@ package ru.hh.school.employerreview.employer;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import java.util.HashSet;
 import java.util.List;
@@ -10,17 +12,18 @@ import java.util.Optional;
 import java.util.Set;
 
 import static java.util.Objects.requireNonNull;
-import org.springframework.transaction.annotation.Transactional;
 
-public class EmployerDAO {
+@Repository("EmployerDAO")
+public class EmployerDao {
 
+  //@Autowired
   private final SessionFactory sessionFactory;
 
-  public EmployerDAO(SessionFactory sessionFactory) {
+  public EmployerDao(SessionFactory sessionFactory) {
     this.sessionFactory = requireNonNull(sessionFactory);
+    //this.sessionFactory.openSession();
   }
 
-  @Transactional
   public void save(Employer employer) {
     if (employer.id() != null) {
         throw new IllegalArgumentException("can not save " + employer + " with assigned id");
@@ -28,7 +31,6 @@ public class EmployerDAO {
     session().save(employer); // see also saveOrUpdate and persist
   }
 
-  @Transactional
   public Optional<Employer> get(int employerId) {
     Employer employer = (Employer) session().get(Employer.class, employerId);
     return Optional.ofNullable(employer);
@@ -52,8 +54,8 @@ public class EmployerDAO {
   }
 
   private Session session() {
-        return sessionFactory.getCurrentSession();
-    }
+    return sessionFactory.getCurrentSession();
+  }
 }
 
 
