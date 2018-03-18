@@ -21,7 +21,6 @@ public class AreaJson {
     if (parentId == null){
       parentId = "-1";
     }
-    Area area = new Area(name, Integer.parseInt(parentId));
-    return area;
+    return new Area(name, Integer.parseInt(parentId));
   }
 }
