@@ -1,7 +1,10 @@
 package ru.hh.school.employerreview.employer;
-
-
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.util.Objects;
 
 @Entity
@@ -46,14 +49,15 @@ public class Employer {
     this.hhId = hhId;
   }
 
-  /** for Hibernate only */
-  Employer() {}  // problem: somebody can use this constructor and create inconsistent instance
+  Employer() {}
 
   public Integer id() {  return id;}
 
   public void setAreaId(int areaId) { this.areaId = areaId;}
 
   public int getAreaId() { return this.areaId;}
+
+  public int getHhId(){return hhId;}
 
   public void setName(String name) {this.name = name; }
 

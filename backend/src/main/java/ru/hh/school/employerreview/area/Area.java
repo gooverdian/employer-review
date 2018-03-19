@@ -28,8 +28,7 @@ public class Area {
     this.parentId = parentId;
   }
 
-  /** for Hibernate only */
-  Area() {}  // problem: somebody can use this constructor and create inconsistent instance
+  Area() {}
 
   public Integer id() {  return id;}
 
