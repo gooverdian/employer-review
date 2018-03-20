@@ -5,6 +5,7 @@ import java.util.Optional;
 import static java.util.Optional.ofNullable;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.query.Query;
 import org.springframework.transaction.annotation.Transactional;
 
 public class AreaDao {
@@ -33,6 +34,13 @@ public class AreaDao {
   @Transactional
   public Optional<Area> get(int areaId) {
     return ofNullable(getSession().get(Area.class, areaId));
+  }
+
+  @Transactional
+  public int truncate(){
+    String hql = String.format("delete from Area");
+    Query query = getSession().createQuery(hql);
+    return query.executeUpdate();
   }
 
   private Session getSession() {

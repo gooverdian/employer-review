@@ -14,6 +14,7 @@ import ru.hh.nab.hibernate.HibernateCommonConfig;
 import ru.hh.nab.hibernate.HibernateProdConfig;
 import ru.hh.nab.hibernate.MappingConfig;
 import ru.hh.nab.hibernate.datasource.DataSourceType;
+import ru.hh.school.employerreview.employer.Employer;
 
 @Configuration
 @Import({
