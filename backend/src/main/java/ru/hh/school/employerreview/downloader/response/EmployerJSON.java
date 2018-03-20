@@ -1,17 +1,25 @@
-package ru.hh.school.employerdownloader.response;
+package ru.hh.school.employerreview.downloader.response;
 
-import com.google.gson.annotations.SerializedName;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import ru.hh.school.employerreview.employer.Employer;
 
 public class EmployerJSON {
+  @JsonProperty("name")
   String name;
+  @JsonProperty("url")
   String url;
+  @JsonProperty("id")
   String id;
+  @JsonProperty("area")
   String area;
+  @JsonProperty("logo_urls")
   LogoUrlsJSON logo_urls;
-
-  @SerializedName(value = "alternate_url")
+  @JsonProperty("alternate_url")
   String alternateUrl;
+  @JsonProperty("vacancies_url")
+  String vacanciesUrl;
+  @JsonProperty("open_vacancies")
+  String openVacancies;
 
   public Employer toHibernateObj(){
     area = "113";
