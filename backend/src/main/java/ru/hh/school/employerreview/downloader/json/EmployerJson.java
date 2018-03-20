@@ -25,13 +25,14 @@ public class EmployerJson {
   @JsonProperty("open_vacancies")
   private String openVacancies;
 
-  public Employer toHibernateObj(int area){
+  public Employer toHibernateObj(int area, String areaName){
     Employer employer = new Employer(name , url, Integer.parseInt(id));
     employer.setAlternateUrl(alternateUrl);
     employer.setLogoUrl90(logo_urls.getLogo90());
     employer.setLogoUrl240(logo_urls.getLogo240());
     employer.setLogoUrlOriginal(logo_urls.getLogoOriginal());
     employer.setAreaId(area);
+    employer.setAreaName(areaName);
     return employer;
   }
 }
