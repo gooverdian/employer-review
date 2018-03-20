@@ -22,6 +22,12 @@ public class Employer {
   @Column(name = "name")
   private String name;
 
+  @Column(name = "score")
+  private Float score;
+
+  @Column(name = "people_rated")
+  private int peopleRated;
+
   @Column(name = "site_url")
   private String siteUrl;
 
@@ -43,13 +49,35 @@ public class Employer {
   @Column(name = "area_id")
   private int areaId;
 
+  @Column(name = "area_name")
+  private String areaName;
+
+  public void setAreaName(String areaName){
+    this.areaName = areaName;
+  }
+
+  public String getAreaName() {
+    return areaName;
+  }
+
+  public void setScore(Float score) {
+    this.score = score;
+  }
+
+  public void addPeopleRated(){
+    this.peopleRated += 1;
+  }
+
   public Employer(String name, String siteUrl, int hhId) {
     this.name = name;
     this.siteUrl = siteUrl;
     this.hhId = hhId;
+    this.peopleRated = 0;
   }
 
-  Employer() {}
+  Employer() {
+
+  }
 
   public Integer id() {
     return id;

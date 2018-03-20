@@ -22,6 +22,7 @@ public class DownloadMain {
   private static final int EMPLOYERS_PAGES = 5;
   private static final int EMPLOYERS_PAGE_SIZE = 1000;
   private static int currentAreaId;
+  private static String currentAreaName;
   private static AreaDao areaDao;
   private static EmployerDao employerDao;
   private static ApplicationContext applicationContext;
@@ -51,6 +52,7 @@ public class DownloadMain {
     for (AreaJson areaJson: areaJsons) {
       areaDao.save(areaJson.toArea());
       currentAreaId = Integer.parseInt(areaJson.getId());
+      currentAreaName = areaJson.getName();
       downloadEmployers();
       saveAreasToDb(areaJson.getAreas());
     }
@@ -78,7 +80,7 @@ public class DownloadMain {
   private static void saveEmployersToDb(EmployerJson[] employerJsons) {
     List<Employer> employers = new ArrayList<>();
     for (EmployerJson employerJson: employerJsons) {
-      employers.add(employerJson.toHibernateObj(currentAreaId));
+      employers.add(employerJson.toHibernateObj(currentAreaId, currentAreaName));
     }
     employerDao.save(employers);
   }
