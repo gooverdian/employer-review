@@ -4,6 +4,9 @@ import javax.sql.DataSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import ru.hh.nab.core.CoreProdConfig;
 import ru.hh.nab.core.util.FileSettings;
 import ru.hh.nab.hibernate.DataSourceFactory;
@@ -21,17 +24,26 @@ import ru.hh.school.employerreview.employer.Employer;
 public class ProdConfig {
 
   @Bean
-  DataSource dataSource(DataSourceFactory dataSourceFactory, FileSettings settings) {
-    return dataSourceFactory.create(DataSourceType.MASTER, settings);
+  DataSource dataSource(DataSourceFactory dataSourceFactory, FileSettings fileSettings) throws Exception {
+    return fileSettings.getBoolean("master.embedded")
+        ? createEmbeddedDatabase()
+        : dataSourceFactory.create(DataSourceType.MASTER, fileSettings);
   }
 
   @Bean
   MappingConfig mappingConfig() {
-    return new MappingConfig(Employer.class);
+    return new MappingConfig();
   }
 
   @Bean
   ExampleResource exampleResource() {
     return new ExampleResource();
+  }
+
+  private EmbeddedDatabase createEmbeddedDatabase() {
+    return new EmbeddedDatabaseBuilder()
+        .setName("master")
+        .setType(EmbeddedDatabaseType.HSQL)
+        .build();
   }
 }
