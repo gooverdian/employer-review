@@ -18,7 +18,7 @@ public class AreaDao {
 
   @Transactional
   public void save(Area area) {
-    if (area.id() != null) {
+    if (area.getId() == null) {
       throw new IllegalArgumentException("can not save " + area + " with assigned id");
     }
     getSession().save(area);

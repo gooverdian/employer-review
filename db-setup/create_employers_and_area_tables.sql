@@ -17,7 +17,7 @@ CREATE TABLE employer (
 );
 
 CREATE TABLE area (
-	id SERIAL PRIMARY KEY,
+	id int PRIMARY KEY,
 	parent_id integer,
 	name varchar NOT NULL
 );

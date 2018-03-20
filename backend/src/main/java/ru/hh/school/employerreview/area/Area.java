@@ -13,7 +13,6 @@ import java.util.Objects;
 public class Area {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "id")
   private Integer id;
 
@@ -23,22 +22,33 @@ public class Area {
   @Column(name = "name")
   private String name;
 
-  public Area(String name, int parentId) {
+  public Area(String name,int id, int parentId) {
     this.name = name;
+    this.id = id;
     this.parentId = parentId;
   }
 
   Area() {}
 
-  public Integer id() {  return id;}
+  public Integer getId() {
+    return id;
+  }
 
-  public void setName(String name) {this.name = name; }
+  public void setName(String name) {
+    this.name = name;
+  }
 
-  public String getName() { return name;}
+  public String getName() {
+    return name;
+  }
 
-  public void  setParentId(int parentId){this.parentId = parentId;}
+  public void  setParentId(int parentId){
+    this.parentId = parentId;
+  }
 
-  public Integer getParentId() { return parentId;  }
+  public Integer getParentId() {
+    return parentId;
+  }
 
   @Override
   public boolean equals(Object that) {

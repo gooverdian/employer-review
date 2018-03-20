@@ -50,9 +50,9 @@ public class DownloadMain {
   private static void saveAreasToDb(AreaJson[] areaJsons) {
     for (AreaJson areaJson: areaJsons) {
       areaDao.save(areaJson.toArea());
-      currentAreaId = Integer.parseInt(areaJson.id);
+      currentAreaId = Integer.parseInt(areaJson.getId());
       downloadEmployers();
-      saveAreasToDb(areaJson.areas);
+      saveAreasToDb(areaJson.getAreas());
     }
   }
 
@@ -69,7 +69,7 @@ public class DownloadMain {
     try {
       URL url = new URL(URL_EMPLOYERS + "?per_page=" + EMPLOYERS_PAGE_SIZE + "&page=" + page + "&area=" + currentAreaId);
       ResponseJson responseJson = OBJECT_MAPPER.readValue(url, ResponseJson.class);
-      return responseJson.items;
+      return responseJson.getItems();
     } catch (Exception e) {
       return null;
     }
