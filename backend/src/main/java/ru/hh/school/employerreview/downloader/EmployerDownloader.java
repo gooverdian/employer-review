@@ -1,18 +1,16 @@
 package ru.hh.school.employerreview.downloader;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.internal.SessionFactoryImpl;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import ru.hh.nab.core.Launcher;
-import ru.hh.school.employerreview.ProdConfig;
+import static ru.hh.nab.core.util.PropertiesUtils.setSystemPropertyIfAbsent;
 import ru.hh.school.employerreview.area.AreaDAO;
 import ru.hh.school.employerreview.area.AreaService;
 import ru.hh.school.employerreview.downloader.json.AreaJson;
@@ -32,12 +30,13 @@ public class EmployerDownloader {
   static int currentAreaId = 113;
 
   public static void main(String[] args) {
+    setSystemPropertyIfAbsent("settingsDir", "src/etc");
+    ApplicationContext context = new AnnotationConfigApplicationContext(DownloaderConfig.class);
 
-    ApplicationContext context = new AnnotationConfigApplicationContext( ProdConfig.class );
+    SessionFactory sessionFactory = context.getBean(SessionFactory.class);
+  }
 
-    sessionFactory = context.getBean(SessionFactory.class);
-    Session session = sessionFactory.openSession();
-
+  private static void doMain(ApplicationContext context) {
     Map<String, String> params = new HashMap<>();
     writeOperationsCounter = 0;
     employerService = createEmployerService(sessionFactory);
