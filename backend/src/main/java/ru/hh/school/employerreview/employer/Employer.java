@@ -51,43 +51,81 @@ public class Employer {
 
   Employer() {}
 
-  public Integer id() {  return id;}
+  public Integer id() {
+    return id;
+  }
 
-  public void setAreaId(int areaId) { this.areaId = areaId;}
+  public void setAreaId(int areaId) {
+    this.areaId = areaId;
+  }
 
-  public int getAreaId() { return this.areaId;}
+  public int getAreaId() {
+    return this.areaId;
+  }
 
-  public int getHhId(){return hhId;}
+  public int getHhId(){
+    return hhId;
+  }
 
-  public void setName(String name) {this.name = name; }
+  public void setName(String name) {
+    this.name = name;
+  }
 
-  public void setDescription(String description){ this.description = description;}
+  public void setDescription(String description){
+    this.description = description;
+  }
 
-  public String getDescription() {    return description;    }
+  public String getDescription() {
+    return description;
+  }
 
-  public String getAlternateUrl() {   return alternateUrl;    }
+  public String getAlternateUrl() {
+    return alternateUrl;
+  }
 
-  public String getLogoUrl90() {      return logoUrl90;   }
+  public String getLogoUrl90() {
+    return logoUrl90;
+  }
 
-  public String getLogoUrl240() {     return logoUrl240;    }
+  public String getLogoUrl240() {
+    return logoUrl240;
+  }
 
-  public String getLogoUrlOriginal() {return logoUrlOriginal; }
+  public String getLogoUrlOriginal() {
+    return logoUrlOriginal;
+  }
 
-  public String getName() {           return name;}
+  public String getName() {
+    return name;
+  }
 
-  public String getSiteUrl() {        return siteUrl; }
+  public String getSiteUrl() {
+    return siteUrl;
+  }
 
-  public void  setHhId(int hhId){this.hhId = hhId;}
+  public void  setHhId(int hhId){
+    this.hhId = hhId;
+  }
 
-  public void  setSiteUrl(String siteUrl){this.siteUrl = siteUrl;}
+  public void  setSiteUrl(String siteUrl){
+    this.siteUrl = siteUrl;
+  }
 
-  public void  setAlternateUrl(String alternateUrl){this.alternateUrl = alternateUrl;}
+  public void  setAlternateUrl(String alternateUrl){
+    this.alternateUrl = alternateUrl;
+  }
 
-  public void  setLogoUrl90(String logoUrl90){this.logoUrl90 = logoUrl90;}
+  public void  setLogoUrl90(String logoUrl90){
+    this.logoUrl90 = logoUrl90;
+  }
 
-  public void  setLogoUrl240(String logoUrl240){this.logoUrl240 = logoUrl240;}
+  public void  setLogoUrl240(String logoUrl240){
+    this.logoUrl240 = logoUrl240;
+  }
 
-  public void  setLogoUrlOriginal(String logoUrlOriginal){this.logoUrlOriginal = logoUrlOriginal;}
+  public void  setLogoUrlOriginal(String logoUrlOriginal){
+    this.logoUrlOriginal = logoUrlOriginal;
+  }
 
   @Override
   public boolean equals(Object that) {

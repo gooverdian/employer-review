@@ -6,21 +6,37 @@ import ru.hh.school.employerreview.area.Area;
 public class AreaJson {
 
   @JsonProperty("name")
-  public String name;
+  private String name;
 
   @JsonProperty("id")
-  public String id;
+  private String id;
 
   @JsonProperty("parent_id")
-  public String parentId;
+  private String parentId;
 
   @JsonProperty("areas")
-  public AreaJson[] areas;
+  private AreaJson[] areas;
+
+  public AreaJson[] getAreas() {
+    return areas;
+  }
+
+  public String getId() {
+    return id;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public String getParentId() {
+    return parentId;
+  }
 
   public Area toArea(){
     if (parentId == null){
       parentId = "-1";
     }
-    return new Area(name, Integer.parseInt(parentId));
+    return new Area(name,Integer.parseInt(id), Integer.parseInt(parentId));
   }
 }

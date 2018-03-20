@@ -4,17 +4,37 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class ResponseJson {
   @JsonProperty("per_page")
-  public int perPage;
+  private int perPage;
 
   @JsonProperty("items")
-  public EmployerJson[] items;
+  private EmployerJson[] items;
 
   @JsonProperty("page")
-  public int page;
+  private int page;
 
   @JsonProperty("pages")
-  public int pages;
+  private int pages;
 
   @JsonProperty("found")
-  public int found;
+  private int found;
+
+  public int getFound() {
+    return found;
+  }
+
+  public int getPage() {
+    return page;
+  }
+
+  public int getPages() {
+    return pages;
+  }
+
+  public int getPerPage() {
+    return perPage;
+  }
+
+  public EmployerJson[] getItems() {
+    return items;
+  }
 }
