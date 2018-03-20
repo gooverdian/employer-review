@@ -5,16 +5,13 @@ import ru.hh.school.employerreview.area.Area;
 
 public class AreaJson {
 
-  @JsonProperty("name")
   private String name;
 
-  @JsonProperty("id")
   private String id;
 
   @JsonProperty("parent_id")
   private String parentId;
 
-  @JsonProperty("areas")
   private AreaJson[] areas;
 
   public AreaJson[] getAreas() {
@@ -33,8 +30,8 @@ public class AreaJson {
     return parentId;
   }
 
-  public Area toArea(){
-    if (parentId == null){
+  public Area toArea() {
+    if (parentId == null) {
       parentId = "-1";
     }
     return new Area(name, Integer.parseInt(id), Integer.parseInt(parentId));

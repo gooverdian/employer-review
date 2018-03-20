@@ -20,7 +20,10 @@ public class AreaDao {
     if (area.getId() == null) {
       throw new IllegalArgumentException("Area id must not be null!");
     }
-    getSession().save(area);
+    Area checkArea = getSession().get(Area.class, area.getId());
+    if (checkArea == null) {
+      getSession().save(area);
+    }
   }
 
   @Transactional
