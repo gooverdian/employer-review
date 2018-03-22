@@ -1,0 +1,20 @@
+language: java
+
+addons:
+  apt:
+    packages:
+      - sshpass
+
+sudo: false
+
+branches:
+  only:
+  - master
+  - demo-1
+  - backend-10
+
+before_install:
+  cd backend
+
+install:
+- mvn clean install
