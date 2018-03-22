@@ -5,13 +5,14 @@ addons:
     packages:
       - sshpass
 
+sudo: false
+
 branches:
   only:
   - master
   - demo-1
   - backend-10
-  
-sudo: false
+
 before_install:
   cd backend
 
