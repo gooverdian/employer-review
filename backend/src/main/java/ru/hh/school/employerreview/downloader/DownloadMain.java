@@ -1,9 +1,15 @@
 package ru.hh.school.employerreview.downloader;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.io.File;
+import java.io.FileOutputStream;
 import java.net.URL;
+import java.nio.channels.Channels;
+import java.nio.channels.ReadableByteChannel;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -19,6 +25,7 @@ public class DownloadMain {
   private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
   private static final String URL_AREAS = "https://api.hh.ru/areas";
   private static final String URL_EMPLOYERS = "https://api.hh.ru/employers";
+  private static final String LOGOS_FOLDER = "employer_logos";
   private static final int EMPLOYERS_PAGES = 5;
   private static final int EMPLOYERS_PAGE_SIZE = 1000;
   private static int currentAreaId;
@@ -36,6 +43,26 @@ public class DownloadMain {
 
     AreaJson[] areas = getAreasFromApi();
     saveAreasToDb(areas);
+
+    downloadLogos();
+  }
+
+  private static void downloadLogos(){
+    Set<Employer> employers = employerDao.getAll();
+    for (Employer employer : employers){
+      downloadLogoFromUrl(employer.getLogoUrl90(), employer.getHhId());
+    }
+  }
+
+  private static void downloadLogoFromUrl(String urlString, int hhId){
+    try {
+      URL url = new URL(urlString);
+      ReadableByteChannel rbc = Channels.newChannel(url.openStream());
+      FileOutputStream fos = new FileOutputStream( LOGOS_FOLDER + File.separator + hhId + ".png");
+      fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
+    } catch (Exception e){
+      return;
+    }
   }
 
   private static AreaJson[] getAreasFromApi() {

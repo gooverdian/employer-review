@@ -1,10 +1,15 @@
 package ru.hh.school.employerreview.employer;
 
+import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+
 import static java.util.Objects.requireNonNull;
 
 public class EmployerDao {
@@ -35,6 +40,13 @@ public class EmployerDao {
         getSession().update(employerFromDB);
       }
     }
+  }
+
+  @Transactional
+  public Set<Employer> getAll() {
+    Criteria criteria = getSession().createCriteria(Employer.class);
+    List<Employer> users = criteria.list();
+    return new HashSet<>(users);
   }
 
   private Session getSession() {
