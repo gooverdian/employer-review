@@ -22,7 +22,7 @@ public class AreaJson {
   }
 
   public String getId() {
-    return id;
+    return this.id;
   }
 
   public String getName() {
@@ -37,6 +37,6 @@ public class AreaJson {
     if (parentId == null){
       parentId = "-1";
     }
-    return new Area(name,Integer.parseInt(id), Integer.parseInt(parentId));
+    return new Area(name, Integer.parseInt(id), Integer.parseInt(parentId));
   }
 }

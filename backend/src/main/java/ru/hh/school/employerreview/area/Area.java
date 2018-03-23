@@ -2,8 +2,6 @@ package ru.hh.school.employerreview.area;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.util.Objects;
@@ -22,13 +20,15 @@ public class Area {
   @Column(name = "name")
   private String name;
 
-  public Area(String name,int id, int parentId) {
+  public Area(String name, int id, int parentId) {
     this.name = name;
     this.id = id;
     this.parentId = parentId;
   }
 
-  Area() {}
+  Area() {
+
+  }
 
   public Integer getId() {
     return id;
@@ -52,8 +52,12 @@ public class Area {
 
   @Override
   public boolean equals(Object that) {
-    if (this == that) return true;
-    if (that == null || getClass() != that.getClass()) return false;
+    if (this == that) {
+      return true;
+    }
+    if (that == null || getClass() != that.getClass()){
+      return false;
+    }
 
     Area thatUser = (Area) that;
     return Objects.equals(id, thatUser.id)

@@ -157,8 +157,12 @@ public class Employer {
 
   @Override
   public boolean equals(Object that) {
-    if (this == that) return true;
-    if (that == null || getClass() != that.getClass()) return false;
+    if (this == that){
+      return true;
+    }
+    if (that == null || getClass() != that.getClass()){
+      return false;
+    }
 
     Employer thatUser = (Employer) that;
     return Objects.equals(id, thatUser.id)
