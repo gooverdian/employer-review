@@ -1,11 +1,14 @@
 package ru.hh.school.employerreview.review.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.List;
 
 public class ResponseBodyReviews {
   private List<ReviewDto> reviews;
   Integer page;
   Integer pages;
+  @JsonProperty("per_page")
   Integer perPage;
 
   public ResponseBodyReviews() {

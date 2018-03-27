@@ -1,4 +1,7 @@
 package ru.hh.school.employerreview.employer;
+
+import ru.hh.school.employerreview.employer.dto.EmployerItem;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -26,7 +29,7 @@ public class Employer {
   private Float score;
 
   @Column(name = "people_rated")
-  private int peopleRated;
+  private Integer peopleRated;
 
   @Column(name = "site_url")
   private String siteUrl;
@@ -47,12 +50,12 @@ public class Employer {
   private String logoUrlOriginal;
 
   @Column(name = "area_id")
-  private int areaId;
+  private Integer areaId;
 
   @Column(name = "area_name")
   private String areaName;
 
-  public void setAreaName(String areaName){
+  public void setAreaName(String areaName) {
     this.areaName = areaName;
   }
 
@@ -64,7 +67,7 @@ public class Employer {
     this.score = score;
   }
 
-  public void addPeopleRated(){
+  public void addPeopleRated() {
     this.peopleRated += 1;
   }
 
@@ -82,15 +85,15 @@ public class Employer {
     return id;
   }
 
-  public void setAreaId(int areaId) {
+  public void setAreaId(Integer areaId) {
     this.areaId = areaId;
   }
 
-  public int getAreaId() {
+  public Integer getAreaId() {
     return this.areaId;
   }
 
-  public int getHhId(){
+  public int getHhId() {
     return hhId;
   }
 
@@ -98,7 +101,7 @@ public class Employer {
     this.name = name;
   }
 
-  public void setDescription(String description){
+  public void setDescription(String description) {
     this.description = description;
   }
 
@@ -130,36 +133,36 @@ public class Employer {
     return siteUrl;
   }
 
-  public void  setHhId(int hhId){
+  public void setHhId(int hhId) {
     this.hhId = hhId;
   }
 
-  public void  setSiteUrl(String siteUrl){
+  public void setSiteUrl(String siteUrl) {
     this.siteUrl = siteUrl;
   }
 
-  public void  setAlternateUrl(String alternateUrl){
+  public void setAlternateUrl(String alternateUrl) {
     this.alternateUrl = alternateUrl;
   }
 
-  public void  setLogoUrl90(String logoUrl90){
+  public void setLogoUrl90(String logoUrl90) {
     this.logoUrl90 = logoUrl90;
   }
 
-  public void  setLogoUrl240(String logoUrl240){
+  public void setLogoUrl240(String logoUrl240) {
     this.logoUrl240 = logoUrl240;
   }
 
-  public void  setLogoUrlOriginal(String logoUrlOriginal){
+  public void setLogoUrlOriginal(String logoUrlOriginal) {
     this.logoUrlOriginal = logoUrlOriginal;
   }
 
   @Override
   public boolean equals(Object that) {
-    if (this == that){
+    if (this == that) {
       return true;
     }
-    if (that == null || getClass() != that.getClass()){
+    if (that == null || getClass() != that.getClass()) {
       return false;
     }
 
@@ -177,7 +180,18 @@ public class Employer {
   @Override
   public String toString() {
     return String.format("%s{id=%d, Name='%s', Area='%d'}",
-            getClass().getSimpleName(), id, name, areaId);
+        getClass().getSimpleName(), id, name, areaId);
+  }
+
+  public EmployerItem toEmployerItem() {
+    EmployerItem employerItem = new EmployerItem();
+    employerItem.setAreaId(areaId);
+    employerItem.setHhId(hhId);
+    employerItem.setName(name);
+    employerItem.setLogoUrl(logoUrl90);
+    employerItem.setUrl(siteUrl);
+    employerItem.setAreaName(areaName);
+    employerItem.setId(id);
+    return employerItem;
   }
 }
-

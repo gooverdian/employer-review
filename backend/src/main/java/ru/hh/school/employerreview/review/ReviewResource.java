@@ -1,12 +1,9 @@
 package ru.hh.school.employerreview.review;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import ru.hh.errors.common.Errors;
+import ru.hh.school.employerreview.PaginationHelper;
 import ru.hh.school.employerreview.employer.Employer;
 import ru.hh.school.employerreview.employer.EmployerDao;
-import ru.hh.school.employerreview.review.dto.Error;
-import ru.hh.school.employerreview.review.dto.ErrorType;
-import ru.hh.school.employerreview.review.dto.Errors;
 import ru.hh.school.employerreview.review.dto.ResponseBodyReviewId;
 import ru.hh.school.employerreview.review.dto.ResponseBodyReviews;
 import ru.hh.school.employerreview.review.dto.ReviewDto;
@@ -28,8 +25,6 @@ import java.util.List;
 @Produces(MediaType.APPLICATION_JSON)
 public class ReviewResource {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(ReviewResource.class);
-
   private final ReviewDao reviewDao;
   private final EmployerDao employerDao;
 
@@ -40,91 +35,86 @@ public class ReviewResource {
 
   @POST
   public Response postReview(ReviewDto reviewDto) {
-    Errors errors = new Errors();
+    Errors errors = new Errors(Response.Status.BAD_REQUEST);
 
     if (reviewDto.getEmployerId() == null) {
-      errors.addError(new Error(ErrorType.MISSING_FIELD, "employerId"));
+      errors.add("MISSING_FIELD", "employer_id");
     }
 
     if (reviewDto.getRating() == null) {
-      errors.addError(new Error(ErrorType.MISSING_FIELD, "rating"));
+      errors.add("MISSING_FIELD", "rating");
     }
 
     if (reviewDto.getRating() < 0.0 || reviewDto.getRating() > 5.0) {
-      errors.addError(new Error(ErrorType.BAD_FIELD_VALUE, "rating"));
+      errors.add("BAD_FIELD_VALUE", "rating");
+    }
+    if (errors.hasErrors()) {
+      throw errors.toWebApplicationException();
     }
 
-    if (!errors.isEmpty()) {
-      return Response.status(400).entity(errors).build();
+    Employer employer = employerDao.getEmployer(reviewDto.getEmployerId());
+    if (employer == null || employer.getId() == null) {
+      throw new Errors(Response.Status.BAD_REQUEST, "BAD_FIELD_VALUE", "employer_id").toWebApplicationException();
     }
 
-    try {
-      Employer employer = employerDao.getEmployer(reviewDto.getEmployerId());
-      if (employer == null || employer.getId() == null) {
-        errors.addError(new Error(ErrorType.BAD_FIELD_VALUE, "employerId"));
-        return Response.status(400).entity(errors).build();
-      }
+    Review review = new Review(
+        employer,
+        reviewDto.getRating(),
+        reviewDto.getText());
+    reviewDao.save(review);
 
-      Review review = new Review(
-          employer,
-          reviewDto.getRating(),
-          reviewDto.getText());
-      reviewDao.save(review);
-
-      return Response.status(200).entity(new ResponseBodyReviewId(review.getId())).build();
-
-    } catch (Exception e) {
-      LOGGER.error(e.getMessage());
-      errors.addError(new Error(ErrorType.SAVE_ERROR, "review"));
-      return Response.status(500).entity(errors).build();
-    }
+    return Response.status(200).entity(new ResponseBodyReviewId(review.getId())).build();
   }
 
   @GET
   public Response getReviews(
-      @QueryParam("employerId") Integer employerId,
-      @QueryParam("page") @DefaultValue("0") Integer page,
-      @QueryParam("per_page") @DefaultValue("10") Integer perPage
+      @QueryParam("employer_id") int employerId,
+      @QueryParam("page") @DefaultValue("0") int page,
+      @QueryParam("per_page") @DefaultValue("10") int perPage
   ) {
-    Errors errors = new Errors();
-
-    if (employerId == null) {
-      errors.addError(new Error(ErrorType.MISSING_PARAMETER, "employerId"));
-      return Response.status(400).entity(errors).build();
-    }
+    Errors errors = new Errors(Response.Status.BAD_REQUEST);
 
     Integer rowCount = Math.toIntExact(reviewDao.getRowCountFilteredByEmployer(employerId));
-    Integer pageCount = null;
-
-    if (perPage != null && perPage != 0) {
-      pageCount = rowCount / perPage + (rowCount % perPage == 0 ? 0 : 1);
+    if (rowCount == 0) {
+      throw new Errors(Response.Status.BAD_REQUEST, "NO_DATA", "review").toWebApplicationException();
+    }
+    if (page < 0) {
+      errors.add("BAD_REQUEST_PARAMETER", "page");
+    }
+    if (perPage <= 0) {
+      errors.add("BAD_REQUEST_PARAMETER", "per_page");
+    }
+    if (errors.hasErrors()) {
+      throw errors.toWebApplicationException();
     }
 
-    List<Review> reviews = null;
-    try {
-
-      if (pageCount != null && pageCount != 0) {
-        reviews = reviewDao.getPaginatedFilteredByEmployer(employerId, page * perPage, perPage);
-      } else {
-        errors.addError(new Error(ErrorType.PAGINATION, "pageCount"));
-        return Response.status(400).entity(errors).build();
-      }
-      if (reviews == null) {
-        return Response.status(200)
-            .entity(new ResponseBodyReviews(new ArrayList<>(), page, pageCount, perPage)).build();
-      }
-
-      List<ReviewDto> reviewDtos = new ArrayList<>();
-      for (Review review : reviews) {
-        ReviewDto reviewDto = new ReviewDto(employerId, review.getRating(), review.getText());
-        reviewDtos.add(reviewDto);
-      }
-      return Response.status(200).entity(new ResponseBodyReviews(reviewDtos, page, pageCount, perPage)).build();
-
-    } catch (Exception e) {
-      LOGGER.error(e.getMessage());
-      errors.addError(new Error(ErrorType.DB_ERROR, "review"));
-      return Response.status(500).entity(errors).build();
+    int pageCount = PaginationHelper.calculatePagesCount(rowCount, perPage);
+    if (page > pageCount - 1) {
+      throw new Errors(Response.Status.BAD_REQUEST, "BAD_REQUEST_PARAMETER", "page").toWebApplicationException();
     }
+
+    List<Review> reviews = reviewDao.getPaginatedFilteredByEmployer(employerId, page * perPage, perPage);
+    if (reviews == null) {
+      return Response.status(200)
+          .entity(new ResponseBodyReviews(new ArrayList<>(), page, pageCount, perPage)).build();
+    }
+
+    reviews.sort((review01, review02) -> {
+      if (review02.getId() > review01.getId()) {
+        return 1;
+      }
+      if (review02.getId() < review01.getId()) {
+        return -1;
+      }
+      return 0;
+    });
+
+    List<ReviewDto> reviewDtos = new ArrayList<>();
+    for (Review review : reviews) {
+      ReviewDto reviewDto = new ReviewDto(employerId, review.getId(), review.getRating(), review.getText());
+      reviewDtos.add(reviewDto);
+    }
+    return Response.status(200).entity(new ResponseBodyReviews(reviewDtos, page, pageCount, perPage)).build();
+
   }
 }

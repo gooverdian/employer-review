@@ -33,8 +33,8 @@ public class AreaJson {
     return parentId;
   }
 
-  public Area toArea(){
-    if (parentId == null){
+  public Area toArea() {
+    if (parentId == null) {
       parentId = "-1";
     }
     return new Area(name, Integer.parseInt(id), Integer.parseInt(parentId));
