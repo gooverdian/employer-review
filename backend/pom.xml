@@ -16,7 +16,7 @@
 
     <properties>
         <jdk.version>1.8</jdk.version>
-        <nab.version>3.3</nab.version>
+        <nab.version>3.6.0</nab.version>
         <jersey.version>2.21</jersey.version>
     </properties>
 
@@ -47,15 +47,15 @@
         </dependency>
 
         <dependency>
-            <groupId>org.hsqldb</groupId>
-            <artifactId>hsqldb</artifactId>
-            <version>2.4.0</version>
-        </dependency>
-
-        <dependency>
             <groupId>org.glassfish.jersey.media</groupId>
             <artifactId>jersey-media-json-jackson</artifactId>
             <version>${jersey.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.hsqldb</groupId>
+            <artifactId>hsqldb</artifactId>
+            <version>2.4.0</version>
         </dependency>
     </dependencies>
 
