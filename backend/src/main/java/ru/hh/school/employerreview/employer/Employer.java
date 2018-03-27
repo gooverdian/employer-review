@@ -26,7 +26,7 @@ public class Employer {
   private Float score;
 
   @Column(name = "people_rated")
-  private int peopleRated;
+  private Integer peopleRated;
 
   @Column(name = "site_url")
   private String siteUrl;
@@ -47,7 +47,7 @@ public class Employer {
   private String logoUrlOriginal;
 
   @Column(name = "area_id")
-  private int areaId;
+  private Integer areaId;
 
   @Column(name = "area_name")
   private String areaName;
@@ -82,11 +82,11 @@ public class Employer {
     return id;
   }
 
-  public void setAreaId(int areaId) {
+  public void setAreaId(Integer areaId) {
     this.areaId = areaId;
   }
 
-  public int getAreaId() {
+  public Integer getAreaId() {
     return this.areaId;
   }
 
