@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <configuration>
-    <contextName>example</contextName>
+    <contextName>employer-service</contextName>
 
-    <include resource="shared-logback.xml"/>
+    <include resource="nab-shared-logback.xml"/>
 </configuration>
