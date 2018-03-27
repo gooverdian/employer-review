@@ -19,9 +19,11 @@ const LogoIcon = () => (
 );
 
 const NavigationBar = () => (
-    <AppBar title="HH Employer Review" leftIcon={<LogoIcon/>}>
-        <Navigation type="horizontal">
-            <NavigationLink to="/" activeOnExact={true} label="Главная" />
+    <AppBar leftIcon={<LogoIcon/>}>
+        <Link to="/" className="brand-link">
+            HH Employer Review
+        </Link>
+        <Navigation className="main-nav" type="horizontal">
             <NavigationLink to="/review/add" label="Оставить отзыв" />
         </Navigation>
     </AppBar>
@@ -32,9 +34,12 @@ const NavigationLink = ({ label, to, activeOnExact }) => (
         path={to}
         exact={activeOnExact}
         children={({match}) => (
-            <span className={"navigation-link" + (match ? " active" : "")}>
-                <Link to={to}>{label}</Link>
-            </span>
+                <Link
+                    className={"main-nav__link" + (match ? " main-nav_active" : "")}
+                    to={to}
+                >
+                    {label}
+                </Link>
         )}
     />
 );
