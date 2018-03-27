@@ -66,9 +66,6 @@ class RatingInput extends React.Component {
                             />
                         ))}
                     </span>
-                    <span className="rating-value">
-                        {this.state.value > 0 ? this.state.value : ''}
-                    </span>
                 </div>
                 <span className="help-block">
                     {this.props.error ? this.props.error : ''}

@@ -10,13 +10,13 @@ class EmployerSearchSelectResults extends React.Component {
     };
 
     componentDidMount() {
-        if (this.props.onReference()) {
+        if (this.props.onReference) {
             this.props.onReference(this);
         }
     }
 
     componentWillUnmount() {
-        if (this.props.onReference()) {
+        if (this.props.onReference) {
             this.props.onReference(undefined);
         }
     }
