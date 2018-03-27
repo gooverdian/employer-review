@@ -7,7 +7,7 @@ import java.util.List;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import static ru.hh.nab.core.util.PropertiesUtils.setSystemPropertyIfAbsent;
+import static ru.hh.nab.common.util.PropertiesUtils.setSystemPropertyIfAbsent;
 import ru.hh.school.employerreview.area.AreaDao;
 import ru.hh.school.employerreview.downloader.json.AreaJson;
 import ru.hh.school.employerreview.downloader.json.EmployerJson;

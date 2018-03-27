@@ -1,25 +1,21 @@
 package ru.hh.school.employerreview;
 
+import javax.sql.DataSource;
 import org.hibernate.SessionFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
+import ru.hh.nab.common.util.FileSettings;
 import ru.hh.nab.core.CoreProdConfig;
-import ru.hh.nab.core.util.FileSettings;
-import ru.hh.nab.hibernate.DataSourceFactory;
+import ru.hh.nab.datasource.DataSourceFactory;
+import ru.hh.nab.datasource.DataSourceType;
 import ru.hh.nab.hibernate.HibernateProdConfig;
 import ru.hh.nab.hibernate.MappingConfig;
-import ru.hh.nab.hibernate.datasource.DataSourceType;
 import ru.hh.school.employerreview.employer.Employer;
 import ru.hh.school.employerreview.employer.EmployerDao;
 import ru.hh.school.employerreview.review.Review;
 import ru.hh.school.employerreview.review.ReviewDao;
 import ru.hh.school.employerreview.review.ReviewResource;
-
-import javax.sql.DataSource;
 
 @Configuration
 @Import({
@@ -30,9 +26,7 @@ public class ProdConfig {
 
   @Bean
   DataSource dataSource(DataSourceFactory dataSourceFactory, FileSettings fileSettings) throws Exception {
-    return fileSettings.getBoolean("master.embedded")
-        ? createEmbeddedDatabase()
-        : dataSourceFactory.create(DataSourceType.MASTER, fileSettings);
+    return dataSourceFactory.create(DataSourceType.MASTER, fileSettings);
   }
 
   @Bean
@@ -58,17 +52,5 @@ public class ProdConfig {
   @Bean
   EmployerDao employerDao(SessionFactory sessionFactory) {
     return new EmployerDao(sessionFactory);
-  }
-
-  private EmbeddedDatabase createEmbeddedDatabase() {
-    return new EmbeddedDatabaseBuilder()
-        .setName("master")
-        .setType(EmbeddedDatabaseType.HSQL)
-        .build();
-  }
-
-  @Bean
-  CorsFilter corsFilter() {
-    return new CorsFilter();
   }
 }
