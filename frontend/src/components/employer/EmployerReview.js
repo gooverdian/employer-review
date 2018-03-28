@@ -13,7 +13,14 @@ class EmployerReview extends React.Component {
                     </h1>
                 </Col>
                 <Col xs={10} className="review__text">
-                    {this.props.data.text}
+                    {this.props.data.text.split("\n").map(function(item) {
+                        return (
+                            <span>
+                                {item}
+                                <br/>
+                            </span>
+                        )
+                    })}
                 </Col>
             </Row>
         );
