@@ -80,7 +80,7 @@ class EmployerSearchResults extends React.Component {
                     <ListItem
                         selectable
                         key={item.id}
-                        avatar={item.logo_urls[90]}
+                        avatar={item.logo_url}
                         caption={item.name}
                         onClick={() => {this.props.history.push('/employer/' + item.id)}}
                         rightActions={[
