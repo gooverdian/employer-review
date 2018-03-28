@@ -1,20 +1,29 @@
 import React from 'react';
-import { withRouter } from 'react-router-dom';
-import EmployerCard from "components/employer/EmployerCard";
-import EmployerReviews from "components/employer/EmployerReviews";
+import EmployerCard from 'components/employer/EmployerCard';
+import EmployerReviews from 'components/employer/EmployerReviews';
+import {Col, Grid, Row} from "react-flexbox-grid";
 
-const ViewEmployerIndex = withRouter(function({match, history}) {
+const ViewEmployerIndex = function({match, history}) {
     return (
         <div className="page-employer-index">
-            <EmployerCard
-                employerId={match.params.employerId}
-            />
-            <EmployerReviews
-                employerId={match.params.employerId}
-                history={history}
-            />
+            <Grid>
+                <Row>
+                    <Col>
+                        <EmployerCard
+                            employerId={match.params.employerId}
+                        />
+                    </Col>
+                </Row>
+                <Row>
+                    <EmployerReviews
+                        employerId={match.params.employerId}
+                        reviewId={match.params.reviewId}
+                        history={history}
+                    />
+                </Row>
+            </Grid>
         </div>
     );
-});
+};
 
 export default ViewEmployerIndex;

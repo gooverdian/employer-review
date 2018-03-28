@@ -1,32 +1,72 @@
 import React from 'react';
-import {Grid, Row, Col} from 'react-flexbox-grid';
-import Exchange from 'helpers/exchange/Exchange';
+import {Col} from 'react-flexbox-grid';
+import List from 'react-toolbox/lib/list/List';
+import ListItem from 'react-toolbox/lib/list/ListItem';
+import ExchangeInterface from "../../helpers/exchange/Exchange";
+import EmployerReview from "./EmployerReview";
 
 class EmployerReviews extends React.Component {
     state = {
-        employer: null
+        data: {}
     };
-
-    stopListeningHistory = undefined;
-    requestThresholdTimer = null;
 
     constructor(params) {
         super();
-        if (params.employerId) {
+        this.state.data = params.data || {};
+    }
+
+    componentDidMount() {
+        if (this.props.employerId) {
             let instance = this;
-            Exchange.getEmployer(params.employerId).then(function(data) {
-                instance.setState({employer: data});
-            }, function(error) {
-                console.log(error);
-            });
+            ExchangeInterface.getReviews(this.props.employerId).then(
+                function(data) {
+                    console.log(data);
+                    instance.setState({data: data});
+                },
+                function(error) {
+                    console.log(error);
+                }
+            )
         }
     }
 
-    render () {
+    generateResultsList() {
+        if (!this.state.data.reviews) {
+            return '';
+        }
+
+        if (this.state.data.reviews.length === 0) {
+            return (
+                <List>
+                    <ListItem
+                        className="nothing-found"
+                        caption="Отзывов по компании не найдено"
+                    />
+                </List>
+            );
+        }
+
         return (
-            <Grid>
-                Reviews
-            </Grid>
+            <List ripple>
+                {this.state.data.reviews.map((item, index) => (
+                    <ListItem
+                        key={'review-' + index}
+                        itemContent={<EmployerReview
+                            data={item}
+                            highlight={item.reviewId == this.props.reviewId}
+                        />}
+                    />
+                ))}
+            </List>
+        );
+    }
+
+    render() {
+        return (
+            <Col md={9} className="employer-reviews">
+                <div>Отзывы о компании</div>
+                {this.generateResultsList()}
+            </Col>
         );
     }
 }

@@ -4,7 +4,6 @@ import List from 'react-toolbox/lib/list/List';
 import ListItem from 'react-toolbox/lib/list/ListItem';
 import {Button} from 'components/router-button/RouterButton';
 import FontAwesome from 'react-fontawesome';
-import {BrowserRouter as Router, Link, Redirect} from "react-router-dom";
 
 const paginationMaxButtonsCount = 9;
 const paginationMaxPagesCount = 15;
@@ -88,7 +87,10 @@ class EmployerSearchResults extends React.Component {
                                 floating mini
                                 key={item.id + 'button'}
                                 icon={<FontAwesome name="plus" />}
-                                href={"/review/add/" + item.id}
+                                onClick={(event) => {
+                                    event.stopPropagation();
+                                    this.props.history.push('/review/add/' + item.id)
+                                }}
                                 title="Оставить отзыв о компании"
                             />
                         ]}

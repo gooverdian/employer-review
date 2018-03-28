@@ -57,7 +57,7 @@ class App extends Component {
                         <div className="page-wrap">
                             <Route exact path="(/|/search)/:search?/:page?" component={ViewHome} />
                             <Route path="/review/add/:employerId?" component={ViewAddReview} />
-                            <Route path="/employer/:employerId" component={ViewEmployerIndex} />
+                            <Route path="/employer/:employerId/:reviewId?" component={ViewEmployerIndex} />
                         </div>
                     </div>
                 </ThemeProvider>

@@ -87,8 +87,9 @@ class FormAddReview extends React.Component {
             text: this.state.attributes.reviewText
         };
 
+        let instance = this;
         ExchangeInterface.addReview(formData).then(function(data) {
-            console.log(data);
+            this.props.history.push('/employer/' + instance.state.attributes.employerId + '/' + data.reviewId);
             // Review saved, gonna redirect to employer and show it
         }, function(error) {
             console.log(error);
