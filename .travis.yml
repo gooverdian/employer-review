@@ -10,10 +10,11 @@ branches:
   - master
   - demo-1
   - backend-10
-  
+
 sudo: false
 before_install:
   cd backend
 
 install:
 - mvn clean install
+

@@ -42,7 +42,7 @@ public class Area {
     return name;
   }
 
-  public void  setParentId(int parentId){
+  public void  setParentId(int parentId) {
     this.parentId = parentId;
   }
 
@@ -55,7 +55,7 @@ public class Area {
     if (this == that) {
       return true;
     }
-    if (that == null || getClass() != that.getClass()){
+    if (that == null || getClass() != that.getClass()) {
       return false;
     }
 

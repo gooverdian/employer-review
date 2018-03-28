@@ -3,6 +3,7 @@ package ru.hh.school.employerreview.downloader.json;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class ResponseJson {
+
   @JsonProperty("per_page")
   private int perPage;
 
