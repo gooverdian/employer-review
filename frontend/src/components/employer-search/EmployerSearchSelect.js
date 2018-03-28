@@ -3,8 +3,7 @@ import Input from 'react-toolbox/lib/input/Input';
 import Exchange from 'helpers/exchange/Exchange';
 import EmployerSearchSelectResults from './EmployerSearchSelectResults';
 import './EmployerSearchSelect.css';
-
-const requestThreshold = 300;
+import settings from "config/settings";
 
 class EmployerSearchSelect extends React.Component {
     state = {
@@ -42,7 +41,7 @@ class EmployerSearchSelect extends React.Component {
                 if (value === '') {
                     instance.resultsComponent.setState({data: {}});
                 } else {
-                    Exchange.employerSearch(value, 0, 50).then(function (data) {
+                    Exchange.employerSearch(value, 0, settings.selectPageSize).then(function (data) {
                         instance.resultsComponent.setState({data: data});
                     }, function (error) {
                         console.log(error);
@@ -50,7 +49,7 @@ class EmployerSearchSelect extends React.Component {
                 }
 
             },
-            requestThreshold
+            settings.searchRequestThreshold
         );
     };
 
