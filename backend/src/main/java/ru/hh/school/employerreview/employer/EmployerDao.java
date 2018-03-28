@@ -55,14 +55,12 @@ public class EmployerDao {
     Root<Employer> employerRoot = criteria.from(Employer.class);
     criteria.select(builder.count(employerRoot));
     criteria.where(builder.like(employerRoot.get("name"), "%" + text + "%"));
-
     Query<Long> query = getSession().createQuery(criteria);
     return query.getSingleResult().intValue();
   }
 
   @Transactional(readOnly = true)
   public List<Employer> find(String text, int page, int perPage) {
-
     if (perPage <= 0 || page < 0) {
       return Collections.emptyList();
     }
@@ -72,7 +70,6 @@ public class EmployerDao {
     criteria.select(employerRoot);
     criteria.where(builder.like(employerRoot.get("name"), "%" + text + "%"));
     Query<Employer> query = getSession().createQuery(criteria);
-
     query.setFirstResult(page * perPage);
     query.setMaxResults(perPage);
     return query.getResultList();

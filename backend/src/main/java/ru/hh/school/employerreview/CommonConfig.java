@@ -8,7 +8,6 @@ import ru.hh.nab.hibernate.HibernateCommonConfig;
 import ru.hh.nab.hibernate.MappingConfig;
 import ru.hh.school.employerreview.employer.Employer;
 import ru.hh.school.employerreview.employer.EmployerDao;
-import ru.hh.school.employerreview.filter.CorsFilter;
 import ru.hh.school.employerreview.search.EmployerSearchResource;
 
 @Configuration
@@ -28,10 +27,5 @@ public class CommonConfig {
   @Bean
   MappingConfig mappingConfig() {
     return new MappingConfig(Employer.class);
-  }
-
-  @Bean
-  CorsFilter corsFilter() {
-    return new CorsFilter();
   }
 }

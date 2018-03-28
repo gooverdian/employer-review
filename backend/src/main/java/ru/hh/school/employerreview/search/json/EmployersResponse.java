@@ -13,7 +13,6 @@ public class EmployersResponse {
     for (Employer item : resultsFromDB) {
       items.add(item.toJson());
     }
-
     setItems(items);
     setPerPage(perPage);
     setPage(page);
