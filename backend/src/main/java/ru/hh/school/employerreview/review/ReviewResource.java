@@ -118,6 +118,16 @@ public class ReviewResource {
             .entity(new ResponseBodyReviews(new ArrayList<>(), page, pageCount, perPage)).build();
       }
 
+      reviews.sort((review01, review02) -> {
+        if (review02.getId() > review01.getId()){
+          return 1;
+        }
+        if (review02.getId() < review01.getId()){
+          return -1;
+        }
+        return 0;
+      });
+
       List<ReviewDto> reviewDtos = new ArrayList<>();
       for (Review review : reviews) {
         ReviewDto reviewDto = new ReviewDto(employerId, review.getId(), review.getRating(), review.getText());
