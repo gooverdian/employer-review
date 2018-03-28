@@ -181,6 +181,7 @@ public class Employer {
     employerItem.setLogoUrl(logoUrl90);
     employerItem.setUrl(siteUrl);
     employerItem.setAreaName(areaName);
+    employerItem.setId(id);
     return employerItem;
   }
 }
