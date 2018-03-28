@@ -14,6 +14,7 @@ import java.util.Objects;
 public class Employer {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "id")
   private Integer id;
 
   @Column(name = "hh_id", unique = true)

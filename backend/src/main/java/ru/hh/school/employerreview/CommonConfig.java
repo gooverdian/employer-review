@@ -8,6 +8,7 @@ import ru.hh.nab.hibernate.HibernateCommonConfig;
 import ru.hh.nab.hibernate.MappingConfig;
 import ru.hh.school.employerreview.employer.Employer;
 import ru.hh.school.employerreview.employer.EmployerDao;
+import ru.hh.school.employerreview.review.Review;
 import ru.hh.school.employerreview.review.ReviewDao;
 import ru.hh.school.employerreview.review.ReviewResource;
 import ru.hh.school.employerreview.search.EmployerSearchResource;
@@ -28,7 +29,7 @@ public class CommonConfig {
 
   @Bean
   MappingConfig mappingConfig() {
-    return new MappingConfig(Employer.class);
+    return new MappingConfig(Employer.class, Review.class);
   }
 
   @Bean
@@ -40,5 +41,4 @@ public class CommonConfig {
   ReviewDao reviewDao(SessionFactory sessionFactory) {
     return new ReviewDao(sessionFactory);
   }
-
 }
