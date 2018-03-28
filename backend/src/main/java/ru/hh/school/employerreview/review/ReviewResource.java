@@ -94,6 +94,10 @@ public class ReviewResource {
     }
 
     Integer rowCount = Math.toIntExact(reviewDao.getRowCountFilteredByEmployer(employerId));
+    if (rowCount == 0) {
+      errors.addError(new Error(ErrorType.NO_DATA, "reviews"));
+      return Response.status(200).entity(errors).build();
+    }
     Integer pageCount = null;
 
     if (perPage != null && perPage != 0) {
