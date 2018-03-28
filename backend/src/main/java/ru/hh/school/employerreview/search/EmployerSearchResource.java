@@ -16,7 +16,7 @@ import java.util.List;
 @Path("/search")
 public class EmployerSearchResource {
 
-  private static final int PER_PAGE_MAX_VALUE = 1000;
+  private static final int PER_PAGE_MAX_VALUE = 100;
 
   private final EmployerDao employerDao;
 
@@ -32,46 +32,29 @@ public class EmployerSearchResource {
 
     checkRequestParams(text, page, perPage);
 
-    try {
-      List<Employer> resultsFromDB = employerDao.find(text, page, perPage);
+    List<Employer> resultsFromDB = employerDao.find(text, page, perPage);
 
-      int found = employerDao.getRowCountFilteredByEmployer(text);
-
-      int pages = (int) Math.ceil((double) found / (double) perPage);
-
-      if (page > pages - 1 && page != 0) {
-        throw new Errors(Response.Status.BAD_REQUEST,
-            "CURRENT PAGE IS MORE THAN AMOUNT OF PAGES",
-            "").toWebApplicationException();
-      }
-
-      EmployersResponse employersResponse = new EmployersResponse(resultsFromDB, page, perPage, found, pages);
-
-      return Response.ok().entity(employersResponse).build();
-    } catch (Exception e) {
-      throw new Errors(Response.Status.BAD_REQUEST,
-          "ERROR ON SERVER",
-          e.getMessage()).toWebApplicationException();
+    int found = employerDao.getRowCountFilteredByEmployer(text);
+    int pages = (int) Math.ceil((double) found / (double) perPage);
+    if (page > pages - 1 && page != 0) {
+      throw new Errors(Response.Status.BAD_REQUEST, "CURRENT PAGE IS MORE THAN AMOUNT OF PAGES", "").toWebApplicationException();
     }
+
+    EmployersResponse employersResponse = new EmployersResponse(resultsFromDB, page, perPage, found, pages);
+    return Response.ok().entity(employersResponse).build();
   }
 
   private void checkRequestParams(String text, int page, int perPage) {
     if (text.isEmpty()) {
-      throw new Errors(Response.Status.BAD_REQUEST,
-          "EMPTY REQUEST",
-          "").toWebApplicationException();
+      throw new Errors(Response.Status.BAD_REQUEST, "EMPTY REQUEST", "").toWebApplicationException();
     }
 
     if (perPage > PER_PAGE_MAX_VALUE || perPage < 0) {
-      throw new Errors(Response.Status.BAD_REQUEST,
-          "CURRENT PER PAGE IS MORE THAN LIMIT",
-          "").toWebApplicationException();
+      throw new Errors(Response.Status.BAD_REQUEST, "CURRENT PER PAGE IS MORE THAN LIMIT", "").toWebApplicationException();
     }
 
     if (page < 0) {
-      throw new Errors(Response.Status.BAD_REQUEST,
-          "CURRENT PAGE LESS THEN 0",
-          "").toWebApplicationException();
+      throw new Errors(Response.Status.BAD_REQUEST, "CURRENT PAGE LESS THEN 0", "").toWebApplicationException();
     }
   }
 }

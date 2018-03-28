@@ -1,10 +1,8 @@
 package ru.hh.school.employerreview;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
-import ru.hh.school.employerreview.employer.EmployerDao;
 import ru.hh.school.employerreview.search.EmployerSearchResource;
 import javax.inject.Inject;
 import javax.ws.rs.WebApplicationException;
@@ -12,15 +10,8 @@ import javax.ws.rs.WebApplicationException;
 @ContextConfiguration(classes = {TestConfig.class})
 public class EmployerSearchResourceTest extends AbstractJUnit4SpringContextTests {
 
-  private EmployerSearchResource resource;
-
   @Inject
-  private  EmployerDao employerDao;
-
-  @Before
-  public void init() {
-    resource = new EmployerSearchResource(employerDao);
-  }
+  private EmployerSearchResource resource;
 
   @Test(expected = WebApplicationException.class)
   public void testEmptyRequest() {
@@ -33,7 +24,7 @@ public class EmployerSearchResourceTest extends AbstractJUnit4SpringContextTests
   }
 
   @Test(expected = WebApplicationException.class)
-  public void testPerPageValue() {
+  public void testNegativePerPage() {
     resource.employersSearch("d", 0, -1);
   }
 }
