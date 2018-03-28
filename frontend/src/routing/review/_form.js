@@ -82,7 +82,7 @@ class FormAddReview extends React.Component {
         }
 
         let formData = {
-            employerId: 3,
+            employerId: this.state.attributes.employerId,
             rating: this.state.attributes.rating,
             text: this.state.attributes.reviewText
         };
