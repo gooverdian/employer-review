@@ -27,4 +27,9 @@ public class EmployerSearchResourceTest extends AbstractJUnit4SpringContextTests
   public void testNegativePerPage() {
     resource.employersSearch("d", 0, -1);
   }
+
+  @Test(expected = WebApplicationException.class)
+  public void testUnparseableStringReqGetEmployerById() {
+    resource.getEmployerById("text");
+  }
 }

@@ -29,6 +29,11 @@ public class EmployerDao {
         .uniqueResult();
   }
 
+  @Transactional
+  public Employer getById(int id) {
+    return getSession().get(Employer.class, id);
+  }
+
   @Transactional(readOnly = true)
   public Employer getEmployer(int employerId) {
     return getSession().get(Employer.class, employerId);

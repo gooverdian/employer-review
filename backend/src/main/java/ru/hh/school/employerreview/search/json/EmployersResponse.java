@@ -26,6 +26,7 @@ public class EmployersResponse {
   @JsonProperty("pages")
   private int pages;
 
+  @JsonProperty("items")
   private List<EmployerItem> items;
 
   @JsonProperty("page")
