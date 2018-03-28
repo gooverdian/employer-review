@@ -1,8 +1,7 @@
 import React from 'react';
 import EmployerSearch from 'components/employer-search/EmployerSearch';
-import { withRouter } from 'react-router-dom';
 
-const ViewHome = withRouter(function({match, history}) {
+const ViewHome = function({match, history}) {
     return (
         <div className="page-home">
             <EmployerSearch
@@ -12,6 +11,6 @@ const ViewHome = withRouter(function({match, history}) {
             />
         </div>
     );
-});
+};
 
 export default ViewHome;

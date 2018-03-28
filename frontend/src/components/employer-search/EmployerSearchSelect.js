@@ -3,7 +3,7 @@ import Input from 'react-toolbox/lib/input/Input';
 import Exchange from 'helpers/exchange/Exchange';
 import EmployerSearchSelectResults from './EmployerSearchSelectResults';
 import './EmployerSearchSelect.css';
-import settings from "config/settings";
+import settings from 'config/settings';
 
 class EmployerSearchSelect extends React.Component {
     state = {

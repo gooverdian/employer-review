@@ -3,7 +3,7 @@ import Input from 'react-toolbox/lib/input/Input';
 import {Col, Row} from 'react-flexbox-grid';
 import RatingInput from 'components/rating-input/RatingInput';
 import EmployerSearchSelect from 'components/employer-search/EmployerSearchSelect';
-import 'assets/css/forms.css';
+import './AddReviewForm.css';
 import Button from "react-toolbox/lib/button/Button";
 import FontAwesome from 'react-fontawesome';
 import ExchangeInterface from 'helpers/exchange/Exchange';
@@ -82,14 +82,14 @@ class FormAddReview extends React.Component {
         }
 
         let formData = {
-            employerId: 2,
-            rating: this.state.rating,
-            reviewText: this.state.reviewText
+            employerId: 3,
+            rating: this.state.attributes.rating,
+            text: this.state.attributes.reviewText
         };
 
+        let instance = this;
         ExchangeInterface.addReview(formData).then(function(data) {
-            console.log(data);
-            // Review saved, gonna redirect to employer and show it
+            instance.props.history.push('/employer/' + instance.state.attributes.employerId + '/' + data.reviewId);
         }, function(error) {
             console.log(error);
         });
@@ -108,7 +108,7 @@ class FormAddReview extends React.Component {
                         />
                     </Col>
                     <Col md={4} className="field-description">
-                        Описание для выбора компании
+                        Начните вводить название компании
                     </Col>
                 </Row>
                 <Row className="form-group">
@@ -120,7 +120,7 @@ class FormAddReview extends React.Component {
                         />
                     </Col>
                     <Col md={4} className="field-description">
-                        Описание для рейтинга
+                        1 - очень плохо, 5 - отлично
                     </Col>
                 </Row>
                 <Row className="form-group">
@@ -134,7 +134,7 @@ class FormAddReview extends React.Component {
                         />
                     </Col>
                     <Col md={4} className="field-description">
-                        Описание для отзыва
+                        Напишите Ваше мнение о компании
                     </Col>
                 </Row>
                 <Row className="form-group">

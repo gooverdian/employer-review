@@ -1,32 +1,32 @@
-.rating-label {
+.rating-input__label {
     color: rgba(0,0,0,.26);
     display: block;
 }
 
-.rating-stars {
+.rating-input__stars {
     margin: 0 -.2em;
 }
 
-.rating-stars span {
+.rating-input__stars span {
     margin: 0 .2em;
     color: rgba(0,0,0,.26);
 }
 
-.rating-stars .rating-star-hover span {
+.rating-input__stars .rating-input_star-hover span {
     color: #ffd240 !important;
 }
 
-.rating-value {
+.rating-input__value {
     vertical-align: middle;
     margin-left: 1em;
     font-size: 2em;
 }
 
-.has-error label {
+.rating-input_has-error label {
     color: #de3226;
 }
 
-.has-error .help-block {
+.rating-input_has-error .help-block {
     color: #de3226;
     font-size: 12px;
     line-height: 20px;

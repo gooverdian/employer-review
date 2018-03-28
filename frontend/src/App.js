@@ -1,18 +1,15 @@
-import React, { Component } from 'react';
+import React from 'react';
 import logo from 'assets/images/logo.svg';
 import 'assets/css/App.css';
-
 import 'assets/react-toolbox/theme.css';
 import theme from 'assets/react-toolbox/theme';
 import ThemeProvider from 'react-toolbox/lib/ThemeProvider';
-
 import AppBar from 'react-toolbox/lib/app_bar/AppBar';
 import Navigation from "react-toolbox/lib/navigation/Navigation";
-
 import ViewHome from 'routing/default/home';
 import ViewAddReview from 'routing/review/add';
-
-import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
+import ViewEmployerIndex from "routing/employer";
+import {BrowserRouter as Router, Route, Link} from 'react-router-dom';
 
 const LogoIcon = () => (
     <img src={logo} alt="logo" />
@@ -34,17 +31,17 @@ const NavigationLink = ({ label, to, activeOnExact }) => (
         path={to}
         exact={activeOnExact}
         children={({match}) => (
-                <Link
-                    className={"main-nav__link" + (match ? " main-nav_active" : "")}
-                    to={to}
-                >
-                    {label}
-                </Link>
+            <Link
+                className={"main-nav__link" + (match ? " main-nav_active" : "")}
+                to={to}
+            >
+                {label}
+            </Link>
         )}
     />
 );
 
-class App extends Component {
+class App extends React.Component {
     render() {
         return (
             <Router>
@@ -56,6 +53,7 @@ class App extends Component {
                         <div className="page-wrap">
                             <Route exact path="(/|/search)/:search?/:page?" component={ViewHome} />
                             <Route path="/review/add/:employerId?" component={ViewAddReview} />
+                            <Route path="/employer/:employerId/:reviewId?" component={ViewEmployerIndex} />
                         </div>
                     </div>
                 </ThemeProvider>

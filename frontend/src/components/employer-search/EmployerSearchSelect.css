@@ -2,7 +2,7 @@
     position: relative;
 }
 
-.employer-search-select-results {
+.employer-search-select__results {
     background: #fff;
     box-shadow: 0 3px 10px 1px rgba(0, 0, 0, 0.3);
     position: absolute;
@@ -15,22 +15,22 @@
     max-height: 300px;
 }
 
-.employer-search-select-results .nothing-found {
+.employer-search-select_nothing-found {
     font-style: italic;
 }
 
-.employer-search-select-results .nothing-found span {
+.employer-search-select_nothing-found span {
     color: #9e9e9e;
 }
 
-.employer-search-select-results .active {
+.employer-search-select_active {
     background: #303f9f;
 }
 
-.employer-search-select-results .active > span:hover {
+.employer-search-select_active > span:hover {
     background: #25346d !important;
 }
 
-.employer-search-select-results .active span {
+.employer-search-select_active span {
     color: #fff;
 }

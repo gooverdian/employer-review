@@ -41,7 +41,7 @@ class EmployerSearchSelectResults extends React.Component {
             return (
                 <List>
                     <ListItem
-                        className="nothing-found"
+                        className="employer-search-select_nothing-found"
                         caption="По Вашему запросу компаний не найдено"
                     />
                 </List>
@@ -53,7 +53,7 @@ class EmployerSearchSelectResults extends React.Component {
                 {this.state.data.items.map((item, index) => (
                     <ListItem
                         selectable
-                        className={index === this.state.selectedIndex ? 'active' : ''}
+                        className={index === this.state.selectedIndex ? 'employer-search-select_active' : ''}
                         key={index}
                         caption={String(item.name)}
                         onMouseDown={this.handleSelection.bind(this, index)}
@@ -74,7 +74,7 @@ class EmployerSearchSelectResults extends React.Component {
 
     render() {
         return (
-            <div className={"employer-search-select-results" + (this.state.visible ? "" : " hidden")}>
+            <div className={"employer-search-select__results" + (this.state.visible ? "" : " hidden")}>
                 {this.generateResultsList()}
             </div>
         );

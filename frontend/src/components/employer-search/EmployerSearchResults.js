@@ -66,7 +66,7 @@ class EmployerSearchResults extends React.Component {
             return (
                 <List>
                     <ListItem
-                        className="nothing-found"
+                        className="employer-search-select_nothing-found"
                         caption="По вашему запросу компаний не найдено"
                     />
                 </List>
@@ -77,15 +77,20 @@ class EmployerSearchResults extends React.Component {
             <List ripple>
                 {this.state.data.items.map((item) => (
                     <ListItem
+                        selectable
                         key={item.id}
-                        avatar={item.logo_urls[90]}
+                        avatar={item.logo_url}
                         caption={item.name}
+                        onClick={() => {this.props.history.push('/employer/' + item.id)}}
                         rightActions={[
                             <Button
                                 floating mini
                                 key={item.id + 'button'}
                                 icon={<FontAwesome name="plus" />}
-                                href={"/review/add/" + item.id}
+                                onClick={(event) => {
+                                    event.stopPropagation();
+                                    this.props.history.push('/review/add/' + item.id)
+                                }}
                                 title="Оставить отзыв о компании"
                             />
                         ]}

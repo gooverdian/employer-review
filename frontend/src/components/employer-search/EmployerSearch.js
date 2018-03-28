@@ -3,8 +3,7 @@ import Input from 'react-toolbox/lib/input/Input';
 import {Grid, Row, Col} from 'react-flexbox-grid';
 import Exchange from 'helpers/exchange/Exchange';
 import EmployerSearchResults from './EmployerSearchResults';
-
-const requestThreshold = 300;
+import settings from 'config/settings';
 
 class EmployerSearch extends React.Component {
     state = {
@@ -94,7 +93,7 @@ class EmployerSearch extends React.Component {
                 instance.performSearch(value);
                 instance.historyPush({search: value});
             },
-            requestThreshold
+            settings.searchRequestThreshold
         );
     };
 
@@ -122,6 +121,7 @@ class EmployerSearch extends React.Component {
                         <EmployerSearchResults
                             onReference={ref => (this.resultsComponent = ref)}
                             onPageChange={page => (this.handlePageChange(page))}
+                            history={this.props.history}
                         />
                     </Row>
                 </form>

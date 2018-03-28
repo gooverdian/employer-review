@@ -1,0 +1,24 @@
+.review {
+    flex: 1;
+    margin: 10px 0;
+    box-shadow: 0 0 5px rgba(0,0,0,0.3);
+    padding: 10px 0;
+}
+
+.review_highlighted {
+    background: #ceffdc;
+}
+
+.review__star {
+    color: #ffd240;
+}
+
+.review__header {
+    margin: 0;
+    padding-left: 10px;
+}
+
+.review__text {
+    white-space: normal;
+    padding: 10px 0;
+}

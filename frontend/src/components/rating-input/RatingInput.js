@@ -34,7 +34,7 @@ class RatingInput extends React.Component {
     }
 
     getClassName(key) {
-        return 'rating-star-' + this.state.statuses[key];
+        return 'rating-input_star-' + this.state.statuses[key];
     }
 
     getRatingIcon(key) {
@@ -48,12 +48,12 @@ class RatingInput extends React.Component {
         }
 
         return (
-            <div className={(this.props.error ? ' has-error' : '')}>
-                <label className="rating-label">
+            <div className={'rating-input' + (this.props.error ? ' rating-input_has-error' : '')}>
+                <label className="rating-input__label">
                     Рейтинг
                 </label>
-                <div className="rating-input-selector">
-                    <span className="rating-stars">
+                <div className="rating-input__selector">
+                    <span className="rating-input__stars">
                         {ratingButtons.map(button => (
                             <IconButton
                                 className={this.getClassName(button.key)}
