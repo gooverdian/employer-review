@@ -1,4 +1,5 @@
 import axios from 'axios';
+import settings from 'config/settings';
 
 class RestExchange {
     constructor(request) {
@@ -59,9 +60,9 @@ class RestExchange {
 }
 
 const ExchangeInterface = {
-    employerSearch: function (text, page = 0, perPage = 10) {
+    employerSearch: function (text, page = 0, perPage = settings.defaultPageSize) {
         return new RestExchange({
-            url: 'https://api.hh.ru/employers',
+            url: settings.apiUrls.employer,
             params: {
                 text: text,
                 page: page,
@@ -71,13 +72,13 @@ const ExchangeInterface = {
     },
     getEmployer: function (employerId) {
         return new RestExchange({
-            url: 'https://api.hh.ru/employers/' + employerId
+            url: settings.apiUrls.employer + employerId
         }).perform();
     },
     addReview: function (reviewFormData) {
         return new RestExchange({
             method: 'post',
-            url: 'http://localhost:8080/review',
+            url: settings.apiUrls.review,
             params: reviewFormData
         }).perform();
     }
