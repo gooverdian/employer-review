@@ -48,6 +48,7 @@ public class EmployerDao {
 
       } else if (employer.getAreaId() > employerFromDB.getAreaId()) {
         employerFromDB.setAreaId(employer.getAreaId());
+        employerFromDB.setAreaName(employer.getAreaName());
         getSession().update(employerFromDB);
       }
     }

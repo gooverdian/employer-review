@@ -5,28 +5,35 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class EmployerItem {
 
   @JsonProperty("name")
-  String name;
+  private String name;
 
   @JsonProperty("url")
-  String url;
+  private String url;
 
   @JsonProperty("hh_id")
-  int hhId;
+  private Integer hhId;
+
+  @JsonProperty("id")
+  private Integer id;
 
   @JsonProperty("logo_url")
-  String logoUrl;
+  private String logoUrl;
 
   @JsonProperty("area_name")
-  String areaName;
+  private String areaName;
 
   @JsonProperty("area_id")
-  int areaId;
+  private Integer areaId;
 
   @JsonProperty("people_rated")
-  private int peopleRated;
+  private Integer peopleRated;
 
   @JsonProperty("score")
   private Float score;
+
+  public void setId(Integer id) {
+    this.id = id;
+  }
 
   public void setScore(Float score) {
     this.score = score;
@@ -40,15 +47,15 @@ public class EmployerItem {
       this.name = name;
   }
 
-  public  void setUrl(String url) {
+  public void setUrl(String url) {
     this.url = url;
   }
 
-  public  void setHhId(int hhId) {
+  public void setHhId(int hhId) {
     this.hhId = hhId;
   }
 
-  public  void setAreaName(String areaName) {
+  public void setAreaName(String areaName) {
     this.areaName = areaName;
   }
 
