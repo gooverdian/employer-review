@@ -7,6 +7,7 @@ import ru.hh.school.employerreview.search.json.EmployersResponse;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
@@ -56,5 +57,21 @@ public class EmployerSearchResource {
     if (page < 0) {
       throw new Errors(Response.Status.BAD_REQUEST, "CURRENT PAGE LESS THEN 0", "").toWebApplicationException();
     }
+  }
+
+  @GET
+  @Path("/{idRequest}")
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response getEmployerById(@PathParam("idRequest") String idRequest) {
+    try {
+      Employer employer = employerDao.getById(Integer.parseInt(idRequest));
+      if (employer == null) {
+        throw new Errors(Response.Status.BAD_REQUEST, "CURRENT USER IS ABSENT", "").toWebApplicationException();
+      }
+      return Response.ok().entity(employer.toJson()).build();
+    } catch (NumberFormatException e) {
+      throw new Errors(Response.Status.BAD_REQUEST, "SERVER CANT PARSE ID", e.getMessage()).toWebApplicationException();
+    }
+
   }
 }

@@ -3,8 +3,11 @@ package ru.hh.school.employerreview.search.json;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class EmployerItem {
+
+  @JsonProperty("name")
   String name;
 
+  @JsonProperty("url")
   String url;
 
   @JsonProperty("hh_id")
@@ -22,6 +25,7 @@ public class EmployerItem {
   @JsonProperty("people_rated")
   private int peopleRated;
 
+  @JsonProperty("score")
   private Float score;
 
   public void setScore(Float score) {
