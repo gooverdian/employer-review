@@ -6,5 +6,6 @@ public enum ErrorType {
   MISSING_PARAMETER,
   SAVE_ERROR,
   DB_ERROR,
-  PAGINATION
+  PAGINATION,
+  NO_DATA
 }
