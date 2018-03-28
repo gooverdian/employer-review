@@ -3,7 +3,7 @@ const settings = {
     defaultPageSize: 10,
     selectPageSize: 50,
     apiUrls: {
-        employer: 'https://api.hh.ru/employers/',
+        employer: 'http://localhost:8080/search/',
         review: 'http://localhost:8080/review/'
     }
 };
