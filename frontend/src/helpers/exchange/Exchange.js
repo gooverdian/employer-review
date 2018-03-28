@@ -76,6 +76,7 @@ const ExchangeInterface = {
         }).perform();
     },
     addReview: function (reviewFormData) {
+        console.log(reviewFormData);
         return new RestExchange({
             method: 'post',
             url: settings.apiUrls.review,

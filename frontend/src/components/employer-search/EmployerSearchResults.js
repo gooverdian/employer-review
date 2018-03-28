@@ -4,6 +4,7 @@ import List from 'react-toolbox/lib/list/List';
 import ListItem from 'react-toolbox/lib/list/ListItem';
 import {Button} from 'components/router-button/RouterButton';
 import FontAwesome from 'react-fontawesome';
+import {BrowserRouter as Router, Link, Redirect} from "react-router-dom";
 
 const paginationMaxButtonsCount = 9;
 const paginationMaxPagesCount = 15;
@@ -77,9 +78,11 @@ class EmployerSearchResults extends React.Component {
             <List ripple>
                 {this.state.data.items.map((item) => (
                     <ListItem
+                        selectable
                         key={item.id}
                         avatar={item.logo_urls[90]}
                         caption={item.name}
+                        onClick={() => {this.props.history.push('/employer/' + item.id)}}
                         rightActions={[
                             <Button
                                 floating mini

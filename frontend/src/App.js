@@ -11,6 +11,7 @@ import Navigation from "react-toolbox/lib/navigation/Navigation";
 
 import ViewHome from 'routing/default/home';
 import ViewAddReview from 'routing/review/add';
+import ViewEmployerIndex from "routing/employer";
 
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 
@@ -56,6 +57,7 @@ class App extends Component {
                         <div className="page-wrap">
                             <Route exact path="(/|/search)/:search?/:page?" component={ViewHome} />
                             <Route path="/review/add/:employerId?" component={ViewAddReview} />
+                            <Route path="/employer/:employerId" component={ViewEmployerIndex} />
                         </div>
                     </div>
                 </ThemeProvider>

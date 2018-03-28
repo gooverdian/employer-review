@@ -82,9 +82,9 @@ class FormAddReview extends React.Component {
         }
 
         let formData = {
-            employerId: 2,
-            rating: this.state.rating,
-            reviewText: this.state.reviewText
+            employerId: 3,
+            rating: this.state.attributes.rating,
+            text: this.state.attributes.reviewText
         };
 
         ExchangeInterface.addReview(formData).then(function(data) {
