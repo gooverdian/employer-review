@@ -2,16 +2,26 @@ package ru.hh.school.employerreview.review.dto;
 
 public class ReviewDto {
   private Integer employerId;
+  private Integer reviewId;
   private Float rating;
   private String text;
 
-  public ReviewDto(Integer employerId, Float rating, String text) {
+  public ReviewDto(Integer employerId, Integer reviewId, Float rating, String text) {
     this.employerId = employerId;
+    this.reviewId = reviewId;
     this.rating = rating;
     this.text = text;
   }
 
   public ReviewDto() {
+  }
+
+  public Integer getReviewId() {
+    return reviewId;
+  }
+
+  public void setReviewId(Integer reviewId) {
+    this.reviewId = reviewId;
   }
 
   public Integer getEmployerId() {
@@ -40,11 +50,11 @@ public class ReviewDto {
 
   @Override
   public String toString() {
-    return "ReviewDto{"
-        + "employerId=" + employerId
-        + ", rating=" + rating
-        + ", text='" + text
-        + '\''
-        + '}';
+    return "ReviewDto{" +
+        "employerId=" + employerId +
+        ", reviewId=" + reviewId +
+        ", rating=" + rating +
+        ", text='" + text + '\'' +
+        '}';
   }
 }
