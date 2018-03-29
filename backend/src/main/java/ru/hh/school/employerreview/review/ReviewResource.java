@@ -119,10 +119,10 @@ public class ReviewResource {
       }
 
       reviews.sort((review01, review02) -> {
-        if (review02.getId() > review01.getId()){
+        if (review02.getId() > review01.getId()) {
           return 1;
         }
-        if (review02.getId() < review01.getId()){
+        if (review02.getId() < review01.getId()) {
           return -1;
         }
         return 0;

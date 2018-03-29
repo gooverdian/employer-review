@@ -109,7 +109,7 @@ class FormAddReview extends React.Component {
                         />
                     </Col>
                     <Col md={4} className="field-description">
-                        Описание для выбора компании
+                        Начните вводить название компании
                     </Col>
                 </Row>
                 <Row className="form-group">
@@ -121,7 +121,7 @@ class FormAddReview extends React.Component {
                         />
                     </Col>
                     <Col md={4} className="field-description">
-                        Описание для рейтинга
+                        1 - очень плохо, 5 - отлично
                     </Col>
                 </Row>
                 <Row className="form-group">
@@ -135,7 +135,7 @@ class FormAddReview extends React.Component {
                         />
                     </Col>
                     <Col md={4} className="field-description">
-                        Описание для отзыва
+                        Напишите Ваше мнение о компании
                     </Col>
                 </Row>
                 <Row className="form-group">

@@ -30,5 +30,6 @@ hs_err_pid*
 *.png
 backend/logos/
 backend/employers_logos/
+backend/logs/
 frontend/node_modules/
 

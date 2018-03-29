@@ -19,5 +19,6 @@
 }
 
 .review__text {
+    white-space: normal;
     padding: 10px 0;
 }
