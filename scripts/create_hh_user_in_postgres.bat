@@ -4,6 +4,7 @@
 (
     echo CREATE USER hh;
     echo ALTER USER hh WITH SUPERUSER;
+    echo ALTER USER hh WITH PASSWORD '123';
 ) | psql -U postgres
 
 echo "user hh has been created! :-)"
