@@ -29,5 +29,6 @@ hs_err_pid*
 
 backend/logos/
 backend/employers_logos/
+backend/logs/
 frontend/node_modules/
 
