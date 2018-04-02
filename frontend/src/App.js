@@ -6,10 +6,8 @@ import theme from 'assets/react-toolbox/theme';
 import ThemeProvider from 'react-toolbox/lib/ThemeProvider';
 import AppBar from 'react-toolbox/lib/app_bar/AppBar';
 import Navigation from "react-toolbox/lib/navigation/Navigation";
-import ViewHome from 'routing/default/home';
-import ViewAddReview from 'routing/review/add';
-import ViewEmployerIndex from "routing/employer";
 import {BrowserRouter as Router, Route, Link} from 'react-router-dom';
+import routeMap from 'config/routeMap';
 
 const LogoIcon = () => (
     <img src={logo} alt="logo" />
@@ -51,9 +49,14 @@ class App extends React.Component {
                             <NavigationBar />
                         </div>
                         <div className="page-wrap">
-                            <Route exact path="(/|/search)/:search?/:page?" component={ViewHome} />
-                            <Route path="/review/add/:employerId?" component={ViewAddReview} />
-                            <Route path="/employer/:employerId/:reviewId?" component={ViewEmployerIndex} />
+                            {routeMap.map((item, index) => (
+                                <Route
+                                    key={'route-' + index}
+                                    exact={item.exact || false}
+                                    path={item.path}
+                                    component={item.component}
+                                />
+                            ))}
                         </div>
                     </div>
                 </ThemeProvider>

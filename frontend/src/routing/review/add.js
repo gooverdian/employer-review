@@ -2,7 +2,7 @@ import React from 'react';
 import AddReviewForm from 'components/add-review-form/AddReviewForm';
 import {Grid} from 'react-flexbox-grid';
 
-export default function ViewAddReview({match, history}) {
+const ViewReviewAdd = function({match, history}) {
     return (
         <Grid className="page-add-review">
             <h1>Оставить отзыв</h1>
@@ -12,4 +12,6 @@ export default function ViewAddReview({match, history}) {
             />
         </Grid>
     );
-}
+};
+
+export default ViewReviewAdd;
