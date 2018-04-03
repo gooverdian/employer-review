@@ -27,7 +27,12 @@
     background: #303f9f;
 }
 
-.employer-search-select_active > span:hover {
+.employer-search-select_highlighted > span {
+    background: #eee;
+}
+
+.employer-search-select_active > span:hover,
+.employer-search-select_active.employer-search-select_highlighted > span {
     background: #25346d !important;
 }
 

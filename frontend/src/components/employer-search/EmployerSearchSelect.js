@@ -79,6 +79,30 @@ class EmployerSearchSelect extends React.Component {
         this.resultsComponent.hide();
     }
 
+    handleInputKeyDown(eventProxy) {
+        let key = eventProxy.key;
+        if (!this.resultsComponent.state.visible) {
+            return;
+        }
+        let preventionNeeded = true;
+        switch (key) {
+            case 'ArrowDown':
+                this.resultsComponent.highlightNext();
+                break;
+            case 'ArrowUp':
+                this.resultsComponent.highlightPrev();
+                break;
+            case 'Enter':
+                this.resultsComponent.selectHighlighted();
+                break;
+            default:
+                preventionNeeded = false;
+        }
+        if (preventionNeeded) {
+            eventProxy.preventDefault();
+        }
+    }
+
     render() {
         return (
             <div className="employer-search-select">
@@ -88,6 +112,7 @@ class EmployerSearchSelect extends React.Component {
                     label="Выберите компанию"
                     value={this.state.searchValue}
                     onChange={this.handleTextChange.bind(this)}
+                    onKeyDown={this.handleInputKeyDown.bind(this)}
                     onFocus={this.handleFocus.bind(this)}
                     onBlur={this.handleBlur.bind(this)}
                     error={this.props.error}

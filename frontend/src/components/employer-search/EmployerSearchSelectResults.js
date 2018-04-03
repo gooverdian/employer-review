@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import List from 'react-toolbox/lib/list/List';
 import ListItem from 'react-toolbox/lib/list/ListItem';
 
@@ -6,7 +7,9 @@ class EmployerSearchSelectResults extends React.Component {
     state = {
         data: {},
         visible: false,
-        selectedIndex: null
+        selectedIndex: null,
+        highlightedIndex: null,
+        listScrollPosition: null
     };
 
     componentDidMount() {
@@ -22,15 +25,94 @@ class EmployerSearchSelectResults extends React.Component {
     }
 
     handleSelection(itemIndex) {
-        this.setState({selectedIndex: itemIndex});
+        this.setState({
+            selectedIndex: itemIndex,
+            highlightedIndex: itemIndex
+        });
         if (this.props.onSelect) {
             this.props.onSelect(this.state.data.items[itemIndex]);
         }
     }
 
     invalidateSelection() {
-        this.setState({selectedIndex: null, data: {}});
+        this.setState({
+            selectedIndex: null,
+            highlightedIndex: null,
+            data: {}
+        });
     }
+
+    highlightNext() {
+        let currentlyHighlighted = this.state.highlightedIndex;
+        if (!this.state.data.items
+            || this.state.data.items.length === 0
+            || currentlyHighlighted + 1 >= this.state.data.items.length
+        ) {
+            return false;
+        }
+        this.setState({highlightedIndex: currentlyHighlighted + 1});
+        this.scrollToHighlighted(currentlyHighlighted + 1);
+
+        return true;
+    }
+
+    highlightPrev() {
+        let currentlyHighlighted = this.state.highlightedIndex;
+        if (!this.state.data.items
+            || this.state.data.items.length === 0
+            || currentlyHighlighted <= 0
+        ) {
+            return false;
+        }
+        this.setState({highlightedIndex: currentlyHighlighted - 1});
+        this.scrollToHighlighted(currentlyHighlighted - 1);
+
+        return true;
+    }
+
+    scrollToHighlighted(highlightedIndex) {
+        if (!this.state.data.items || this.state.data.items.length === 0) {
+            return false;
+        }
+        let resultsNode = ReactDOM.findDOMNode(this),
+            listNode = resultsNode.childNodes[0];
+        if (!listNode) {
+            return false;
+        }
+        let listItemNode = listNode.childNodes[0];
+        if (!listItemNode) {
+            return false;
+        }
+        let itemHeight = listItemNode.offsetHeight,
+            maxScrollPosition = resultsNode.scrollHeight,
+            currentScrollPosition = resultsNode.scrollTop,
+            nodeHeight = resultsNode.offsetHeight,
+            itemTop = highlightedIndex * itemHeight,
+            itemBottom = itemTop + itemHeight,
+            listPadding = maxScrollPosition - (itemHeight * this.state.data.items.length);
+        if (Math.max(itemTop - 15, 0) < currentScrollPosition) {
+            this.setState({
+                listScrollPosition: Math.max(itemTop - 15, 0)
+            });
+            return;
+        }
+        if (Math.min(maxScrollPosition, itemBottom + 15) > (currentScrollPosition + nodeHeight)) {
+            this.setState({
+                listScrollPosition: Math.min(itemBottom - nodeHeight + (15 + listPadding), maxScrollPosition)
+            });
+        }
+    }
+
+    selectHighlighted() {
+        this.handleSelection(this.state.highlightedIndex);
+        this.hide();
+    }
+
+    componentDidUpdate() {
+        let listNode = ReactDOM.findDOMNode(this);
+        listNode.scrollTop = this.state.listScrollPosition;
+    }
+
 
     generateResultsList() {
         if (!this.state.data.items) {
@@ -53,7 +135,10 @@ class EmployerSearchSelectResults extends React.Component {
                 {this.state.data.items.map((item, index) => (
                     <ListItem
                         selectable
-                        className={index === this.state.selectedIndex ? 'employer-search-select_active' : ''}
+                        className={
+                            (index === this.state.selectedIndex ? 'employer-search-select_active' : '')
+                            + (index === this.state.highlightedIndex ? 'employer-search-select_highlighted' : '')
+                        }
                         key={index}
                         caption={String(item.name)}
                         onMouseDown={this.handleSelection.bind(this, index)}
@@ -65,7 +150,10 @@ class EmployerSearchSelectResults extends React.Component {
     }
 
     show() {
-        this.setState({visible: true});
+        this.setState({
+            visible: true,
+            highlightedIndex: 0
+        });
     }
 
     hide() {
