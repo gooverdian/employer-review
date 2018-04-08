@@ -1,8 +1,11 @@
 package ru.hh.school.employerreview.area;
 
 import static java.util.Objects.requireNonNull;
+
 import java.util.Optional;
+
 import static java.util.Optional.ofNullable;
+
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,7 +28,7 @@ public class AreaDao {
 
   @Transactional
   public void save(Area[] areas) {
-    for (Area area: areas) {
+    for (Area area : areas) {
       save(area);
     }
   }

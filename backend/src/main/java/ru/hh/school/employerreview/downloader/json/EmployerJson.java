@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import ru.hh.school.employerreview.employer.Employer;
 
 public class EmployerJson {
+
   @JsonProperty("name")
   private String name;
 
@@ -13,7 +14,7 @@ public class EmployerJson {
   @JsonProperty("id")
   private String id;
 
-  @JsonProperty("logoUrls")
+  @JsonProperty("logo_urls")
   private LogoUrlsJson logoUrls;
 
   @JsonProperty("alternate_url")
@@ -25,7 +26,7 @@ public class EmployerJson {
   @JsonProperty("open_vacancies")
   private String openVacancies;
 
-  public Employer toHibernateObj(int area, String areaName){
+  public Employer toHibernateObj(int area, String areaName) {
     Employer employer = new Employer(name , url, Integer.parseInt(id));
     employer.setAlternateUrl(alternateUrl);
     employer.setLogoUrl90(logoUrls.getLogo90());

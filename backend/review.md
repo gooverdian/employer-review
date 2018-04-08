@@ -36,14 +36,13 @@ HTTP code | type | value | описание
 400 | MISSING_FIELD | employerId | Не передано поле employerId
 400 | MISSING_FIELD | rating | Не передано поле rating
 400 | BAD_FIELD_VALUE | employerId | Значение employerId не найдено в базе
-500 | SAVE_ERROR | review | Не удалось сохранить отзыв
-
+400 | BAD_FIELD_VALUE | rating | Значение поля rating не удовлетворяет ограничениям
 
 
 **GET:**
 Принимает параметры:
 
-- employerId
+- employer_id
 - page	Нумерация страниц начинается  с 0
 - per_page
 
@@ -53,26 +52,27 @@ HTTP code | type | value | описание
 {
 	"reviews": [
 	  	{
-			"employerId": 4,
+			"employer_id": 4,
 			"rating": 2,
 			"text": "Review 01"
 		},
 	  	{
-			"employerId": 4,
+			"employer_id": 4,
 			"rating": 2,
 			"text": "Review 00"
 		}
 	],
 	"page": 2,
 	"pages": 3,
-	"perPage": 5
+	"per_page": 5
 }
 ```
 
 Может возвращать ошибки в формате указанном выше.
-Возможные значения:  
+Возможные значения:
 
 HTTP code | type | value | описание
 ----------|------|-------|-----------
-400 | MISSING_PARAMETER | employerId | Отсутствует параметр запроса - employerId
-500 | DB_ERROR | review | Произошла ошибка при обращении в БД
+200 | NO_DATA | review | Отклики для запрошенного работодателя не найдены
+400 | BAD_REQUEST_PARAMETER | page | Некорректный параметр запроса - page
+400 | BAD_REQUEST_PARAMETER | perPage | Некорректный параметр запроса - perPage
