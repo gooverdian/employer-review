@@ -45,7 +45,7 @@ public class Rating {
     return this.rating;
   }
 
-  Rating() {
+  public Rating() {
     this.peopleRated = 0;
     this.rating = 0.f;
   }

@@ -64,7 +64,7 @@ public class EmployerDao {
     CriteriaQuery criteria = builder.createQuery();
     Root<Employer> employerRoot = criteria.from(Employer.class);
     criteria.select(builder.count(employerRoot));
-    criteria.where(builder.like(employerRoot.get("name"), "%" + text + "%"));
+    criteria.where(builder.like(builder.upper(employerRoot.get("name")), "%" + text.toUpperCase() + "%"));
     Query<Long> query = getSession().createQuery(criteria);
     return query.getSingleResult().intValue();
   }
@@ -74,12 +74,13 @@ public class EmployerDao {
     if (perPage <= 0 || page < 0) {
       return Collections.emptyList();
     }
-    CriteriaBuilder builder = getSession().getCriteriaBuilder();
-    CriteriaQuery<Employer> criteria = builder.createQuery(Employer.class);
-    Root<Employer> employerRoot = criteria.from(Employer.class);
-    criteria.select(employerRoot);
-    criteria.where(builder.like(employerRoot.get("name"), "%" + text + "%"));
-    Query<Employer> query = getSession().createQuery(criteria);
+    Query<Employer> query = getSession().createQuery(
+        "SELECT e " +
+            "FROM Employer e LEFT JOIN Rating r " +
+            "ON e.rating.id = r.id " +
+            "WHERE UPPER(e.name) LIKE :text " +
+            "ORDER BY r.rating DESC NULLS LAST, r.peopleRated DESC NULLS LAST"
+    ).setParameter("text", "%" + text.toUpperCase() + "%");
     query.setFirstResult(page * perPage);
     query.setMaxResults(perPage);
     return query.getResultList();

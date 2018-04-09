@@ -20,7 +20,7 @@ public class ReviewGenerationService {
   private EmployerDao employerDao;
   private RatingDao ratingDao;
 
-  public static final int PER_PAGE = 1000;
+  private static final int PER_PAGE = 1000;
   private static final int MAX_TEXT_LENGTH = 100;
   private static final int MAX_ESTIMATE = 5;
   private static final float MIN_ESTIMATE = 0.5f;
@@ -68,7 +68,7 @@ public class ReviewGenerationService {
     }
   }
 
-  public float getEstimate(float mathExpected) {
+  private float getEstimate(float mathExpected) {
     float estimate = (float) randomGenerator.nextGaussian() + mathExpected;
     float result = 2.5f;
     float minDifference = Float.MAX_VALUE;
@@ -99,16 +99,16 @@ public class ReviewGenerationService {
     return sb.toString();
   }
 
-  public int getReviewCount(float mathExpected, float deviation) {
+  private int getReviewCount(float mathExpected, float deviation) {
     int reviewCount = (int) (randomGenerator.nextFloat() * deviation + mathExpected);
     return reviewCount > 0 ? reviewCount : 0;
   }
 
-  public float getEmployerMeanEstimate() {
+  private float getEmployerMeanEstimate() {
     return randomGenerator.nextFloat() * MAX_ESTIMATE;
   }
 
-  public Review getReview(Employer employer, float mathExpectedEstimate) {
+  private Review getReview(Employer employer, float mathExpectedEstimate) {
     return new Review(employer, getEstimate(mathExpectedEstimate), getReviewType(), getText());
   }
 }

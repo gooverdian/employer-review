@@ -5,11 +5,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
 public class ResponseBodyReviews {
+  @JsonProperty("reviews")
   private List<ReviewDto> reviews;
-  Integer page;
-  Integer pages;
+  @JsonProperty("page")
+  private Integer page;
+  @JsonProperty("pages")
+  private Integer pages;
   @JsonProperty("per_page")
-  Integer perPage;
+  private Integer perPage;
 
   public ResponseBodyReviews() {
   }
