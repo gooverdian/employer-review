@@ -6,17 +6,28 @@ import EmployerSearchSelect from 'components/employer-search/EmployerSearchSelec
 import './AddReviewForm.css';
 import Button from "react-toolbox/lib/button/Button";
 import FontAwesome from 'react-fontawesome';
-import ExchangeInterface from 'helpers/exchange/Exchange';
+import ExchangeInterface from 'components/exchange/ExchangeInterface';
 import Validator from 'helpers/validator/Validator';
 
-class FormAddReview extends React.Component {
+class AddReviewForm extends React.Component {
     state = {
         attributes: {
-            employerId: null,
-            rating: null,
-            reviewText: ''
-        },
-        errors: {}
+            employerId: {
+                value: null,
+                valid: undefined,
+                error: undefined
+            },
+            rating: {
+                value: null,
+                valid: undefined,
+                error: undefined
+            },
+            reviewText: {
+                value: '',
+                valid: undefined,
+                error: undefined
+            },
+        }
     };
 
     validationRules = {
@@ -28,31 +39,33 @@ class FormAddReview extends React.Component {
         ]
     };
 
-    handleChange(name, value) {
+    updateAttribute = (name, value) => {
+        let validationResult = this.validateAttribute(name, value);
         this.setState({attributes: {
             ...this.state.attributes,
-            [name]: value
-        }});
-        if (this.state.errors[name]) {
-            if (this.validateAttribute(name)) {
-                let errors = this.state.errors;
-                delete errors[name];
-                this.setState({errors: errors});
+            [name]: {
+                value: value,
+                valid: validationResult.valid,
+                error: validationResult.error
             }
-        }
-    }
+        }});
+    };
 
-    validateAttribute(name) {
+    validateAttribute(name, value) {
         if (!this.validationRules[name]) {
             return true;
         }
-        let ruleSet = this.validationRules[name];
-        let attributeResult = true;
+        let ruleSet = this.validationRules[name],
+            attributeResult = {
+                valid: true,
+                error: undefined
+            };
         for (let i = 0; i < ruleSet.length; i++) {
             let rule = ruleSet[i];
-            attributeResult = Validator.validate(rule.rule, this.state.attributes[name]) && attributeResult;
-            if (!attributeResult) {
-                return rule.message || 'Неправильное значение поля ' + name;
+            if (!Validator.validate(rule.rule, value)) {
+                attributeResult.valid = false;
+                // Будет показано только сообщение от последнего нарушенного правила
+                attributeResult.error = rule.message || 'Неправильное значение поля ' + name;
             }
         }
 
@@ -60,40 +73,43 @@ class FormAddReview extends React.Component {
     }
 
     validate() {
-        let errors = {};
-        for (let key in this.state.attributes) {
-            if (!this.state.attributes.hasOwnProperty(key)) {
-                continue;
-            }
-            let attributeResult = this.validateAttribute(key);
-            if (attributeResult !== true) {
-                errors[key] = attributeResult;
-            }
-        }
+        let validatedAttributes = {},
+            hasErrors = false,
+            attributeResult;
+        Object.keys(this.state.attributes).forEach((key) => {
+             attributeResult = this.validateAttribute(key, this.state.attributes[key].value);
+             if (!attributeResult.valid) {
+                 hasErrors = true;
+             }
+             validatedAttributes[key] = {
+                value: this.state.attributes[key].value,
+                valid: attributeResult.valid,
+                error: attributeResult.error
+             };
+        });
 
-        this.setState({errors: errors});
+        this.setState({attributes: validatedAttributes});
 
-        return Object.keys(errors).length === 0;
+        return hasErrors;
     }
 
-    submit() {
+    submit = () => {
         if (!this.validate()) {
             return;
         }
 
         let formData = {
-            employerId: 3,
-            rating: this.state.attributes.rating,
-            text: this.state.attributes.reviewText
+            employerId: this.state.attributes.employerId.value,
+            rating: this.state.attributes.rating.value,
+            text: this.state.attributes.reviewText.value
         };
 
-        let instance = this;
-        ExchangeInterface.addReview(formData).then(function(data) {
-            instance.props.history.push('/employer/' + instance.state.attributes.employerId + '/' + data.reviewId);
-        }, function(error) {
+        ExchangeInterface.addReview(formData).then((data) => {
+            this.props.history.push(`/employer/${this.state.attributes.employerId}/${data.reviewId}`);
+        }, (error) => {
             console.log(error);
         });
-    }
+    };
 
     render () {
         return (
@@ -101,25 +117,25 @@ class FormAddReview extends React.Component {
                 <Row className="form-group">
                     <Col md={8}>
                         <EmployerSearchSelect
-                            value={this.state.attributes.employerId}
-                            onChange={this.handleChange.bind(this, 'employerId')}
+                            value={this.state.attributes.employerId.value}
+                            onChange={this.updateAttribute.bind(this, 'employerId')}
                             employerId={this.props.employerId}
-                            error={this.state.errors['employerId']}
+                            error={this.state.attributes.employerId.error}
                         />
                     </Col>
-                    <Col md={4} className="field-description">
+                    <Col md={4} className="form-group__description">
                         Начните вводить название компании
                     </Col>
                 </Row>
                 <Row className="form-group">
                     <Col md={8}>
                         <RatingInput
-                            value={this.state.attributes.rating}
-                            onChange={this.handleChange.bind(this, 'rating')}
-                            error={this.state.errors['rating']}
+                            value={this.state.attributes.rating.value}
+                            onChange={this.updateAttribute.bind(this, 'rating')}
+                            error={this.state.attributes.rating.error}
                         />
                     </Col>
-                    <Col md={4} className="field-description">
+                    <Col md={4} className="form-group__description">
                         1 - очень плохо, 5 - отлично
                     </Col>
                 </Row>
@@ -128,12 +144,12 @@ class FormAddReview extends React.Component {
                         <Input
                             type="text" multiline
                             label="Текст отзыва" maxLength={1000}
-                            value={this.state.attributes.reviewText}
-                            onChange={this.handleChange.bind(this, 'reviewText')}
-                            error={this.state.errors['reviewText']}
+                            value={this.state.attributes.reviewText.value}
+                            onChange={this.updateAttribute.bind(this, 'reviewText')}
+                            error={this.state.attributes.reviewText.error}
                         />
                     </Col>
-                    <Col md={4} className="field-description">
+                    <Col md={4} className="form-group__description">
                         Напишите Ваше мнение о компании
                     </Col>
                 </Row>
@@ -144,7 +160,7 @@ class FormAddReview extends React.Component {
                             className="pull-right"
                             icon={<FontAwesome name="send" />}
                             label="Отправить"
-                            onClick={this.submit.bind(this)}
+                            onClick={this.submit}
                         />
                     </Col>
                 </Row>
@@ -153,4 +169,4 @@ class FormAddReview extends React.Component {
     }
 }
 
-export default FormAddReview;
+export default AddReviewForm;

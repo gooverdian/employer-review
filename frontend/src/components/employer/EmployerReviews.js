@@ -2,7 +2,7 @@ import React from 'react';
 import {Col} from 'react-flexbox-grid';
 import List from 'react-toolbox/lib/list/List';
 import ListItem from 'react-toolbox/lib/list/ListItem';
-import ExchangeInterface from 'helpers/exchange/Exchange';
+import ExchangeInterface from 'components/exchange/ExchangeInterface';
 import EmployerReview from './EmployerReview';
 
 class EmployerReviews extends React.Component {
@@ -49,7 +49,7 @@ class EmployerReviews extends React.Component {
             <List ripple>
                 {this.state.data.reviews.map((item, index) => (
                     <ListItem
-                        key={'review-' + index}
+                        key={index}
                         itemContent={<EmployerReview
                             data={item}
                             highlight={String(item.reviewId) === String(this.props.reviewId)}

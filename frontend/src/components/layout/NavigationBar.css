@@ -1,0 +1,43 @@
+.main-nav {
+    height: 100%;
+    padding: 0;
+    display: flex;
+    align-items: center;
+}
+
+.main-nav__link {
+    height: 100%;
+    text-decoration: none;
+    margin: 0 .2em;
+    padding-top: 5px;
+    border-bottom: 5px solid transparent;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+}
+
+.main-nav__brand-link {
+    flex-grow: 1;
+    font-size: 18px;
+    font-weight: 700;
+    overflow-x: hidden;
+    -o-text-overflow: ellipsis;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-decoration: none;
+}
+
+.main-nav__link:hover, .main-nav_active {
+    border-bottom: 5px solid #ff4081;
+}
+
+.main-nav_active::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #ff4081;
+    box-shadow: 0 0 10px 4px #ff4081;
+}

@@ -5,23 +5,28 @@ import ListItem from 'react-toolbox/lib/list/ListItem';
 
 class EmployerSearchSelectResults extends React.Component {
     state = {
-        data: {},
         visible: false,
         selectedIndex: null,
         highlightedIndex: null,
         listScrollPosition: null
     };
 
-    componentDidMount() {
-        if (this.props.onReference) {
-            this.props.onReference(this);
+    domNode = undefined;
+
+    constructor(props, context) {
+        super(props, context);
+
+        if (!this.props.data) {
+            this.props.data = {};
         }
     }
 
+    componentDidMount() {
+        this.domNode = ReactDOM.findDOMNode(this)
+    }
+
     componentWillUnmount() {
-        if (this.props.onReference) {
-            this.props.onReference(undefined);
-        }
+        this.domNode = undefined;
     }
 
     handleSelection(itemIndex) {
@@ -30,7 +35,7 @@ class EmployerSearchSelectResults extends React.Component {
             highlightedIndex: itemIndex
         });
         if (this.props.onSelect) {
-            this.props.onSelect(this.state.data.items[itemIndex]);
+            this.props.onSelect(this.props.data.items[itemIndex]);
         }
     }
 
@@ -38,15 +43,14 @@ class EmployerSearchSelectResults extends React.Component {
         this.setState({
             selectedIndex: null,
             highlightedIndex: null,
-            data: {}
         });
     }
 
     highlightNext() {
         let currentlyHighlighted = this.state.highlightedIndex;
-        if (!this.state.data.items
-            || this.state.data.items.length === 0
-            || currentlyHighlighted + 1 >= this.state.data.items.length
+        if (!this.props.data.items
+            || this.props.data.items.length === 0
+            || currentlyHighlighted + 1 >= this.props.data.items.length
         ) {
             return false;
         }
@@ -58,8 +62,8 @@ class EmployerSearchSelectResults extends React.Component {
 
     highlightPrev() {
         let currentlyHighlighted = this.state.highlightedIndex;
-        if (!this.state.data.items
-            || this.state.data.items.length === 0
+        if (!this.props.data.items
+            || this.props.data.items.length === 0
             || currentlyHighlighted <= 0
         ) {
             return false;
@@ -71,11 +75,10 @@ class EmployerSearchSelectResults extends React.Component {
     }
 
     scrollToHighlighted(highlightedIndex) {
-        if (!this.state.data.items || this.state.data.items.length === 0) {
+        if (!this.props.data.items || this.props.data.items.length === 0) {
             return false;
         }
-        let resultsNode = ReactDOM.findDOMNode(this),
-            listNode = resultsNode.childNodes[0];
+        let listNode = this.domNode.childNodes[0];
         if (!listNode) {
             return false;
         }
@@ -84,21 +87,22 @@ class EmployerSearchSelectResults extends React.Component {
             return false;
         }
         let itemHeight = listItemNode.offsetHeight,
-            maxScrollPosition = resultsNode.scrollHeight,
-            currentScrollPosition = resultsNode.scrollTop,
-            nodeHeight = resultsNode.offsetHeight,
+            maxScrollPosition = this.domNode.scrollHeight,
+            currentScrollPosition = this.domNode.scrollTop,
+            nodeHeight = this.domNode.offsetHeight,
             itemTop = highlightedIndex * itemHeight,
             itemBottom = itemTop + itemHeight,
-            listPadding = maxScrollPosition - (itemHeight * this.state.data.items.length);
-        if (Math.max(itemTop - 15, 0) < currentScrollPosition) {
+            listPadding = maxScrollPosition - (itemHeight * this.props.data.items.length),
+            scrollPadding = Math.floor(itemHeight / 3);
+        if (Math.max(itemTop - scrollPadding, 0) < currentScrollPosition) {
             this.setState({
-                listScrollPosition: Math.max(itemTop - 15, 0)
+                listScrollPosition: Math.max(itemTop - scrollPadding, 0)
             });
             return;
         }
-        if (Math.min(maxScrollPosition, itemBottom + 15) > (currentScrollPosition + nodeHeight)) {
+        if (Math.min(maxScrollPosition, itemBottom + scrollPadding) > (currentScrollPosition + nodeHeight)) {
             this.setState({
-                listScrollPosition: Math.min(itemBottom - nodeHeight + (15 + listPadding), maxScrollPosition)
+                listScrollPosition: Math.min(itemBottom - nodeHeight + (scrollPadding + listPadding), maxScrollPosition)
             });
         }
     }
@@ -109,17 +113,15 @@ class EmployerSearchSelectResults extends React.Component {
     }
 
     componentDidUpdate() {
-        let listNode = ReactDOM.findDOMNode(this);
-        listNode.scrollTop = this.state.listScrollPosition;
+        this.domNode.scrollTop = this.state.listScrollPosition;
     }
 
-
-    generateResultsList() {
-        if (!this.state.data.items) {
+    renderResultsList() {
+        if (!this.props.data.items) {
             return '';
         }
 
-        if (this.state.data.items.length === 0) {
+        if (this.props.data.items.length === 0) {
             return (
                 <List>
                     <ListItem
@@ -132,7 +134,7 @@ class EmployerSearchSelectResults extends React.Component {
 
         return (
             <List ripple>
-                {this.state.data.items.map((item, index) => (
+                {this.props.data.items.map((item, index) => (
                     <ListItem
                         selectable
                         className={
@@ -163,7 +165,7 @@ class EmployerSearchSelectResults extends React.Component {
     render() {
         return (
             <div className={"employer-search-select__results" + (this.state.visible ? "" : " hidden")}>
-                {this.generateResultsList()}
+                {this.renderResultsList()}
             </div>
         );
     }

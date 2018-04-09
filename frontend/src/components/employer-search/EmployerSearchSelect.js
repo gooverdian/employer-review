@@ -1,6 +1,6 @@
 import React from 'react';
 import Input from 'react-toolbox/lib/input/Input';
-import Exchange from 'helpers/exchange/Exchange';
+import ExchangeInterface from 'components/exchange/ExchangeInterface';
 import EmployerSearchSelectResults from './EmployerSearchSelectResults';
 import './EmployerSearchSelect.css';
 import settings from 'config/settings';
@@ -8,24 +8,24 @@ import settings from 'config/settings';
 class EmployerSearchSelect extends React.Component {
     state = {
         searchValue: '',
-        selectedItem: null
+        selectedItem: null,
+        results: {}
     };
 
     requestThresholdTimer = null;
 
-    constructor(params) {
-        super();
-        if (params.employerId) {
-            let instance = this;
-            Exchange.getEmployer(params.employerId).then(function(data) {
-                instance.handleSelection(data);
-            }, function(error) {
+    constructor(props, context) {
+        super(props, context);
+        if (props.employerId) {
+            ExchangeInterface.getEmployer(props.employerId).then((data) => {
+                this.handleSelection(data);
+            }, (error) => {
                 console.log(error);
             });
         }
     }
 
-    handleTextChange(value) {
+    handleTextChange = (value) => {
         this.setState({searchValue: value});
         if (this.requestThresholdTimer) {
             clearTimeout(this.requestThresholdTimer);
@@ -35,15 +35,14 @@ class EmployerSearchSelect extends React.Component {
             this.invalidateSelection();
         }
 
-        let instance = this;
         this.requestThresholdTimer = setTimeout(
-            function () {
+            () => {
                 if (value === '') {
-                    instance.resultsComponent.setState({data: {}});
+                    this.setState({results: {}});
                 } else {
-                    Exchange.employerSearch(value, 0, settings.selectPageSize).then(function (data) {
-                        instance.resultsComponent.setState({data: data});
-                    }, function (error) {
+                    ExchangeInterface.employerSearch(value, 0, settings.selectPageSize).then((data) => {
+                        this.setState({results: data});
+                    }, (error) => {
                         console.log(error);
                     });
                 }
@@ -53,33 +52,33 @@ class EmployerSearchSelect extends React.Component {
         );
     };
 
-    invalidateSelection() {
+    invalidateSelection = () => {
         if (this.props.onChange) {
             this.props.onChange(null);
         }
         this.setState({selectedItem: null});
         this.resultsComponent.invalidateSelection();
         this.resultsComponent.show();
-    }
+    };
 
-    handleSelection(item) {
+    handleSelection = (item) => {
         if (this.props.onChange) {
             this.props.onChange(item.id);
         }
         this.setState({searchValue: item.name, selectedItem: item});
-    }
+    };
 
-    handleFocus() {
+    showResults = () => {
         if (!this.state.selectedItem) {
             this.resultsComponent.show();
         }
-    }
+    };
 
-    handleBlur() {
+    hideResults = () => {
         this.resultsComponent.hide();
-    }
+    };
 
-    handleInputKeyDown(eventProxy) {
+    handleInputKeyDown = (eventProxy) => {
         let key = eventProxy.key;
         if (!this.resultsComponent.state.visible) {
             return;
@@ -101,7 +100,7 @@ class EmployerSearchSelect extends React.Component {
         if (preventionNeeded) {
             eventProxy.preventDefault();
         }
-    }
+    };
 
     render() {
         return (
@@ -111,15 +110,16 @@ class EmployerSearchSelect extends React.Component {
                     type="text"
                     label="Выберите компанию"
                     value={this.state.searchValue}
-                    onChange={this.handleTextChange.bind(this)}
-                    onKeyDown={this.handleInputKeyDown.bind(this)}
-                    onFocus={this.handleFocus.bind(this)}
-                    onBlur={this.handleBlur.bind(this)}
+                    onChange={this.handleTextChange}
+                    onKeyDown={this.handleInputKeyDown}
+                    onFocus={this.showResults}
+                    onBlur={this.hideResults}
                     error={this.props.error}
                 />
                 <EmployerSearchSelectResults
-                    onSelect={this.handleSelection.bind(this)}
-                    onReference={ref => (this.resultsComponent = ref)}
+                    ref={ref => (this.resultsComponent = ref)}
+                    onSelect={this.handleSelection}
+                    data={this.state.results}
                 />
             </div>
         );

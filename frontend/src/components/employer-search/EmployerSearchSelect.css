@@ -33,7 +33,7 @@
 
 .employer-search-select_active > span:hover,
 .employer-search-select_active.employer-search-select_highlighted > span {
-    background: #25346d !important;
+    background: #25346d;
 }
 
 .employer-search-select_active span {

@@ -4,6 +4,10 @@ body {
     font-family: sans-serif;
 }
 
+textarea {
+    font-family: inherit;
+}
+
 .hidden {
     display: none;
 }

@@ -1,6 +1,6 @@
 import React from 'react';
 import {Grid} from 'react-flexbox-grid';
-import Exchange from 'helpers/exchange/Exchange';
+import ExchangeInterface from 'components/exchange/ExchangeInterface';
 import {Button} from 'components/router-button/RouterButton';
 
 class EmployerCard extends React.Component {
@@ -12,7 +12,7 @@ class EmployerCard extends React.Component {
         super();
         if (params.employerId) {
             let instance = this;
-            Exchange.getEmployer(params.employerId).then(function(data) {
+            ExchangeInterface.getEmployer(params.employerId).then(function(data) {
                 instance.setState({employer: data});
             }, function(error) {
                 console.log(error);

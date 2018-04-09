@@ -1,105 +1,107 @@
 import React from 'react';
 import Input from 'react-toolbox/lib/input/Input';
 import {Grid, Row, Col} from 'react-flexbox-grid';
-import Exchange from 'helpers/exchange/Exchange';
+import ExchangeInterface from 'components/exchange/ExchangeInterface';
 import EmployerSearchResults from './EmployerSearchResults';
 import settings from 'config/settings';
 
 class EmployerSearch extends React.Component {
-    state = {
-        searchValue: '',
-        page: null
-    };
-
     stopListeningHistory = undefined;
     requestThresholdTimer = null;
 
-    componentDidMount() {
-        let state = {
-            search: this.props.search || '',
-            page: this.props.page || null
-        };
-        this.props.history.replace(
-            this.props.history.pathname,
-            state
-        );
-        let instance = this;
-        this.stopListeningHistory = this.props.history.listen((location, action) => {
-            if (action === 'POP') {
-                instance.onHistoryPop(location.state);
-            }
-            if (action === 'PUSH' && !location.state) {
-                instance.onHistoryPop();
-            }
+    constructor(props, context) {
+        super(props, context);
+        let locationState = props.history.location.state;
+        if (!locationState) {
+            locationState = {
+                search: this.props.search || '',
+                page: this.props.page || 0
+            };
+            this.props.history.replace(
+                this.props.history.pathname,
+                locationState
+            );
+        }
+
+        this.state = this.getStateFromLocation(locationState);
+    }
+
+    fetchEmployers(state) {
+        ExchangeInterface.employerSearch(state.searchValue, state.page).then((data) => {
+            this.setState({...state, results: data});
+        }, (error) => {
+            console.log(error);
         });
-        this.onHistoryPop(state);
+    }
+
+    componentDidMount() {
+        this.stopListeningHistory = this.props.history.listen((location) => {
+            this.popLocationState(location.state);
+        });
+
+        if (String(this.state.searchValue).length > 0) {
+            this.fetchEmployers(this.state);
+        }
     }
 
     componentWillUnmount() {
         this.stopListeningHistory();
+        this.stopListeningHistory = undefined;
     }
 
-    historyPush(state) {
+    pushLocationState(locationState) {
         let url = '/';
-        if (state.search) {
-            url += 'search/' + encodeURIComponent(state.search);
+        if (locationState.search) {
+            url += 'search/' + encodeURIComponent(locationState.search);
         }
-        if (state.page) {
-            url += '/' + state.page;
+        if (locationState.page) {
+            url += '/' + locationState.page;
         }
 
-        this.props.history.push(
-            url,
-            state
-        );
+        this.props.history.push(url, locationState);
     }
 
-    performSearch(value, page) {
-        if (!value || value === '') {
-            this.resultsComponent.setState({
-                data: {}
-            });
+    getStateFromLocation(locationState) {
+        locationState = locationState || {};
+        let state = {
+            searchValue: locationState.search || '',
+            page: locationState.page || 0,
+        };
+
+        if (String(state.searchValue).length === 0) {
+            state.results = {};
+        }
+
+        return state;
+    }
+
+    popLocationState(locationState) {
+        let state = this.getStateFromLocation(locationState);
+
+        if(!state.results) {
+            this.fetchEmployers(state);
         } else {
-            let instance = this;
-            Exchange.employerSearch(value, page).then(function (data) {
-                instance.resultsComponent.setState({
-                    data: data
-                });
-            }, function (error) {
-                console.log(error);
-            });
+            this.setState(state);
         }
-    }
-
-    onHistoryPop(state) {
-        state = state || {};
-        this.setState({
-            searchValue: state.search || '',
-            page: state.page || null
-        });
-        this.performSearch(state.search, state.page);
     }
 
     handleTextChange = (value) => {
-        this.setState({...this.state, searchValue: value});
+        this.setState({searchValue: value});
 
         if (this.requestThresholdTimer) {
             clearTimeout(this.requestThresholdTimer);
         }
 
-        let instance = this;
         this.requestThresholdTimer = setTimeout(
-            function () {
-                instance.performSearch(value);
-                instance.historyPush({search: value});
+            () => {
+                this.pushLocationState({search: value});
             },
             settings.searchRequestThreshold
         );
     };
 
     handlePageChange = (page) => {
-        this.performSearch(this.state.searchValue, page);
-        this.historyPush({
+        this.pushLocationState({
             search: this.state.searchValue,
             page: page
         });
@@ -115,13 +117,13 @@ class EmployerSearch extends React.Component {
                                 type="text"
                                 label="Поиск по компаниям"
                                 value={this.state.searchValue}
-                                onChange={this.handleTextChange.bind(this)}
+                                onChange={value => this.handleTextChange(value)}
                             />
                         </Col>
                         <EmployerSearchResults
-                            onReference={ref => (this.resultsComponent = ref)}
                             onPageChange={page => (this.handlePageChange(page))}
                             history={this.props.history}
+                            data={this.state.results}
                         />
                     </Row>
                 </form>
