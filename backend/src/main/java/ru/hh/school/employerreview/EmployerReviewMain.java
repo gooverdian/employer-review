@@ -7,6 +7,7 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import ru.hh.nab.core.Launcher;
 import ru.hh.nab.core.servlet.DefaultServletConfig;
 import ru.hh.school.employerreview.filter.CorsFilter;
+import ru.hh.school.employerreview.filter.HibernateExceptionMapper;
 import ru.hh.school.employerreview.filter.QueryParamExceptionMapper;
 import ru.hh.school.employerreview.filter.SqlExceptionMapper;
 
@@ -34,6 +35,7 @@ public class EmployerReviewMain extends Launcher {
             ResourceConfig resourceConfig = super.createResourceConfig(context);
             resourceConfig.register(QueryParamExceptionMapper.class);
             resourceConfig.register(SqlExceptionMapper.class);
+            resourceConfig.register(HibernateExceptionMapper.class);
             return resourceConfig;
           }
         });

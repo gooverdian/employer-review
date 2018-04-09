@@ -5,6 +5,8 @@ import ru.hh.school.employerreview.employer.Employer;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -36,13 +38,18 @@ public class Review {
   @Column(name = "text")
   private String text;
 
+  @Enumerated(EnumType.STRING)
+  @Column(name = "review_type")
+  private ReviewType reviewType;
+
   public Review() {
   }
 
-  public Review(Employer employer, Float rating, String text) {
+  public Review(Employer employer, Float rating, ReviewType reviewType, String text) {
     this.employer = employer;
     this.rating = rating;
     this.text = text;
+    this.reviewType = reviewType;
   }
 
   public Integer getId() {
@@ -104,21 +111,34 @@ public class Review {
         .equals(review.createdOn);
   }
 
-  @Override
-  public int hashCode() {
-    int result = id.hashCode();
-    result = 31 * result + createdOn.hashCode();
-    return result;
+  public ReviewType getReviewType() {
+    return reviewType;
+  }
+
+  public void setReviewType(ReviewType reviewType) {
+    this.reviewType = reviewType;
   }
 
   @Override
   public String toString() {
-    return "Review{"
-        + "id=" + id
-        + ", employer=" + employer
-        + ", rating=" + rating
-        + ", createdOn=" + createdOn
-        + ", text='" + text + '\''
-        + '}';
+    return "Review{" +
+        "id=" + id +
+        ", employer=" + employer +
+        ", rating=" + rating +
+        ", createdOn=" + createdOn +
+        ", text='" + text + '\'' +
+        ", reviewType=" + reviewType +
+        '}';
+  }
+
+  @Override
+  public int hashCode() {
+    int result = id.hashCode();
+    result = 31 * result + employer.hashCode();
+    result = 31 * result + rating.hashCode();
+    result = 31 * result + (createdOn != null ? createdOn.hashCode() : 0);
+    result = 31 * result + (text != null ? text.hashCode() : 0);
+    result = 31 * result + reviewType.hashCode();
+    return result;
   }
 }
