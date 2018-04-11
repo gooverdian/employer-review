@@ -1,5 +1,9 @@
 # Скрипты.
 
-create-table-review.sql - создание таблицы отзыва
-create-tables-specializations.sql - создание таблиц специализации и проф области
-init-db.sh - создание бд employer_review и необходимых таблиц в ней
+init-db.sh - создание бд employer_review в Unix системах
+init-db.bat - создание бд employer_review в Windows
+
+Для того чтобы накатить последнюю версию БД нужно воспользоваться командой 
+```
+mvn flyway:migrate
+```

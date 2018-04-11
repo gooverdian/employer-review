@@ -1,6 +1,6 @@
 #!/bin/bash
 
 sudo -u postgres createdb employer_review
-sudo -u postgres psql -d employer_review -f create_employers_and_area_tables.sql
-sudo -u postgres psql -d employer_review -f create-tables-specializations.sql
-sudo -u postgres psql -d employer_review -f create-table-review.sql
+sudo -u postgres psql -c "CREATE USER hh;"
+sudo -u postgres psql -c "ALTER USER hh WITH SUPERUSER;"
+sudo -u postgres psql -c "ALTER USER hh WITH PASSWORD '123';"
