@@ -15,13 +15,7 @@ public class EmployersResponse {
     for (int i = 0; i < resultsFromDB.size(); ++i) {
       EmployerItem employerItem = resultsFromDB.get(i).toEmployerItem();
       if (ratings.get(i) != null) {
-        employerItem.setPeopleRated(ratings.get(i).getPeopleRated());
-        employerItem.setRating(ratings.get(i).getRating());
-        employerItem.setStar1(ratings.get(i).getStar1());
-        employerItem.setStar2(ratings.get(i).getStar2());
-        employerItem.setStar3(ratings.get(i).getStar3());
-        employerItem.setStar4(ratings.get(i).getStar4());
-        employerItem.setStar5(ratings.get(i).getStar5());
+        employerItem.setRating(ratings.get(i));
       }
       items.add(employerItem);
     }

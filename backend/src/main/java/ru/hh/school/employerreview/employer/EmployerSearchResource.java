@@ -85,13 +85,7 @@ public class EmployerSearchResource {
     EmployerItem employerItem = employer.toEmployerItem();
     Rating rating = ratingDao.getRating(employerId);
     if (rating != null) {
-      employerItem.setRating(rating.getRating());
-      employerItem.setPeopleRated(rating.getPeopleRated());
-      employerItem.setStar1(rating.getStar1());
-      employerItem.setStar2(rating.getStar2());
-      employerItem.setStar3(rating.getStar3());
-      employerItem.setStar4(rating.getStar4());
-      employerItem.setStar5(rating.getStar5());
+      employerItem.setRating(rating);
     }
     return Response.ok().entity(employerItem).build();
   }

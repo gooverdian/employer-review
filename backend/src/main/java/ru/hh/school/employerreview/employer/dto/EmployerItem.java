@@ -1,6 +1,7 @@
 package ru.hh.school.employerreview.employer.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import ru.hh.school.employerreview.rating.Rating;
 
 public class EmployerItem {
 
@@ -46,16 +47,23 @@ public class EmployerItem {
   @JsonProperty("star5")
   private Integer star5;
 
+  @JsonProperty("star1_5")
+  private Integer star15;
+
+  @JsonProperty("star2_5")
+  private Integer star25;
+
+  @JsonProperty("star3_5")
+  private Integer star35;
+
+  @JsonProperty("star4_5")
+  private Integer star45;
+
+  @JsonProperty("star0_5")
+  private Integer star05;
+
   public void setId(Integer id) {
     this.id = id;
-  }
-
-  public void setRating(Float rating) {
-    this.rating = rating;
-  }
-
-  public void setPeopleRated(Integer peopleRated) {
-    this.peopleRated = peopleRated;
   }
 
   public void setName(String name) {
@@ -82,23 +90,18 @@ public class EmployerItem {
     this.areaId = areaId;
   }
 
-  public void setStar1(Integer star1) {
-    this.star1 = star1;
-  }
-
-  public void setStar2(Integer star2) {
-    this.star2 = star2;
-  }
-
-  public void setStar3(Integer star3) {
-    this.star3 = star3;
-  }
-
-  public void setStar4(Integer star4) {
-    this.star4 = star4;
-  }
-
-  public void setStar5(Integer star5) {
-    this.star5 = star5;
+  public void setRating(Rating rating) {
+    this.rating = rating.getRating();
+    this.peopleRated = rating.getPeopleRated();
+    this.star1 = rating.getStar1();
+    this.star2 = rating.getStar2();
+    this.star3 = rating.getStar3();
+    this.star4 = rating.getStar4();
+    this.star5 = rating.getStar5();
+    this.star15 = rating.getStar15();
+    this.star25 = rating.getStar25();
+    this.star35 = rating.getStar35();
+    this.star45 = rating.getStar45();
+    this.star05 = rating.getStar05();
   }
 }

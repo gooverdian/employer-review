@@ -33,6 +33,21 @@ public class Rating {
   @Column(name = "star5")
   private Integer star5;
 
+  @Column(name = "star1_5")
+  private Integer star15;
+
+  @Column(name = "star2_5")
+  private Integer star25;
+
+  @Column(name = "star3_5")
+  private Integer star35;
+
+  @Column(name = "star4_5")
+  private Integer star45;
+
+  @Column(name = "star0_5")
+  private Integer star05;
+
   public void setRating(Float rating) {
     this.rating = rating;
   }
@@ -89,6 +104,46 @@ public class Rating {
     this.star5 = star5;
   }
 
+  public void setStar15(Integer star15) {
+    this.star15 = star15;
+  }
+
+  public void setStar25(Integer star25) {
+    this.star25 = star25;
+  }
+
+  public void setStar35(Integer star35) {
+    this.star35 = star35;
+  }
+
+  public void setStar45(Integer star45) {
+    this.star45 = star45;
+  }
+
+  public void setStar05(Integer star05) {
+    this.star05 = star05;
+  }
+
+  public Integer getStar15() {
+    return star15;
+  }
+
+  public Integer getStar25() {
+    return star25;
+  }
+
+  public Integer getStar35() {
+    return star35;
+  }
+
+  public Integer getStar45() {
+    return star45;
+  }
+
+  public Integer getStar05() {
+    return star05;
+  }
+
   Rating() {
 
   }
@@ -102,6 +157,11 @@ public class Rating {
     this.star3 = 0;
     this.star4 = 0;
     this.star5 = 0;
+    this.star15 = 0;
+    this.star25 = 0;
+    this.star35 = 0;
+    this.star45 = 0;
+    this.star05 = 0;
   }
 
 }

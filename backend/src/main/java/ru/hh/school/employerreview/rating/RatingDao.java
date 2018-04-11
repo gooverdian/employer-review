@@ -10,7 +10,8 @@ public class RatingDao {
 
   private final SessionFactory sessionFactory;
   private static final int MAX_ESTIMATE = 5;
-  private static final int MIN_ESTIMATE = 1;
+  private static final int MIN_ESTIMATE = 0;
+  private static final float ESTIMATE_RECOGNISE_LIMIT = 0.25f;
 
   public RatingDao(SessionFactory sessionFactory) {
     this.sessionFactory = requireNonNull(sessionFactory);
@@ -22,71 +23,40 @@ public class RatingDao {
   }
 
   @Transactional
-  public void addNewEstimate(Integer employerId, int newEstimate) {
+  public void addNewEstimate(Integer employerId, float newEstimate) {
     if (newEstimate <= MAX_ESTIMATE && newEstimate >= MIN_ESTIMATE) {
       Rating rating = getRating(employerId);
-      boolean isNewRating = false;
       if (rating == null) {
         rating = new Rating(employerId);
-        isNewRating = true;
       }
       int peopleRated = rating.getPeopleRated();
       float averageScore = rating.getRating();
       rating.setRating((averageScore * peopleRated + newEstimate) / (peopleRated + 1));
       rating.setPeopleRated(peopleRated + 1);
-      switch (newEstimate) {
-        case 1 : {
-          rating.setStar1(rating.getStar1() + 1);
-          break;
-        }
-        case 2 : {
-          rating.setStar2(rating.getStar2() + 1);
-          break;
-        }
-        case 3 : {
-          rating.setStar3(rating.getStar3() + 1);
-          break;
-        }
-        case 4 : {
-          rating.setStar4(rating.getStar4() + 1);
-          break;
-        }
-        case 5 : {
-          rating.setStar5(rating.getStar5() + 1);
-          break;
-        }
-      }
-      if (isNewRating) {
-        getSession().save(rating);
-      } else {
-        getSession().update(rating);
-      }
-    }
-  }
 
-  @Transactional
-  public Integer countStar(Integer employerId, int starNumber) {
-    if (starNumber <= MAX_ESTIMATE && starNumber >= MIN_ESTIMATE) {
-      Rating rating = getRating(employerId);
-      switch (starNumber) {
-        case 1: {
-          return rating.getStar1();
-        }
-        case 2: {
-          return rating.getStar2();
-        }
-        case 3: {
-          return rating.getStar3();
-        }
-        case 4: {
-          return rating.getStar4();
-        }
-        case 5: {
-          return rating.getStar5();
-        }
+      if (Math.abs(newEstimate - 0.5) < ESTIMATE_RECOGNISE_LIMIT) {
+        rating.setStar05(rating.getStar05() + 1);
+      } else if (Math.abs(newEstimate - 1) < ESTIMATE_RECOGNISE_LIMIT) {
+        rating.setStar1(rating.getStar1() + 1);
+      } else if (Math.abs(newEstimate - 1.5) < ESTIMATE_RECOGNISE_LIMIT) {
+        rating.setStar15(rating.getStar15() + 1);
+      } else if (Math.abs(newEstimate - 2) < ESTIMATE_RECOGNISE_LIMIT) {
+        rating.setStar2(rating.getStar2() + 1);
+      } else if (Math.abs(newEstimate - 2.5) < ESTIMATE_RECOGNISE_LIMIT) {
+        rating.setStar25(rating.getStar25() + 1);
+      } else if (Math.abs(newEstimate - 3) < ESTIMATE_RECOGNISE_LIMIT) {
+        rating.setStar3(rating.getStar3() + 1);
+      } else if (Math.abs(newEstimate - 3.5) < ESTIMATE_RECOGNISE_LIMIT) {
+        rating.setStar35(rating.getStar35() + 1);
+      } else if (Math.abs(newEstimate - 4) < ESTIMATE_RECOGNISE_LIMIT) {
+        rating.setStar4(rating.getStar4() + 1);
+      } else if (Math.abs(newEstimate - 4.5) < ESTIMATE_RECOGNISE_LIMIT) {
+        rating.setStar45(rating.getStar45() + 1);
+      } else if (Math.abs(newEstimate - 5) < ESTIMATE_RECOGNISE_LIMIT) {
+        rating.setStar5(rating.getStar5() + 1);
       }
+      getSession().saveOrUpdate(rating);
     }
-    return null;
   }
 
   private Session getSession() {

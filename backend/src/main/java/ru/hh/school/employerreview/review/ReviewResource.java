@@ -65,7 +65,7 @@ public class ReviewResource {
         reviewDto.getText());
     reviewDao.save(review);
 
-    ratingDao.addNewEstimate(employer.getId(), reviewDto.getRating().intValue());
+    ratingDao.addNewEstimate(employer.getId(), reviewDto.getRating());
 
     return Response.status(200).entity(new ResponseBodyReviewId(review.getId())).build();
   }

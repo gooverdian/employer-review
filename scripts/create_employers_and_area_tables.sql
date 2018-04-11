@@ -27,5 +27,10 @@ CREATE TABLE rating (
     star2           integer NOT NULL,
     star3           integer NOT NULL,
     star4           integer NOT NULL,
-    star5           integer NOT NULL
+    star5           integer NOT NULL,
+    star1_5         integer NOT NULL,
+    star2_5         integer NOT NULL,
+    star3_5         integer NOT NULL,
+    star4_5         integer NOT NULL,
+    star0_5         integer NOT NULL
 );
