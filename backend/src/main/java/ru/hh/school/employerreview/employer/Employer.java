@@ -1,5 +1,6 @@
 package ru.hh.school.employerreview.employer;
 
+import ru.hh.school.employerreview.area.Area;
 import ru.hh.school.employerreview.employer.dto.EmployerItem;
 
 import javax.persistence.Column;
@@ -7,6 +8,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import java.util.Objects;
 
@@ -24,12 +27,6 @@ public class Employer {
 
   @Column(name = "name")
   private String name;
-
-  @Column(name = "score")
-  private Float score;
-
-  @Column(name = "people_rated")
-  private Integer peopleRated;
 
   @Column(name = "site_url")
   private String siteUrl;
@@ -49,33 +46,14 @@ public class Employer {
   @Column(name = "logo_url_original")
   private String logoUrlOriginal;
 
-  @Column(name = "area_id")
-  private Integer areaId;
-
-  @Column(name = "area_name")
-  private String areaName;
-
-  public void setAreaName(String areaName) {
-    this.areaName = areaName;
-  }
-
-  public String getAreaName() {
-    return areaName;
-  }
-
-  public void setScore(Float score) {
-    this.score = score;
-  }
-
-  public void addPeopleRated() {
-    this.peopleRated += 1;
-  }
+  @ManyToOne
+  @JoinColumn(name = "area_id")
+  private Area area;
 
   public Employer(String name, String siteUrl, int hhId) {
     this.name = name;
     this.siteUrl = siteUrl;
     this.hhId = hhId;
-    this.peopleRated = 0;
   }
 
   Employer() {
@@ -85,12 +63,12 @@ public class Employer {
     return id;
   }
 
-  public void setAreaId(Integer areaId) {
-    this.areaId = areaId;
+  public void setArea(Area area) {
+    this.area = area;
   }
 
-  public Integer getAreaId() {
-    return this.areaId;
+  public Area getArea() {
+    return this.area;
   }
 
   public int getHhId() {
@@ -169,28 +147,28 @@ public class Employer {
     Employer thatUser = (Employer) that;
     return Objects.equals(id, thatUser.id)
         && Objects.equals(name, thatUser.name)
-        && Objects.equals(areaId, thatUser.areaId);
+        && Objects.equals(area.getId(), thatUser.area.getId());
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, areaId, name);
+    return Objects.hash(id, area.getId(), name);
   }
 
   @Override
   public String toString() {
     return String.format("%s{id=%d, Name='%s', Area='%d'}",
-        getClass().getSimpleName(), id, name, areaId);
+        getClass().getSimpleName(), id, name, area.getId());
   }
 
   public EmployerItem toEmployerItem() {
     EmployerItem employerItem = new EmployerItem();
-    employerItem.setAreaId(areaId);
+    employerItem.setAreaId(area.getId());
     employerItem.setHhId(hhId);
     employerItem.setName(name);
     employerItem.setLogoUrl(logoUrl90);
     employerItem.setUrl(siteUrl);
-    employerItem.setAreaName(areaName);
+    employerItem.setAreaName(area.getName());
     employerItem.setId(id);
     return employerItem;
   }

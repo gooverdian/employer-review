@@ -8,6 +8,8 @@ import java.util.List;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import static ru.hh.nab.common.util.PropertiesUtils.setSystemPropertyIfAbsent;
+
+import ru.hh.school.employerreview.area.Area;
 import ru.hh.school.employerreview.area.AreaDao;
 import ru.hh.school.employerreview.downloader.json.AreaJson;
 import ru.hh.school.employerreview.downloader.json.EmployerJson;
@@ -21,8 +23,6 @@ public class DownloadMain {
   private static final String URL_EMPLOYERS = "https://api.hh.ru/employers";
   private static final int EMPLOYERS_PAGES = 5;
   private static final int EMPLOYERS_PAGE_SIZE = 1000;
-  private static int currentAreaId;
-  private static String currentAreaName;
   private static AreaDao areaDao;
   private static EmployerDao employerDao;
   private static ApplicationContext applicationContext;
@@ -48,26 +48,25 @@ public class DownloadMain {
 
   private static void saveAreasToDb(AreaJson[] areaJsons) {
     for (AreaJson areaJson: areaJsons) {
-      areaDao.save(areaJson.toArea());
-      currentAreaId = Integer.parseInt(areaJson.getId());
-      currentAreaName = areaJson.getName();
-      downloadEmployers();
+      Area currentArea = areaJson.toArea();
+      areaDao.save(currentArea);
+      downloadEmployers(currentArea);
       saveAreasToDb(areaJson.getAreas());
     }
   }
 
-  private static void downloadEmployers() {
+  private static void downloadEmployers(Area area) {
     for (int page = 0; page < EMPLOYERS_PAGES; page++) {
-      EmployerJson[] employerJsons = getEmployersPageFromApi(page);
+      EmployerJson[] employerJsons = getEmployersPageFromApi(page, area.getId());
       if (employerJsons != null) {
-        saveEmployersToDb(employerJsons);
+        saveEmployersToDb(employerJsons, area);
       }
     }
   }
 
-  private static EmployerJson[] getEmployersPageFromApi(int page) {
+  private static EmployerJson[] getEmployersPageFromApi(int page, int areaId) {
     try {
-      URL url = new URL(URL_EMPLOYERS + "?per_page=" + EMPLOYERS_PAGE_SIZE + "&page=" + page + "&area=" + currentAreaId);
+      URL url = new URL(URL_EMPLOYERS + "?per_page=" + EMPLOYERS_PAGE_SIZE + "&page=" + page + "&area=" + areaId);
       ResponseJson responseJson = OBJECT_MAPPER.readValue(url, ResponseJson.class);
       return responseJson.getItems();
     } catch (Exception e) {
@@ -75,10 +74,10 @@ public class DownloadMain {
     }
   }
 
-  private static void saveEmployersToDb(EmployerJson[] employerJsons) {
+  private static void saveEmployersToDb(EmployerJson[] employerJsons, Area area) {
     List<Employer> employers = new ArrayList<>();
     for (EmployerJson employerJson: employerJsons) {
-      employers.add(employerJson.toHibernateObj(currentAreaId, currentAreaName));
+      employers.add(employerJson.toHibernateObj(area));
     }
     employerDao.save(employers);
   }

@@ -6,9 +6,13 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import ru.hh.nab.hibernate.HibernateCommonConfig;
 import ru.hh.nab.hibernate.MappingConfig;
+import ru.hh.school.employerreview.area.Area;
+import ru.hh.school.employerreview.area.AreaDao;
 import ru.hh.school.employerreview.employer.Employer;
 import ru.hh.school.employerreview.employer.EmployerDao;
 import ru.hh.school.employerreview.employer.EmployerSearchResource;
+import ru.hh.school.employerreview.rating.Rating;
+import ru.hh.school.employerreview.rating.RatingDao;
 import ru.hh.school.employerreview.review.Review;
 import ru.hh.school.employerreview.review.ReviewDao;
 import ru.hh.school.employerreview.review.ReviewResource;
@@ -18,8 +22,8 @@ import ru.hh.school.employerreview.review.ReviewResource;
 public class CommonConfig {
 
   @Bean
-  EmployerSearchResource employerSearchResource(EmployerDao employerDao) {
-    return new EmployerSearchResource(employerDao);
+  EmployerSearchResource employerSearchResource(EmployerDao employerDao, RatingDao ratingDao) {
+    return new EmployerSearchResource(employerDao, ratingDao);
   }
 
   @Bean
@@ -28,13 +32,23 @@ public class CommonConfig {
   }
 
   @Bean
-  MappingConfig mappingConfig() {
-    return new MappingConfig(Employer.class, Review.class);
+  RatingDao ratingDao(SessionFactory sessionFactory) {
+    return new RatingDao(sessionFactory);
   }
 
   @Bean
-  ReviewResource reviewResource(ReviewDao reviewDao, EmployerDao employerDao) {
-    return new ReviewResource(reviewDao, employerDao);
+  AreaDao areaDao(SessionFactory sessionFactory) {
+    return new AreaDao(sessionFactory);
+  }
+
+  @Bean
+  MappingConfig mappingConfig() {
+    return new MappingConfig(Employer.class, Review.class, Area.class, Rating.class);
+  }
+
+  @Bean
+  ReviewResource reviewResource(ReviewDao reviewDao, EmployerDao employerDao, RatingDao ratingDao) {
+    return new ReviewResource(reviewDao, employerDao, ratingDao);
   }
 
   @Bean

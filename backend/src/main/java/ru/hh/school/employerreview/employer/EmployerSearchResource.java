@@ -2,7 +2,10 @@ package ru.hh.school.employerreview.employer;
 
 import ru.hh.errors.common.Errors;
 import ru.hh.school.employerreview.PaginationHelper;
+import ru.hh.school.employerreview.employer.dto.EmployerItem;
 import ru.hh.school.employerreview.employer.dto.EmployersResponse;
+import ru.hh.school.employerreview.rating.Rating;
+import ru.hh.school.employerreview.rating.RatingDao;
 
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
@@ -12,6 +15,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.ArrayList;
 import java.util.List;
 
 @Path("/employers")
@@ -19,9 +23,11 @@ import java.util.List;
 public class EmployerSearchResource {
 
   private final EmployerDao employerDao;
+  private final RatingDao ratingDao;
 
-  public EmployerSearchResource(EmployerDao employerDao) {
+  public EmployerSearchResource(EmployerDao employerDao, RatingDao ratingDao) {
     this.employerDao = employerDao;
+    this.ratingDao = ratingDao;
   }
 
   @GET
@@ -29,13 +35,13 @@ public class EmployerSearchResource {
                                   @QueryParam("page") @DefaultValue("0") int page,
                                   @QueryParam("perPage") @DefaultValue("10") int perPage) {
 
-    if (text.isEmpty()) {
+    if (text.isEmpty() || page < 0 || perPage <= 0) {
       throw new Errors(Response.Status.BAD_REQUEST, "BAD_REQUEST_PARAMETER", "text").toWebApplicationException();
     }
 
     int rowCount = employerDao.getRowCountFilteredByEmployer(text);
     if (rowCount == 0) {
-      return Response.ok().entity(new EmployersResponse(null, page, perPage, rowCount, 0)).build();
+      return Response.ok().entity(new EmployersResponse(null, null, page, perPage, rowCount, 0)).build();
     }
     Errors errors = new Errors(Response.Status.BAD_REQUEST);
     if (page < 0) {
@@ -57,17 +63,30 @@ public class EmployerSearchResource {
     }
 
     List<Employer> resultsFromDB = employerDao.find(text, page, perPage);
-    EmployersResponse employersResponse = new EmployersResponse(resultsFromDB, page, perPage, rowCount, pageCount);
+    List<Rating> ratings = new ArrayList<>();
+    for (Employer employer : resultsFromDB) {
+      ratings.add(ratingDao.getRating(employer.getId()));
+    }
+
+    EmployersResponse employersResponse = new EmployersResponse(resultsFromDB, ratings, page, perPage, rowCount, pageCount);
     return Response.ok().entity(employersResponse).build();
   }
 
   @GET
   @Path("/{employer_id}")
   public Response getEmployerById(@PathParam("employer_id") Integer employerId) {
+    if (employerId == null) {
+      throw new Errors(Response.Status.BAD_REQUEST, "BAD_REQUEST_PARAMETER", "employerId").toWebApplicationException();
+    }
     Employer employer = employerDao.getById(employerId);
     if (employer == null) {
       throw new Errors(Response.Status.BAD_REQUEST, "BAD_REQUEST_PARAMETER", "employerId").toWebApplicationException();
     }
-    return Response.ok().entity(employer.toEmployerItem()).build();
+    EmployerItem employerItem = employer.toEmployerItem();
+    Rating rating = ratingDao.getRating(employerId);
+    if (rating != null) {
+      employerItem.setRating(rating);
+    }
+    return Response.ok().entity(employerItem).build();
   }
 }

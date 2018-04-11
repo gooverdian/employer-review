@@ -1,6 +1,7 @@
 package ru.hh.school.employerreview.downloader.json;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import ru.hh.school.employerreview.area.Area;
 import ru.hh.school.employerreview.employer.Employer;
 
 public class EmployerJson {
@@ -26,14 +27,13 @@ public class EmployerJson {
   @JsonProperty("open_vacancies")
   private String openVacancies;
 
-  public Employer toHibernateObj(int area, String areaName) {
+  public Employer toHibernateObj(Area area) {
     Employer employer = new Employer(name , url, Integer.parseInt(id));
     employer.setAlternateUrl(alternateUrl);
     employer.setLogoUrl90(logoUrls.getLogo90());
     employer.setLogoUrl240(logoUrls.getLogo240());
     employer.setLogoUrlOriginal(logoUrls.getLogoOriginal());
-    employer.setAreaId(area);
-    employer.setAreaName(areaName);
+    employer.setArea(area);
     return employer;
   }
 }

@@ -4,10 +4,10 @@ import ru.hh.errors.common.Errors;
 import ru.hh.school.employerreview.PaginationHelper;
 import ru.hh.school.employerreview.employer.Employer;
 import ru.hh.school.employerreview.employer.EmployerDao;
+import ru.hh.school.employerreview.rating.RatingDao;
 import ru.hh.school.employerreview.review.dto.ResponseBodyReviewId;
 import ru.hh.school.employerreview.review.dto.ResponseBodyReviews;
 import ru.hh.school.employerreview.review.dto.ReviewDto;
-
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
@@ -27,10 +27,12 @@ public class ReviewResource {
 
   private final ReviewDao reviewDao;
   private final EmployerDao employerDao;
+  private final RatingDao ratingDao;
 
-  public ReviewResource(ReviewDao reviewDao, EmployerDao employerDao) {
+  public ReviewResource(ReviewDao reviewDao, EmployerDao employerDao, RatingDao ratingDao) {
     this.reviewDao = reviewDao;
     this.employerDao = employerDao;
+    this.ratingDao = ratingDao;
   }
 
   @POST
@@ -62,6 +64,8 @@ public class ReviewResource {
         reviewDto.getRating(),
         reviewDto.getText());
     reviewDao.save(review);
+
+    ratingDao.addNewEstimate(employer.getId(), reviewDto.getRating());
 
     return Response.status(200).entity(new ResponseBodyReviewId(review.getId())).build();
   }
