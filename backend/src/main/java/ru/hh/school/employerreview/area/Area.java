@@ -1,5 +1,6 @@
 package ru.hh.school.employerreview.area;
 
+import ru.hh.school.employerreview.downloader.dto.AreaJson;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -74,6 +75,14 @@ public class Area {
   public String toString() {
     return String.format("%s{id=%d, Name='%s', ParentId='%d'}",
             getClass().getSimpleName(), id, name, parentId);
+  }
+
+  public AreaJson toAreaJson() {
+    AreaJson areaJson = new AreaJson();
+    areaJson.setId(this.id);
+    areaJson.setName(this.name);
+    areaJson.setParentId(this.parentId);
+    return areaJson;
   }
 }
 

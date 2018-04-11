@@ -16,6 +16,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Path("/employers")
@@ -41,7 +42,7 @@ public class EmployerSearchResource {
 
     int rowCount = employerDao.getRowCountFilteredByEmployer(text);
     if (rowCount == 0) {
-      return Response.ok().entity(new EmployersResponse(null, null, page, perPage, rowCount, 0)).build();
+      return Response.ok().entity(new EmployersResponse(Collections.emptyList(), Collections.emptyList(), page, perPage, rowCount, 0)).build();
     }
     Errors errors = new Errors(Response.Status.BAD_REQUEST);
     if (page < 0) {

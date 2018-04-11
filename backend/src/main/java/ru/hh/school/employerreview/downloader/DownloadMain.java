@@ -11,9 +11,9 @@ import static ru.hh.nab.common.util.PropertiesUtils.setSystemPropertyIfAbsent;
 
 import ru.hh.school.employerreview.area.Area;
 import ru.hh.school.employerreview.area.AreaDao;
-import ru.hh.school.employerreview.downloader.json.AreaJson;
-import ru.hh.school.employerreview.downloader.json.EmployerJson;
-import ru.hh.school.employerreview.downloader.json.ResponseJson;
+import ru.hh.school.employerreview.downloader.dto.AreaJson;
+import ru.hh.school.employerreview.downloader.dto.EmployerJson;
+import ru.hh.school.employerreview.downloader.dto.ResponseJson;
 import ru.hh.school.employerreview.employer.Employer;
 import ru.hh.school.employerreview.employer.EmployerDao;
 

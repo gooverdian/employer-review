@@ -54,15 +54,11 @@ public class EmployersResponse {
   }
 
   public void setItems(List<EmployerItem> employerItems) {
-    items = employerItems;
+    this.items = employerItems;
   }
 
   public void setFound(int found) {
     this.found = found;
-  }
-
-  public List<EmployerItem> getItems() {
-    return items;
   }
 }
 

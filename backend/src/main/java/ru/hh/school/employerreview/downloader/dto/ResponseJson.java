@@ -1,4 +1,4 @@
-package ru.hh.school.employerreview.downloader.json;
+package ru.hh.school.employerreview.downloader.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -20,22 +20,22 @@ public class ResponseJson {
   private int found;
 
   public int getFound() {
-    return found;
+    return this.found;
   }
 
   public int getPage() {
-    return page;
+    return this.page;
   }
 
   public int getPages() {
-    return pages;
+    return this.pages;
   }
 
   public int getPerPage() {
-    return perPage;
+    return this.perPage;
   }
 
   public EmployerJson[] getItems() {
-    return items;
+    return this.items;
   }
 }

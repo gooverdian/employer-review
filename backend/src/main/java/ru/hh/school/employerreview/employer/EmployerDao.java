@@ -29,7 +29,7 @@ public class EmployerDao {
         .uniqueResult();
   }
 
-  @Transactional
+  @Transactional(readOnly = true)
   public Employer getById(int id) {
     return getSession().get(Employer.class, id);
   }
