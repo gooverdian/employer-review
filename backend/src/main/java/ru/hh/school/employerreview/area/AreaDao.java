@@ -4,7 +4,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.springframework.transaction.annotation.Transactional;
-import ru.hh.school.employerreview.employer.Employer;
+
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
@@ -40,9 +40,9 @@ public class AreaDao {
   public int getRowCountFilteredByArea(String text) {
     CriteriaBuilder builder = getSession().getCriteriaBuilder();
     CriteriaQuery criteria = builder.createQuery();
-    Root<Employer> employerRoot = criteria.from(Area.class);
-    criteria.select(builder.count(employerRoot));
-    criteria.where(builder.like(employerRoot.get("name"), "%" + text + "%"));
+    Root<Area> arearRoot = criteria.from(Area.class);
+    criteria.select(builder.count(arearRoot));
+    criteria.where(builder.like(arearRoot.get("name"), "%" + text + "%"));
     Query<Long> query = getSession().createQuery(criteria);
     return query.getSingleResult().intValue();
   }
@@ -54,9 +54,9 @@ public class AreaDao {
     }
     CriteriaBuilder builder = getSession().getCriteriaBuilder();
     CriteriaQuery<Area> criteria = builder.createQuery(Area.class);
-    Root<Area> employerRoot = criteria.from(Area.class);
-    criteria.select(employerRoot);
-    criteria.where(builder.like(employerRoot.get("name"), "%" + text + "%"));
+    Root<Area> arearRoot = criteria.from(Area.class);
+    criteria.select(arearRoot);
+    criteria.where(builder.like(arearRoot.get("name"), "%" + text + "%"));
     Query<Area> query = getSession().createQuery(criteria);
     query.setFirstResult(page * perPage);
     query.setMaxResults(perPage);

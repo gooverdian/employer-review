@@ -15,21 +15,21 @@ public class AreaSearchResourceTest extends AbstractJUnit4SpringContextTests {
 
   @Test(expected = WebApplicationException.class)
   public void testEmptyRequest() {
-    resource.areasSearch("", 0, 10);
+    resource.searchAreas("", 0, 10);
   }
 
   @Test(expected = WebApplicationException.class)
-  public void testPageNegativeValue() {
-    resource.areasSearch("d", -1, 10);
+  public void testNegativePageValue() {
+    resource.searchAreas("d", -1, 10);
   }
 
   @Test(expected = WebApplicationException.class)
-  public void testPerPageValue() {
-    resource.areasSearch("d", 0, -1);
+  public void testNegativePerPageValue() {
+    resource.searchAreas("d", 0, -1);
   }
 
   @Test(expected = WebApplicationException.class)
-  public void testGetEmployerById() {
+  public void testGetAreaByNullValue() {
     resource.getAreaById(null);
   }
 }

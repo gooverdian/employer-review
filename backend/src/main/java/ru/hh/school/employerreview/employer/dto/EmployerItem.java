@@ -30,7 +30,7 @@ public class EmployerItem {
   private Integer peopleRated;
 
   @JsonProperty("rating")
-  private Float rating;
+  private Float averageRating;
 
   @JsonProperty("star1")
   private Integer star1;
@@ -91,17 +91,19 @@ public class EmployerItem {
   }
 
   public void setRating(Rating rating) {
-    this.rating = rating.getRating();
-    this.peopleRated = rating.getPeopleRated();
-    this.star1 = rating.getStar1();
-    this.star2 = rating.getStar2();
-    this.star3 = rating.getStar3();
-    this.star4 = rating.getStar4();
-    this.star5 = rating.getStar5();
-    this.star15 = rating.getStar15();
-    this.star25 = rating.getStar25();
-    this.star35 = rating.getStar35();
-    this.star45 = rating.getStar45();
-    this.star05 = rating.getStar05();
+    if (rating != null) {
+      averageRating = rating.getRating();
+      peopleRated = rating.getPeopleRated();
+      star1 = rating.getStar1();
+      star2 = rating.getStar2();
+      star3 = rating.getStar3();
+      star4 = rating.getStar4();
+      star5 = rating.getStar5();
+      star15 = rating.getStar15();
+      star25 = rating.getStar25();
+      star35 = rating.getStar35();
+      star45 = rating.getStar45();
+      star05 = rating.getStar05();
+    }
   }
 }

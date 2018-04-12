@@ -36,7 +36,7 @@ public class ReviewResource {
   }
 
   @POST
-  public Response postReview(ReviewDto reviewDto) {
+  public ResponseBodyReviewId postReview(ReviewDto reviewDto) {
     Errors errors = new Errors(Response.Status.BAD_REQUEST);
 
     if (reviewDto.getEmployerId() == null) {
@@ -68,15 +68,19 @@ public class ReviewResource {
 
     ratingDao.addNewEstimate(employer.getId(), reviewDto.getRating());
 
-    return Response.status(200).entity(new ResponseBodyReviewId(review.getId())).build();
+    return new ResponseBodyReviewId(review.getId());
   }
 
   @GET
-  public Response getReviews(
-      @QueryParam("employer_id") int employerId,
+  public ResponseBodyReviews getReviews(
+      @QueryParam("employer_id") Integer employerId,
       @QueryParam("page") @DefaultValue("0") int page,
       @QueryParam("per_page") @DefaultValue("10") int perPage
   ) {
+    if (employerId == null) {
+      throw new Errors(Response.Status.BAD_REQUEST, "BAD_REQUEST_PARAMETER", "employerId").toWebApplicationException();
+    }
+
     Errors errors = new Errors(Response.Status.BAD_REQUEST);
 
     Integer rowCount = Math.toIntExact(reviewDao.getRowCountFilteredByEmployer(employerId));
@@ -100,8 +104,7 @@ public class ReviewResource {
 
     List<Review> reviews = reviewDao.getPaginatedFilteredByEmployer(employerId, page * perPage, perPage);
     if (reviews == null) {
-      return Response.status(200)
-          .entity(new ResponseBodyReviews(new ArrayList<>(), page, pageCount, perPage)).build();
+      return new ResponseBodyReviews(new ArrayList<>(), page, pageCount, perPage);
     }
 
     reviews.sort((review01, review02) -> {
@@ -119,7 +122,7 @@ public class ReviewResource {
       ReviewDto reviewDto = new ReviewDto(employerId, review.getId(), review.getRating(), review.getReviewType(), review.getText());
       reviewDtos.add(reviewDto);
     }
-    return Response.status(200).entity(new ResponseBodyReviews(reviewDtos, page, pageCount, perPage)).build();
+    return new ResponseBodyReviews(reviewDtos, page, pageCount, perPage);
 
   }
 }

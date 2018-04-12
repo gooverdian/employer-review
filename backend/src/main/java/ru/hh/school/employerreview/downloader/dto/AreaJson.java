@@ -22,15 +22,15 @@ public class AreaJson {
   }
 
   public Integer getId() {
-    return this.id;
+    return id;
   }
 
   public String getName() {
-    return this.name;
+    return name;
   }
 
   public Integer getParentId() {
-    return this.parentId;
+    return parentId;
   }
 
   public void setName(String name) {

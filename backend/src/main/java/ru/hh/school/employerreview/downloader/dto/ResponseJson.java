@@ -20,22 +20,22 @@ public class ResponseJson {
   private int found;
 
   public int getFound() {
-    return this.found;
+    return found;
   }
 
   public int getPage() {
-    return this.page;
+    return page;
   }
 
   public int getPages() {
-    return this.pages;
+    return pages;
   }
 
   public int getPerPage() {
-    return this.perPage;
+    return perPage;
   }
 
   public EmployerJson[] getItems() {
-    return this.items;
+    return items;
   }
 }

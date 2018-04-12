@@ -16,21 +16,21 @@ public class EmployerSearchResourceTest extends AbstractJUnit4SpringContextTests
 
   @Test(expected = WebApplicationException.class)
   public void testEmptyRequest() {
-    resource.employersSearch("", 0, 10);
+    resource.searchEmployers("", 0, 10);
   }
 
   @Test(expected = WebApplicationException.class)
-  public void testPageNegativeValue() {
-    resource.employersSearch("d", -1, 10);
+  public void testNegativePageValue() {
+    resource.searchEmployers("d", -1, 10);
   }
 
   @Test(expected = WebApplicationException.class)
-  public void testPerPageValue() {
-    resource.employersSearch("d", 0, -1);
+  public void testNegativePerPageValue() {
+    resource.searchEmployers("d", 0, -1);
   }
 
   @Test(expected = WebApplicationException.class)
-  public void testGetEmployerById() {
+  public void testGetEmployerByNullValue() {
     resource.getEmployerById(null);
   }
 }

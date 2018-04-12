@@ -1,24 +1,18 @@
 package ru.hh.school.employerreview.employer.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import ru.hh.school.employerreview.employer.Employer;
-import ru.hh.school.employerreview.rating.Rating;
-
-import java.util.ArrayList;
 import java.util.List;
 
 public class EmployersResponse {
 
-  public EmployersResponse(List<Employer> resultsFromDB, List<Rating> ratings, int page, int perPage, int found, int pages) {
+  public EmployersResponse() {
+    page = 0;
+    perPage = 0;
+    found = 0;
+    pages = 0;
+  }
 
-    List<EmployerItem> items = new ArrayList<>();
-    for (int i = 0; i < resultsFromDB.size(); ++i) {
-      EmployerItem employerItem = resultsFromDB.get(i).toEmployerItem();
-      if (ratings.get(i) != null) {
-        employerItem.setRating(ratings.get(i));
-      }
-      items.add(employerItem);
-    }
+  public EmployersResponse(List<EmployerItem> items, int page, int perPage, int found, int pages) {
     setItems(items);
     setPerPage(perPage);
     setPage(page);
@@ -54,7 +48,7 @@ public class EmployersResponse {
   }
 
   public void setItems(List<EmployerItem> employerItems) {
-    this.items = employerItems;
+    items = employerItems;
   }
 
   public void setFound(int found) {

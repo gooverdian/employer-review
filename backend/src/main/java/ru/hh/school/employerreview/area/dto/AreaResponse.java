@@ -1,19 +1,20 @@
 package ru.hh.school.employerreview.area.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import ru.hh.school.employerreview.area.Area;
 import ru.hh.school.employerreview.downloader.dto.AreaJson;
-import java.util.ArrayList;
+
 import java.util.List;
 
 public class AreaResponse {
 
-  public AreaResponse(List<Area> resultsFromDB, int page, int perPage, int found, int pages) {
+  public AreaResponse() {
+    found = 0;
+    page = 0;
+    pages = 0;
+    perPage = 0;
+  }
 
-    List<AreaJson> items = new ArrayList<>();
-    for (Area area : resultsFromDB) {
-      items.add(area.toAreaJson());
-    }
+  public AreaResponse(List<AreaJson> items, int page, int perPage, int found, int pages) {
     setItems(items);
     setPerPage(perPage);
     setPage(page);
