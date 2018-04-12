@@ -23,8 +23,8 @@ import ru.hh.school.employerreview.review.ReviewResource;
 public class CommonConfig {
 
   @Bean
-  EmployerSearchResource employerSearchResource(EmployerDao employerDao, RatingDao ratingDao) {
-    return new EmployerSearchResource(employerDao, ratingDao);
+  EmployerSearchResource employerSearchResource(EmployerDao employerDao, RatingDao ratingDao, AreaDao areaDao) {
+    return new EmployerSearchResource(employerDao, ratingDao, areaDao);
   }
 
   @Bean

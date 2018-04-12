@@ -50,7 +50,7 @@ public class Employer {
   @JoinColumn(name = "area_id")
   private Area area;
 
-  public Employer(String name, String siteUrl, int hhId) {
+  public Employer(String name, String siteUrl, Integer hhId) {
     this.name = name;
     this.siteUrl = siteUrl;
     this.hhId = hhId;
@@ -71,7 +71,7 @@ public class Employer {
     return this.area;
   }
 
-  public int getHhId() {
+  public Integer getHhId() {
     return hhId;
   }
 
@@ -79,7 +79,7 @@ public class Employer {
     this.name = name;
   }
 
-  public void setId(int id) {
+  public void setId(Integer id) {
     this.id = id;
   }
 
@@ -167,13 +167,15 @@ public class Employer {
 
   public EmployerItem toEmployerItem() {
     EmployerItem employerItem = new EmployerItem();
-    employerItem.setAreaId(area.getId());
     employerItem.setHhId(hhId);
     employerItem.setName(name);
     employerItem.setLogoUrl(logoUrl90);
     employerItem.setUrl(siteUrl);
-    employerItem.setAreaName(area.getName());
     employerItem.setId(id);
+    if (area != null) {
+      employerItem.setAreaId(area.getId());
+      employerItem.setAreaName(area.getName());
+    }
     return employerItem;
   }
 }

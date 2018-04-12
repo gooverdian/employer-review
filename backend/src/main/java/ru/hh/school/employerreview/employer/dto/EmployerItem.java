@@ -111,8 +111,31 @@ public class EmployerItem {
 
   public Employer toEmployer() {
     Employer employer = new Employer(name, url, hhId);
-    employer.setArea(new Area(areaName, areaId, -1));
+    if (areaId != null) {
+      employer.setArea(new Area(areaName, areaId, -1));
+    }
+    employer.setLogoUrl90(logoUrl);
     employer.setId(id);
     return employer;
+  }
+
+  public Integer getAreaId() {
+    return areaId;
+  }
+
+  public Integer getId() {
+    return id;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public String getUrl() {
+    return url;
+  }
+
+  public Integer getHhId() {
+    return hhId;
   }
 }

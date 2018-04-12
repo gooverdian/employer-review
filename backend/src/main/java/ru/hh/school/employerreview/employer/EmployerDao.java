@@ -44,12 +44,17 @@ public class EmployerDao {
 
   @Transactional
   public void save(Employer employer) {
-    Employer employerFromDB = getEmployerByHhId(employer.getHhId());
-    if (employerFromDB == null) {
+    if (employer.getHhId() != null) { // for employers from hh database
+      Employer employerFromDB = getEmployerByHhId(employer.getHhId());
+      if (employerFromDB == null) {
+        getSession().save(employer);
+      } else if (employer.getArea().getId() > employerFromDB.getArea().getId()) {
+        // Check if the new employer.area is the child of employer's area from DB to go down to the lowest area level
+        employerFromDB.setArea(employer.getArea());
+        getSession().update(employerFromDB);
+      }
+    } else {
       getSession().save(employer);
-    } else if (employer.getArea().getId() > employerFromDB.getArea().getId()) {
-      employerFromDB.setArea(employer.getArea());
-      getSession().update(employerFromDB);
     }
   }
 

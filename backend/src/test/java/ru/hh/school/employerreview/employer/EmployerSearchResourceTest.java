@@ -4,6 +4,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import ru.hh.school.employerreview.EmployerReviewTestBase;
 import ru.hh.school.employerreview.area.AreaDao;
+import ru.hh.school.employerreview.employer.dto.EmployerItem;
 import ru.hh.school.employerreview.employer.dto.EmployersResponse;
 
 import javax.inject.Inject;
@@ -42,6 +43,65 @@ public class EmployerSearchResourceTest extends EmployerReviewTestBase {
 
     employerDao.deleteEmployer(employer);
     areaDao.deleteArea(area);
+  }
+
+  @Test
+  public void testAddNewEmployer() {
+    areaDao.save(area);
+    EmployerItem employerItem = new EmployerItem();
+    employerItem.setAreaId(testAreaId);
+    employerItem.setUrl("url");
+    employerItem.setName(testEmployerName);
+
+    Employer employer = employerDao.getEmployer(resource.postEmployer(employerItem).getId());
+
+    Assert.assertEquals(employer.getName(), employerItem.getName());
+    Assert.assertEquals(employer.getArea().getId(), employerItem.getAreaId());
+    Assert.assertEquals(employer.getSiteUrl(), employerItem.getUrl());
+    Assert.assertNull(employer.getHhId());
+
+    employerDao.deleteEmployer(employer);
+    areaDao.deleteArea(area);
+  }
+
+  @Test
+  public void testAddNewEmployerWithEmptyArea() {
+    EmployerItem employerItem = new EmployerItem();
+    employerItem.setUrl("url");
+    employerItem.setName(testEmployerName);
+
+    Employer employer = employerDao.getEmployer(resource.postEmployer(employerItem).getId());
+
+    Assert.assertEquals(employer.getName(), employerItem.getName());
+    Assert.assertEquals(employer.getSiteUrl(), employerItem.getUrl());
+    Assert.assertNull(employer.getHhId());
+
+    employerDao.deleteEmployer(employer);
+  }
+
+  @Test(expected = WebApplicationException.class)
+  public void testAddNullEmployer() {
+    resource.postEmployer(null);
+  }
+
+  @Test(expected = WebApplicationException.class)
+  public void testAddNewEmployerWithWrongArea() {
+    EmployerItem employerItem = new EmployerItem();
+    employerItem.setAreaId(-1);
+    employerItem.setUrl("url");
+    employerItem.setName(testEmployerName);
+
+    resource.postEmployer(employerItem);
+  }
+
+  @Test(expected = WebApplicationException.class)
+  public void testAddEmployerAlreadyInHH() {
+    EmployerItem employerItem = new EmployerItem();
+    employerItem.setAreaId(testAreaId);
+    employerItem.setUrl("url");
+    employerItem.setName(testEmployerName);
+    employerItem.setHhId(5254);
+    resource.postEmployer(employerItem);
   }
 
   @Test(expected = WebApplicationException.class)
