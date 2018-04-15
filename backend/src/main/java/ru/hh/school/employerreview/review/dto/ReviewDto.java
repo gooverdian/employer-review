@@ -1,20 +1,35 @@
 package ru.hh.school.employerreview.review.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import ru.hh.school.employerreview.review.ReviewType;
 
 public class ReviewDto {
   @JsonProperty("employer_id")
   private Integer employerId;
+
   @JsonProperty("review_id")
   private Integer reviewId;
+
+  @JsonProperty("review_type")
+  private ReviewType reviewType;
+
   private Float rating;
   private String text;
 
-  public ReviewDto(Integer employerId, Integer reviewId, Float rating, String text) {
+  public ReviewDto(Integer employerId, Integer reviewId, Float rating, ReviewType reviewType, String text) {
     this.employerId = employerId;
     this.reviewId = reviewId;
     this.rating = rating;
     this.text = text;
+    this.reviewType = reviewType;
+  }
+
+  public ReviewType getReviewType() {
+    return reviewType;
+  }
+
+  public void setReviewType(ReviewType reviewType) {
+    this.reviewType = reviewType;
   }
 
   public ReviewDto() {
@@ -57,6 +72,7 @@ public class ReviewDto {
     return "ReviewDto{" +
         "employerId=" + employerId +
         ", reviewId=" + reviewId +
+        ", reviewType=" + reviewType +
         ", rating=" + rating +
         ", text='" + text + '\'' +
         '}';

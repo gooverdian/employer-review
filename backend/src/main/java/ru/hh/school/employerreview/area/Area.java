@@ -15,7 +15,7 @@ public class Area {
   private Integer id;
 
   @Column(name = "parent_id")
-  private int parentId;
+  private Integer parentId;
 
   @Column(name = "name")
   private String name;

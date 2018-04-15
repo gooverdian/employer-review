@@ -37,11 +37,18 @@ CREATE TABLE rating (
     star0_5         integer NOT NULL
 );
 
+--Тип озыва
+CREATE TYPE review_type_enum AS ENUM (
+    'EMPLOYEE',
+    'INTERVIEWEE'
+);
+
 --Отзыв
 CREATE TABLE review (
 	id SERIAL PRIMARY KEY,
 	employer_id integer NOT NULL REFERENCES employer,
 	created_on timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	review_type review_type_enum NOT NULL,
 	text varchar,
 	rating real NOT NULL
 );

@@ -62,6 +62,7 @@ public class ReviewResource {
     Review review = new Review(
         employer,
         reviewDto.getRating(),
+        reviewDto.getReviewType(),
         reviewDto.getText());
     reviewDao.save(review);
 
@@ -115,7 +116,7 @@ public class ReviewResource {
 
     List<ReviewDto> reviewDtos = new ArrayList<>();
     for (Review review : reviews) {
-      ReviewDto reviewDto = new ReviewDto(employerId, review.getId(), review.getRating(), review.getText());
+      ReviewDto reviewDto = new ReviewDto(employerId, review.getId(), review.getRating(), review.getReviewType(), review.getText());
       reviewDtos.add(reviewDto);
     }
     return Response.status(200).entity(new ResponseBodyReviews(reviewDtos, page, pageCount, perPage)).build();
