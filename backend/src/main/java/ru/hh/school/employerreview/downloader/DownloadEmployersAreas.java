@@ -1,8 +1,5 @@
 package ru.hh.school.employerreview.downloader;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import ru.hh.school.employerreview.area.Area;
 import ru.hh.school.employerreview.area.AreaDao;
 import ru.hh.school.employerreview.downloader.dto.AreaJson;
@@ -15,17 +12,13 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import static ru.hh.nab.common.util.PropertiesUtils.setSystemPropertyIfAbsent;
-
-public class DownloadMain {
-  private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+public class DownloadEmployersAreas extends DownloadAbstract {
   private static final String URL_AREAS = "https://api.hh.ru/areas";
   private static final String URL_EMPLOYERS = "https://api.hh.ru/employers";
   private static final int EMPLOYERS_PAGES = 5;
   private static final int EMPLOYERS_PAGE_SIZE = 1000;
   private static AreaDao areaDao;
   private static EmployerDao employerDao;
-  private static ApplicationContext applicationContext;
   private static int areaSizeCounter = 0;
 
   public static void main(String[] args) {
@@ -37,8 +30,7 @@ public class DownloadMain {
       maxEmployersSize = Integer.parseInt(args[1]);
     }
 
-    setSystemPropertyIfAbsent("settingsDir", "src/etc");
-    applicationContext = new AnnotationConfigApplicationContext(DownloaderConfig.class);
+    init();
 
     employerDao = applicationContext.getBean(EmployerDao.class);
     areaDao = applicationContext.getBean(AreaDao.class);
@@ -56,7 +48,7 @@ public class DownloadMain {
   }
 
   private static void saveAreasToDb(AreaJson[] areaJsons, int maxAreasSize, int maxEmployersSize) {
-    for (AreaJson areaJson: areaJsons) {
+    for (AreaJson areaJson : areaJsons) {
       Area currentArea = areaJson.toArea();
       if (areaSizeCounter < maxAreasSize) {
         areaDao.save(currentArea);
@@ -90,10 +82,9 @@ public class DownloadMain {
 
   private static void saveEmployersToDb(EmployerJson[] employerJsons, Area area) {
     List<Employer> employers = new ArrayList<>();
-    for (EmployerJson employerJson: employerJsons) {
+    for (EmployerJson employerJson : employerJsons) {
       employers.add(employerJson.toHibernateObj(area));
     }
     employerDao.save(employers);
   }
 }
-

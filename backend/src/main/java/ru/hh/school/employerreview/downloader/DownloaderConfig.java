@@ -1,8 +1,6 @@
 package ru.hh.school.employerreview.downloader;
 
 import com.mchange.v2.c3p0.DriverManagerDataSource;
-import java.util.Properties;
-import javax.sql.DataSource;
 import org.hibernate.SessionFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,12 +9,20 @@ import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import ru.hh.nab.common.util.FileSettings;
-import static ru.hh.nab.common.util.PropertiesUtils.fromFilesInSettingsDir;
 import ru.hh.nab.hibernate.MappingConfig;
 import ru.hh.school.employerreview.area.Area;
 import ru.hh.school.employerreview.area.AreaDao;
 import ru.hh.school.employerreview.employer.Employer;
 import ru.hh.school.employerreview.employer.EmployerDao;
+import ru.hh.school.employerreview.specializations.ProfessionalField;
+import ru.hh.school.employerreview.specializations.ProfessionalFieldDao;
+import ru.hh.school.employerreview.specializations.Specialization;
+import ru.hh.school.employerreview.specializations.SpecializationDao;
+
+import javax.sql.DataSource;
+import java.util.Properties;
+
+import static ru.hh.nab.common.util.PropertiesUtils.fromFilesInSettingsDir;
 
 @Configuration
 @EnableTransactionManagement
@@ -42,7 +48,7 @@ class DownloaderConfig {
 
   @Bean
   MappingConfig mappingConfig() {
-    return new MappingConfig(Employer.class, Area.class);
+    return new MappingConfig(Employer.class, Area.class, ProfessionalField.class, Specialization.class);
   }
 
   @Bean
@@ -68,5 +74,15 @@ class DownloaderConfig {
   @Bean
   AreaDao areaDao(SessionFactory sessionFactory) {
     return new AreaDao(sessionFactory);
+  }
+
+  @Bean
+  SpecializationDao specializationDao(SessionFactory sessionFactory) {
+    return new SpecializationDao(sessionFactory);
+  }
+
+  @Bean
+  ProfessionalFieldDao proffFieldDao(SessionFactory sessionFactory) {
+    return new ProfessionalFieldDao(sessionFactory);
   }
 }

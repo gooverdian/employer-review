@@ -17,6 +17,10 @@ import ru.hh.school.employerreview.rating.RatingDao;
 import ru.hh.school.employerreview.review.Review;
 import ru.hh.school.employerreview.review.ReviewDao;
 import ru.hh.school.employerreview.review.ReviewResource;
+import ru.hh.school.employerreview.specializations.ProfessionalField;
+import ru.hh.school.employerreview.specializations.ProfessionalFieldDao;
+import ru.hh.school.employerreview.specializations.Specialization;
+import ru.hh.school.employerreview.specializations.SpecializationDao;
 
 @Configuration
 @Import({HibernateCommonConfig.class})
@@ -49,7 +53,7 @@ public class CommonConfig {
 
   @Bean
   MappingConfig mappingConfig() {
-    return new MappingConfig(Employer.class, Review.class, Area.class, Rating.class);
+    return new MappingConfig(Employer.class, Review.class, Area.class, Rating.class, ProfessionalField.class, Specialization.class);
   }
 
   @Bean
@@ -60,5 +64,15 @@ public class CommonConfig {
   @Bean
   ReviewDao reviewDao(SessionFactory sessionFactory) {
     return new ReviewDao(sessionFactory);
+  }
+
+  @Bean
+  SpecializationDao specializationDao(SessionFactory sessionFactory) {
+    return new SpecializationDao(sessionFactory);
+  }
+
+  @Bean
+  ProfessionalFieldDao proffFieldDao(SessionFactory sessionFactory) {
+    return new ProfessionalFieldDao(sessionFactory);
   }
 }
