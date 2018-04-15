@@ -1,9 +1,8 @@
 package ru.hh.school.employerreview.review;
 
+import org.junit.Assert;
 import org.junit.Test;
-import org.springframework.test.context.ContextConfiguration;
-import ru.hh.school.employerreview.EmployerReviewTest;
-import ru.hh.school.employerreview.TestConfig;
+import ru.hh.school.employerreview.TestBase;
 import ru.hh.school.employerreview.area.Area;
 import ru.hh.school.employerreview.area.AreaDao;
 import ru.hh.school.employerreview.employer.Employer;
@@ -13,8 +12,7 @@ import ru.hh.school.employerreview.review.dto.ReviewDto;
 import javax.inject.Inject;
 import javax.ws.rs.WebApplicationException;
 
-@ContextConfiguration(classes = {TestConfig.class})
-public class ReviewResourceTest extends EmployerReviewTest {
+public class ReviewResourceTest extends TestBase {
 
   @Inject
   private ReviewResource resource;
@@ -22,28 +20,36 @@ public class ReviewResourceTest extends EmployerReviewTest {
   private AreaDao areaDao;
   @Inject
   private EmployerDao employerDao;
+  @Inject
+  private ReviewDao reviewDao;
 
   @Test
   public void testPostReview() {
+    Area area = new Area(testAreaName, testAreaId, -1);
+    areaDao.save(area);
 
-    Area area = areaDao.getById(testAreaId);
-    if (area == null) {
-      areaDao.save(new Area(testAreaName, testAreaId, -1));
-    }
-
-    Employer employer = employerDao.getEmployer(testEmployerId);
-    if (employer == null) {
-      employer = new Employer(testEmployerName, "url", 1);
-      employer.setArea(area);
-      employerDao.save(employer);
-    }
+    Employer employer = new Employer(testEmployerName, "url", 1);
+    employer.setArea(area);
+    employerDao.save(employer);
 
     ReviewDto reviewDto = new ReviewDto();
     reviewDto.setEmployerId(employer.getId());
     reviewDto.setRating(2.5f);
     reviewDto.setText("good");
+    reviewDto.setReviewType(ReviewType.EMPLOYEE);
 
-    resource.postReview(reviewDto);
+
+    Review postedReview = reviewDto.toReview();
+    Review reviewFromDB = reviewDao.getById(resource.postReview(reviewDto).getReviewId());
+
+    Assert.assertEquals(postedReview.getText(), reviewFromDB.getText());
+    Assert.assertEquals(postedReview.getRating(), reviewFromDB.getRating());
+    Assert.assertEquals(postedReview.getReviewType(), reviewFromDB.getReviewType());
+    Assert.assertEquals(postedReview.getEmployer().getId(), reviewFromDB.getEmployer().getId());
+
+    reviewDao.delete(reviewFromDB);
+    employerDao.delete(employer);
+    areaDao.delete(area);
   }
 
   @Test(expected = WebApplicationException.class)

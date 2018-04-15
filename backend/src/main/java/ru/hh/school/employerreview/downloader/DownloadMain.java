@@ -26,15 +26,15 @@ public class DownloadMain {
   private static AreaDao areaDao;
   private static EmployerDao employerDao;
   private static ApplicationContext applicationContext;
-  private static int maxEmployersSizeToDownload = -1;
-  private static int maxAreasSizeToDownload = -1;
+  private static int maxEmployersSize = Integer.MAX_VALUE;
+  private static int maxAreasSize = Integer.MAX_VALUE;
   private static int areaSizeCounter = 0;
 
   public static void main(String[] args) {
 
     if (args.length == 2) {
-      maxAreasSizeToDownload = Integer.parseInt(args[0]);
-      maxEmployersSizeToDownload = Integer.parseInt(args[1]);
+      maxAreasSize = Integer.parseInt(args[0]);
+      maxEmployersSize = Integer.parseInt(args[1]);
     }
 
     setSystemPropertyIfAbsent("settingsDir", "src/etc");
@@ -58,12 +58,12 @@ public class DownloadMain {
   private static void saveAreasToDb(AreaJson[] areaJsons) {
     for (AreaJson areaJson: areaJsons) {
       Area currentArea = areaJson.toArea();
-      if (maxAreasSizeToDownload > 0 && areaSizeCounter < maxAreasSizeToDownload) {
+      if (areaSizeCounter < maxAreasSize) {
         areaDao.save(currentArea);
-        if (maxEmployersSizeToDownload > 0 && employerDao.countRows() < maxEmployersSizeToDownload) {
+        if (employerDao.countRows() < maxEmployersSize) {
           downloadEmployers(currentArea);
         }
-        ++areaSizeCounter;
+        areaSizeCounter += 1;
         saveAreasToDb(areaJson.getAreas());
       }
     }

@@ -56,7 +56,7 @@ public class Employer {
     this.hhId = hhId;
   }
 
-  Employer() {
+  public Employer() {
   }
 
   public Integer getId() {
@@ -77,6 +77,10 @@ public class Employer {
 
   public void setName(String name) {
     this.name = name;
+  }
+
+  public void setId(int id) {
+    this.id = id;
   }
 
   public void setDescription(String description) {

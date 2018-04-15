@@ -1,6 +1,7 @@
 package ru.hh.school.employerreview.employer.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.List;
 
 public class EmployersResponse {
@@ -42,6 +43,10 @@ public class EmployersResponse {
 
   public int getFound() {
     return found;
+  }
+
+  public List<EmployerItem> getItems() {
+    return items;
   }
 
   public EmployersResponse() {

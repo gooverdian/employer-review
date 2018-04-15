@@ -65,7 +65,7 @@ public class EmployerSearchResource {
     }
     Employer employer = employerDao.getById(employerId);
     if (employer == null) {
-      throw new Errors(Response.Status.BAD_REQUEST, "NOT_FOUND", "employerId").toWebApplicationException();
+      throw new Errors(Response.Status.OK, "NOT_FOUND", "employerId").toWebApplicationException();
     }
     EmployerItem employerItem = employer.toEmployerItem();
     employerItem.setRating(ratingDao.getRating(employerId));

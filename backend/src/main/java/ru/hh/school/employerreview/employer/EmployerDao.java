@@ -2,6 +2,7 @@ package ru.hh.school.employerreview.employer;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Projections;
 import org.hibernate.query.Query;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -86,13 +87,12 @@ public class EmployerDao {
 
   @Transactional(readOnly = true)
   public int countRows() {
-    return ((Long) getSession().createQuery("select count(*) from Employer").uniqueResult()).intValue();
+    return ((Number) getSession().createCriteria(Employer.class).setProjection(Projections.rowCount()).uniqueResult()).intValue();
   }
 
   @Transactional
-  public int truncate() {
-    Query query = getSession().createQuery(String.format("delete from Employer"));
-    return query.executeUpdate();
+  public void delete(Employer employer) {
+    getSession().delete(employer);
   }
 
   private Session getSession() {

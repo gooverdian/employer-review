@@ -23,7 +23,6 @@ public class AreaResponse {
   private int found;
 
   public AreaResponse() {
-
   }
 
   public AreaResponse(List<AreaJson> items, int page, int perPage, int found, int pages) {
@@ -56,5 +55,9 @@ public class AreaResponse {
 
   public int getFound() {
     return found;
+  }
+
+  public List<AreaJson> getItems() {
+    return items;
   }
 }

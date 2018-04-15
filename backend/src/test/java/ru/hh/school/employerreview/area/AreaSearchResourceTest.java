@@ -2,16 +2,13 @@ package ru.hh.school.employerreview.area;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.springframework.test.context.ContextConfiguration;
-import ru.hh.school.employerreview.EmployerReviewTest;
-import ru.hh.school.employerreview.TestConfig;
+import ru.hh.school.employerreview.TestBase;
 import ru.hh.school.employerreview.area.dto.AreaResponse;
 
 import javax.inject.Inject;
 import javax.ws.rs.WebApplicationException;
 
-@ContextConfiguration(classes = {TestConfig.class})
-public class AreaSearchResourceTest extends EmployerReviewTest {
+public class AreaSearchResourceTest extends TestBase {
 
   @Inject
   private AreaSearchResource resource;
@@ -20,21 +17,20 @@ public class AreaSearchResourceTest extends EmployerReviewTest {
 
   @Test
   public void testAreaSearch() {
-    Area area = areaDao.getById(testAreaId);
-    if (area == null) {
-      areaDao.save(new Area(testAreaName, testAreaId, -1));
-    }
+    Area area = new Area(testAreaName, testAreaId, -1);
+    areaDao.save(area);
     AreaResponse areaResponse = resource.searchAreas(testAreaName, 0, 10);
     Assert.assertEquals(areaResponse.getFound(), 1);
+    Assert.assertEquals(areaResponse.getItems().get(0).toArea(), area);
+    areaDao.delete(area);
   }
 
   @Test
   public void testGetAreaById() {
-    Area area = areaDao.getById(testAreaId);
-    if (area == null) {
-      areaDao.save(new Area(testAreaName, testAreaId, -1));
-    }
-    Assert.assertNotNull(resource.getAreaById(testAreaId));
+    Area area = new Area(testAreaName, testAreaId, -1);
+    areaDao.save(area);
+    Assert.assertEquals(resource.getAreaById(area.getId()).toArea(), area);
+    areaDao.delete(area);
   }
 
   @Test(expected = WebApplicationException.class)

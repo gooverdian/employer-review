@@ -92,6 +92,10 @@ public class Review {
     this.text = text;
   }
 
+  public void setType(ReviewType reviewType) {
+    this.reviewType = reviewType;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {

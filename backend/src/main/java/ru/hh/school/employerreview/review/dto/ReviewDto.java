@@ -1,6 +1,8 @@
 package ru.hh.school.employerreview.review.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import ru.hh.school.employerreview.employer.Employer;
+import ru.hh.school.employerreview.review.Review;
 import ru.hh.school.employerreview.review.ReviewType;
 
 public class ReviewDto {
@@ -77,4 +79,17 @@ public class ReviewDto {
         ", text='" + text + '\'' +
         '}';
   }
+
+  public Review toReview() {
+    Review review = new Review();
+    Employer employer = new Employer();
+    employer.setId(employerId);
+    review.setEmployer(employer);
+    review.setId(reviewId);
+    review.setType(reviewType);
+    review.setRating(rating);
+    review.setText(text);
+    return review;
+  }
+
 }

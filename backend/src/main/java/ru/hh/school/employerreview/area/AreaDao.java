@@ -29,22 +29,16 @@ public class AreaDao {
     getSession().save(area);
   }
 
-  @Transactional(readOnly = true)
-  public int countRows() {
-    return ((Long) getSession().createQuery("select count(*) from Area").uniqueResult()).intValue();
-  }
-
-  @Transactional
-  public int truncate() {
-    Query query = getSession().createQuery(String.format("delete from Area"));
-    return query.executeUpdate();
-  }
-
   @Transactional
   public void save(Area[] areas) {
     for (Area area : areas) {
       save(area);
     }
+  }
+
+  @Transactional
+  public void delete(Area area) {
+    getSession().delete(area);
   }
 
   @Transactional(readOnly = true)

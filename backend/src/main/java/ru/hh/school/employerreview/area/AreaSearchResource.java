@@ -60,7 +60,7 @@ public class AreaSearchResource {
     }
     Area area = areaDao.getById(areaId);
     if (area == null) {
-      throw new Errors(Response.Status.BAD_REQUEST, "NOT_FOUND", "areaId").toWebApplicationException();
+      throw new Errors(Response.Status.OK, "NOT_FOUND", "areaId").toWebApplicationException();
     }
     return area.toAreaJson();
   }

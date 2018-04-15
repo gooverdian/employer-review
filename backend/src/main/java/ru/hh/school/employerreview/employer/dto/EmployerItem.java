@@ -1,6 +1,8 @@
 package ru.hh.school.employerreview.employer.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import ru.hh.school.employerreview.area.Area;
+import ru.hh.school.employerreview.employer.Employer;
 import ru.hh.school.employerreview.rating.Rating;
 
 public class EmployerItem {
@@ -105,5 +107,12 @@ public class EmployerItem {
       star45 = rating.getStar45();
       star05 = rating.getStar05();
     }
+  }
+
+  public Employer toEmployer() {
+    Employer employer = new Employer(name, url, hhId);
+    employer.setArea(new Area(areaName, areaId, -1));
+    employer.setId(id);
+    return employer;
   }
 }
