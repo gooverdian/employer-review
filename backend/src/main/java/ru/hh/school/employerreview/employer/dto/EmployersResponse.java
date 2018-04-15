@@ -5,21 +5,6 @@ import java.util.List;
 
 public class EmployersResponse {
 
-  public EmployersResponse() {
-    page = 0;
-    perPage = 0;
-    found = 0;
-    pages = 0;
-  }
-
-  public EmployersResponse(List<EmployerItem> items, int page, int perPage, int found, int pages) {
-    setItems(items);
-    setPerPage(perPage);
-    setPage(page);
-    setFound(found);
-    setPages(pages);
-  }
-
   @JsonProperty("per_page")
   private int perPage;
 
@@ -53,6 +38,22 @@ public class EmployersResponse {
 
   public void setFound(int found) {
     this.found = found;
+  }
+
+  public int getFound() {
+    return found;
+  }
+
+  public EmployersResponse() {
+
+  }
+
+  public EmployersResponse(List<EmployerItem> items, int page, int perPage, int found, int pages) {
+    setItems(items);
+    setPerPage(perPage);
+    setPage(page);
+    setFound(found);
+    setPages(pages);
   }
 }
 

@@ -34,14 +34,11 @@ public class AreaSearchResource {
     PaginationHelper.checkInputParameters(text, page, perPage);
 
     int rowCount = areaDao.getRowCountFilteredByArea(text);
-    if (rowCount == 0) {
+    if (rowCount <= 0) {
       return new AreaResponse();
     }
 
     int pageCount = PaginationHelper.calculatePagesCount(rowCount, perPage);
-    if (pageCount <= 0) {
-      throw new Errors(Response.Status.BAD_REQUEST, "PAGINATION", "pageCount").toWebApplicationException();
-    }
     if (page > pageCount - 1) {
       throw new Errors(Response.Status.BAD_REQUEST, "BAD_REQUEST_PARAMETER", "page").toWebApplicationException();
     }

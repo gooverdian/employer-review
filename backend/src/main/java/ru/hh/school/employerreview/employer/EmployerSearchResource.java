@@ -4,7 +4,6 @@ import ru.hh.errors.common.Errors;
 import ru.hh.school.employerreview.PaginationHelper;
 import ru.hh.school.employerreview.employer.dto.EmployerItem;
 import ru.hh.school.employerreview.employer.dto.EmployersResponse;
-import ru.hh.school.employerreview.rating.Rating;
 import ru.hh.school.employerreview.rating.RatingDao;
 
 import javax.ws.rs.DefaultValue;
@@ -38,14 +37,11 @@ public class EmployerSearchResource {
     PaginationHelper.checkInputParameters(text, page, perPage);
 
     int rowCount = employerDao.getRowCountFilteredByEmployer(text);
-    if (rowCount == 0) {
+    if (rowCount <= 0) {
       return new EmployersResponse();
     }
 
     int pageCount = PaginationHelper.calculatePagesCount(rowCount, perPage);
-    if (pageCount <= 0) {
-      throw new Errors(Response.Status.BAD_REQUEST, "PAGINATION", "pageCount").toWebApplicationException();
-    }
     if (page > pageCount - 1) {
       throw new Errors(Response.Status.BAD_REQUEST, "BAD_REQUEST_PARAMETER", "page").toWebApplicationException();
     }
@@ -69,13 +65,10 @@ public class EmployerSearchResource {
     }
     Employer employer = employerDao.getById(employerId);
     if (employer == null) {
-      throw new Errors(Response.Status.BAD_REQUEST, "BAD_REQUEST_PARAMETER", "employerId").toWebApplicationException();
+      throw new Errors(Response.Status.BAD_REQUEST, "NOT_FOUND", "employerId").toWebApplicationException();
     }
     EmployerItem employerItem = employer.toEmployerItem();
-    Rating rating = ratingDao.getRating(employerId);
-    if (rating != null) {
-      employerItem.setRating(rating);
-    }
+    employerItem.setRating(ratingDao.getRating(employerId));
     return employerItem;
   }
 }

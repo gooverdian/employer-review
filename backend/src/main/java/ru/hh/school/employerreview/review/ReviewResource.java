@@ -19,6 +19,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Path("/review")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -77,24 +78,11 @@ public class ReviewResource {
       @QueryParam("page") @DefaultValue("0") int page,
       @QueryParam("per_page") @DefaultValue("10") int perPage
   ) {
-    if (employerId == null) {
-      throw new Errors(Response.Status.BAD_REQUEST, "BAD_REQUEST_PARAMETER", "employerId").toWebApplicationException();
-    }
-
-    Errors errors = new Errors(Response.Status.BAD_REQUEST);
+    PaginationHelper.checkInputParameters(Objects.toString(employerId, ""), page, perPage);
 
     Integer rowCount = Math.toIntExact(reviewDao.getRowCountFilteredByEmployer(employerId));
     if (rowCount == 0) {
       throw new Errors(Response.Status.BAD_REQUEST, "NO_DATA", "review").toWebApplicationException();
-    }
-    if (page < 0) {
-      errors.add("BAD_REQUEST_PARAMETER", "page");
-    }
-    if (perPage <= 0) {
-      errors.add("BAD_REQUEST_PARAMETER", "per_page");
-    }
-    if (errors.hasErrors()) {
-      throw errors.toWebApplicationException();
     }
 
     int pageCount = PaginationHelper.calculatePagesCount(rowCount, perPage);
@@ -104,7 +92,7 @@ public class ReviewResource {
 
     List<Review> reviews = reviewDao.getPaginatedFilteredByEmployer(employerId, page * perPage, perPage);
     if (reviews == null) {
-      return new ResponseBodyReviews(new ArrayList<>(), page, pageCount, perPage);
+      return new ResponseBodyReviews();
     }
 
     reviews.sort((review01, review02) -> {
@@ -123,6 +111,5 @@ public class ReviewResource {
       reviewDtos.add(reviewDto);
     }
     return new ResponseBodyReviews(reviewDtos, page, pageCount, perPage);
-
   }
 }

@@ -7,21 +7,6 @@ import java.util.List;
 
 public class AreaResponse {
 
-  public AreaResponse() {
-    found = 0;
-    page = 0;
-    pages = 0;
-    perPage = 0;
-  }
-
-  public AreaResponse(List<AreaJson> items, int page, int perPage, int found, int pages) {
-    setItems(items);
-    setPerPage(perPage);
-    setPage(page);
-    setFound(found);
-    setPages(pages);
-  }
-
   @JsonProperty("per_page")
   private int perPage;
 
@@ -36,6 +21,18 @@ public class AreaResponse {
 
   @JsonProperty("found")
   private int found;
+
+  public AreaResponse() {
+
+  }
+
+  public AreaResponse(List<AreaJson> items, int page, int perPage, int found, int pages) {
+    setItems(items);
+    setPerPage(perPage);
+    setPage(page);
+    setFound(found);
+    setPages(pages);
+  }
 
   public void setPerPage(int perPage) {
     this.perPage = perPage;
@@ -55,5 +52,9 @@ public class AreaResponse {
 
   public void setFound(int found) {
     this.found = found;
+  }
+
+  public int getFound() {
+    return found;
   }
 }

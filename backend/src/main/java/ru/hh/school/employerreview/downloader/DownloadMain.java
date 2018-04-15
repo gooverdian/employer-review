@@ -1,14 +1,8 @@
 package ru.hh.school.employerreview.downloader;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import static ru.hh.nab.common.util.PropertiesUtils.setSystemPropertyIfAbsent;
-
 import ru.hh.school.employerreview.area.Area;
 import ru.hh.school.employerreview.area.AreaDao;
 import ru.hh.school.employerreview.downloader.dto.AreaJson;
@@ -16,6 +10,12 @@ import ru.hh.school.employerreview.downloader.dto.EmployerJson;
 import ru.hh.school.employerreview.downloader.dto.ResponseJson;
 import ru.hh.school.employerreview.employer.Employer;
 import ru.hh.school.employerreview.employer.EmployerDao;
+
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+
+import static ru.hh.nab.common.util.PropertiesUtils.setSystemPropertyIfAbsent;
 
 public class DownloadMain {
   private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
@@ -26,8 +26,17 @@ public class DownloadMain {
   private static AreaDao areaDao;
   private static EmployerDao employerDao;
   private static ApplicationContext applicationContext;
+  private static int maxEmployersSizeToDownload = -1;
+  private static int maxAreasSizeToDownload = -1;
+  private static int areaSizeCounter = 0;
 
   public static void main(String[] args) {
+
+    if (args.length == 2) {
+      maxAreasSizeToDownload = Integer.parseInt(args[0]);
+      maxEmployersSizeToDownload = Integer.parseInt(args[1]);
+    }
+
     setSystemPropertyIfAbsent("settingsDir", "src/etc");
     applicationContext = new AnnotationConfigApplicationContext(DownloaderConfig.class);
 
@@ -49,9 +58,14 @@ public class DownloadMain {
   private static void saveAreasToDb(AreaJson[] areaJsons) {
     for (AreaJson areaJson: areaJsons) {
       Area currentArea = areaJson.toArea();
-      areaDao.save(currentArea);
-      downloadEmployers(currentArea);
-      saveAreasToDb(areaJson.getAreas());
+      if (maxAreasSizeToDownload > 0 && areaSizeCounter < maxAreasSizeToDownload) {
+        areaDao.save(currentArea);
+        if (maxEmployersSizeToDownload > 0 && employerDao.countRows() < maxEmployersSizeToDownload) {
+          downloadEmployers(currentArea);
+        }
+        ++areaSizeCounter;
+        saveAreasToDb(areaJson.getAreas());
+      }
     }
   }
 

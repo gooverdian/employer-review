@@ -42,14 +42,18 @@ public class EmployerDao {
   @Transactional
   public void save(List<Employer> employers) {
     for (Employer employer : employers) {
-      Employer employerFromDB = getByHhId(employer.getHhId());
-      if (employerFromDB == null) {
-        getSession().save(employer);
+      save(employer);
+    }
+  }
 
-      } else if (employer.getArea().getId() > employerFromDB.getArea().getId()) {
-        employerFromDB.setArea(employer.getArea());
-        getSession().update(employerFromDB);
-      }
+  @Transactional
+  public void save(Employer employer) {
+    Employer employerFromDB = getByHhId(employer.getHhId());
+    if (employerFromDB == null) {
+      getSession().save(employer);
+    } else if (employer.getArea().getId() > employerFromDB.getArea().getId()) {
+      employerFromDB.setArea(employer.getArea());
+      getSession().update(employerFromDB);
     }
   }
 
@@ -78,6 +82,17 @@ public class EmployerDao {
     query.setFirstResult(page * perPage);
     query.setMaxResults(perPage);
     return query.getResultList();
+  }
+
+  @Transactional(readOnly = true)
+  public int countRows() {
+    return ((Long) getSession().createQuery("select count(*) from Employer").uniqueResult()).intValue();
+  }
+
+  @Transactional
+  public int truncate() {
+    Query query = getSession().createQuery(String.format("delete from Employer"));
+    return query.executeUpdate();
   }
 
   private Session getSession() {
