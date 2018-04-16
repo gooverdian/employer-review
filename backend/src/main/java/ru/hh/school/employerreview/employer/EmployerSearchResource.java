@@ -46,10 +46,10 @@ public class EmployerSearchResource {
       throw new Errors(Response.Status.BAD_REQUEST, "BAD_REQUEST_PARAMETER", "page").toWebApplicationException();
     }
 
-    List<Employer> resultsFromDB = employerDao.find(text, page, perPage);
+    List<Employer> resultsFromDB = employerDao.findEmployers(text, page, perPage);
 
     List<EmployerItem> employerItems = new ArrayList<>();
-    for (int i = 0; i < resultsFromDB.size(); ++i) {
+    for (int i = 0; i < resultsFromDB.size(); i++) {
       EmployerItem employerItem = resultsFromDB.get(i).toEmployerItem();
       employerItem.setRating(ratingDao.getRating(resultsFromDB.get(i).getId()));
       employerItems.add(employerItem);
@@ -63,9 +63,9 @@ public class EmployerSearchResource {
     if (employerId == null) {
       throw new Errors(Response.Status.BAD_REQUEST, "BAD_REQUEST_PARAMETER", "employerId").toWebApplicationException();
     }
-    Employer employer = employerDao.getById(employerId);
+    Employer employer = employerDao.getEmployer(employerId);
     if (employer == null) {
-      throw new Errors(Response.Status.OK, "NOT_FOUND", "employerId").toWebApplicationException();
+      throw new Errors(Response.Status.NOT_FOUND, "NOT_FOUND", "employerId").toWebApplicationException();
     }
     EmployerItem employerItem = employer.toEmployerItem();
     employerItem.setRating(ratingDao.getRating(employerId));

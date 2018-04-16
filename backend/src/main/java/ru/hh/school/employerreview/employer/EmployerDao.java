@@ -23,16 +23,11 @@ public class EmployerDao {
   }
 
   @Transactional
-  public Employer getByHhId(int hhId) {
+  public Employer getEmployerByHhId(int hhId) {
     return getSession()
         .createQuery("FROM Employer E WHERE E.hhId = :hhid", Employer.class)
         .setParameter("hhid", hhId)
         .uniqueResult();
-  }
-
-  @Transactional(readOnly = true)
-  public Employer getById(int id) {
-    return getSession().get(Employer.class, id);
   }
 
   @Transactional(readOnly = true)
@@ -49,7 +44,7 @@ public class EmployerDao {
 
   @Transactional
   public void save(Employer employer) {
-    Employer employerFromDB = getByHhId(employer.getHhId());
+    Employer employerFromDB = getEmployerByHhId(employer.getHhId());
     if (employerFromDB == null) {
       getSession().save(employer);
     } else if (employer.getArea().getId() > employerFromDB.getArea().getId()) {
@@ -70,7 +65,7 @@ public class EmployerDao {
   }
 
   @Transactional(readOnly = true)
-  public List<Employer> find(String text, int page, int perPage) {
+  public List<Employer> findEmployers(String text, int page, int perPage) {
     if (perPage <= 0 || page < 0) {
       return Collections.emptyList();
     }
@@ -91,7 +86,7 @@ public class EmployerDao {
   }
 
   @Transactional
-  public void delete(Employer employer) {
+  public void deleteEmployer(Employer employer) {
     getSession().delete(employer);
   }
 

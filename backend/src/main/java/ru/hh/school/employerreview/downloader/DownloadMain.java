@@ -26,12 +26,12 @@ public class DownloadMain {
   private static AreaDao areaDao;
   private static EmployerDao employerDao;
   private static ApplicationContext applicationContext;
-  private static int maxEmployersSize = Integer.MAX_VALUE;
-  private static int maxAreasSize = Integer.MAX_VALUE;
   private static int areaSizeCounter = 0;
 
   public static void main(String[] args) {
 
+    int maxEmployersSize = Integer.MAX_VALUE;
+    int maxAreasSize = Integer.MAX_VALUE;
     if (args.length == 2) {
       maxAreasSize = Integer.parseInt(args[0]);
       maxEmployersSize = Integer.parseInt(args[1]);
@@ -44,7 +44,7 @@ public class DownloadMain {
     areaDao = applicationContext.getBean(AreaDao.class);
 
     AreaJson[] areas = getAreasFromApi();
-    saveAreasToDb(areas);
+    saveAreasToDb(areas, maxAreasSize, maxEmployersSize);
   }
 
   private static AreaJson[] getAreasFromApi() {
@@ -55,7 +55,7 @@ public class DownloadMain {
     }
   }
 
-  private static void saveAreasToDb(AreaJson[] areaJsons) {
+  private static void saveAreasToDb(AreaJson[] areaJsons, int maxAreasSize, int maxEmployersSize) {
     for (AreaJson areaJson: areaJsons) {
       Area currentArea = areaJson.toArea();
       if (areaSizeCounter < maxAreasSize) {
@@ -64,7 +64,7 @@ public class DownloadMain {
           downloadEmployers(currentArea);
         }
         areaSizeCounter += 1;
-        saveAreasToDb(areaJson.getAreas());
+        saveAreasToDb(areaJson.getAreas(), maxAreasSize, maxEmployersSize);
       }
     }
   }

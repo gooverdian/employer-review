@@ -2,13 +2,13 @@ package ru.hh.school.employerreview.area;
 
 import org.junit.Assert;
 import org.junit.Test;
-import ru.hh.school.employerreview.TestBase;
+import ru.hh.school.employerreview.EmployerReviewTestBase;
 import ru.hh.school.employerreview.area.dto.AreaResponse;
 
 import javax.inject.Inject;
 import javax.ws.rs.WebApplicationException;
 
-public class AreaSearchResourceTest extends TestBase {
+public class AreaSearchResourceTest extends EmployerReviewTestBase {
 
   @Inject
   private AreaSearchResource resource;
@@ -17,20 +17,18 @@ public class AreaSearchResourceTest extends TestBase {
 
   @Test
   public void testAreaSearch() {
-    Area area = new Area(testAreaName, testAreaId, -1);
     areaDao.save(area);
     AreaResponse areaResponse = resource.searchAreas(testAreaName, 0, 10);
     Assert.assertEquals(areaResponse.getFound(), 1);
     Assert.assertEquals(areaResponse.getItems().get(0).toArea(), area);
-    areaDao.delete(area);
+    areaDao.deleteArea(area);
   }
 
   @Test
   public void testGetAreaById() {
-    Area area = new Area(testAreaName, testAreaId, -1);
     areaDao.save(area);
     Assert.assertEquals(resource.getAreaById(area.getId()).toArea(), area);
-    areaDao.delete(area);
+    areaDao.deleteArea(area);
   }
 
   @Test(expected = WebApplicationException.class)

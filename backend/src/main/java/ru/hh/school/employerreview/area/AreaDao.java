@@ -37,7 +37,7 @@ public class AreaDao {
   }
 
   @Transactional
-  public void delete(Area area) {
+  public void deleteArea(Area area) {
     getSession().delete(area);
   }
 
@@ -53,7 +53,7 @@ public class AreaDao {
   }
 
   @Transactional(readOnly = true)
-  public List<Area> find(String text, int page, int perPage) {
+  public List<Area> findAreas(String text, int page, int perPage) {
     if (perPage <= 0 || page < 0) {
       return Collections.emptyList();
     }
@@ -69,7 +69,7 @@ public class AreaDao {
   }
 
   @Transactional(readOnly = true)
-  public Area getById(int id) {
+  public Area getAreaById(int id) {
     return getSession().get(Area.class, id);
   }
 

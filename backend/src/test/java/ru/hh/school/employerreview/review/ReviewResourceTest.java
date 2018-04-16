@@ -2,17 +2,15 @@ package ru.hh.school.employerreview.review;
 
 import org.junit.Assert;
 import org.junit.Test;
-import ru.hh.school.employerreview.TestBase;
-import ru.hh.school.employerreview.area.Area;
+import ru.hh.school.employerreview.EmployerReviewTestBase;
 import ru.hh.school.employerreview.area.AreaDao;
-import ru.hh.school.employerreview.employer.Employer;
 import ru.hh.school.employerreview.employer.EmployerDao;
 import ru.hh.school.employerreview.review.dto.ReviewDto;
 
 import javax.inject.Inject;
 import javax.ws.rs.WebApplicationException;
 
-public class ReviewResourceTest extends TestBase {
+public class ReviewResourceTest extends EmployerReviewTestBase {
 
   @Inject
   private ReviewResource resource;
@@ -25,10 +23,7 @@ public class ReviewResourceTest extends TestBase {
 
   @Test
   public void testPostReview() {
-    Area area = new Area(testAreaName, testAreaId, -1);
     areaDao.save(area);
-
-    Employer employer = new Employer(testEmployerName, "url", 1);
     employer.setArea(area);
     employerDao.save(employer);
 
@@ -37,7 +32,6 @@ public class ReviewResourceTest extends TestBase {
     reviewDto.setRating(2.5f);
     reviewDto.setText("good");
     reviewDto.setReviewType(ReviewType.EMPLOYEE);
-
 
     Review postedReview = reviewDto.toReview();
     Review reviewFromDB = reviewDao.getById(resource.postReview(reviewDto).getReviewId());
@@ -48,8 +42,8 @@ public class ReviewResourceTest extends TestBase {
     Assert.assertEquals(postedReview.getEmployer().getId(), reviewFromDB.getEmployer().getId());
 
     reviewDao.delete(reviewFromDB);
-    employerDao.delete(employer);
-    areaDao.delete(area);
+    employerDao.deleteEmployer(employer);
+    areaDao.deleteArea(area);
   }
 
   @Test(expected = WebApplicationException.class)

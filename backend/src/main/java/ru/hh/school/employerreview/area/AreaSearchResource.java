@@ -43,7 +43,7 @@ public class AreaSearchResource {
       throw new Errors(Response.Status.BAD_REQUEST, "BAD_REQUEST_PARAMETER", "page").toWebApplicationException();
     }
 
-    List<Area> resultsFromDB = areaDao.find(text, page, perPage);
+    List<Area> resultsFromDB = areaDao.findAreas(text, page, perPage);
 
     List<AreaJson> items = new ArrayList<>();
     for (Area area : resultsFromDB) {
@@ -58,9 +58,9 @@ public class AreaSearchResource {
     if (areaId == null) {
       throw new Errors(Response.Status.BAD_REQUEST, "BAD_REQUEST_PARAMETER", "areaId").toWebApplicationException();
     }
-    Area area = areaDao.getById(areaId);
+    Area area = areaDao.getAreaById(areaId);
     if (area == null) {
-      throw new Errors(Response.Status.OK, "NOT_FOUND", "areaId").toWebApplicationException();
+      throw new Errors(Response.Status.NOT_FOUND, "NOT_FOUND", "areaId").toWebApplicationException();
     }
     return area.toAreaJson();
   }

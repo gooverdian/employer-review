@@ -2,15 +2,14 @@ package ru.hh.school.employerreview.employer;
 
 import org.junit.Assert;
 import org.junit.Test;
-import ru.hh.school.employerreview.TestBase;
-import ru.hh.school.employerreview.area.Area;
+import ru.hh.school.employerreview.EmployerReviewTestBase;
 import ru.hh.school.employerreview.area.AreaDao;
 import ru.hh.school.employerreview.employer.dto.EmployersResponse;
 
 import javax.inject.Inject;
 import javax.ws.rs.WebApplicationException;
 
-public class EmployerSearchResourceTest extends TestBase {
+public class EmployerSearchResourceTest extends EmployerReviewTestBase {
 
   @Inject
   private EmployerSearchResource resource;
@@ -21,10 +20,7 @@ public class EmployerSearchResourceTest extends TestBase {
 
   @Test
   public void testEmployerSearch() {
-    Area area = new Area(testAreaName, testAreaId, -1);
     areaDao.save(area);
-
-    Employer employer = new Employer(testEmployerName, "url", 1);
     employer.setArea(area);
     employerDao.save(employer);
 
@@ -32,23 +28,20 @@ public class EmployerSearchResourceTest extends TestBase {
     Assert.assertEquals(employersResponse.getFound(), 1);
     Assert.assertEquals(employersResponse.getItems().get(0).toEmployer(), employer);
 
-    employerDao.delete(employer);
-    areaDao.delete(area);
+    employerDao.deleteEmployer(employer);
+    areaDao.deleteArea(area);
   }
 
   @Test
   public void testGetEmployerById() {
-    Area area = new Area(testAreaName, testAreaId, -1);
     areaDao.save(area);
-
-    Employer employer = new Employer(testEmployerName, "url", 1);
     employer.setArea(area);
     employerDao.save(employer);
 
     Assert.assertEquals(resource.getEmployerById(employer.getId()).toEmployer(), employer);
 
-    employerDao.delete(employer);
-    areaDao.delete(area);
+    employerDao.deleteEmployer(employer);
+    areaDao.deleteArea(area);
   }
 
   @Test(expected = WebApplicationException.class)
