@@ -1,10 +1,11 @@
-package ru.hh.school.employerreview.employer.dto;
+package ru.hh.school.employerreview.area.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import ru.hh.school.employerreview.downloader.dto.AreaJson;
 
 import java.util.List;
 
-public class EmployersResponse {
+public class AreaResponse {
 
   @JsonProperty("per_page")
   private int perPage;
@@ -13,13 +14,24 @@ public class EmployersResponse {
   private int pages;
 
   @JsonProperty("items")
-  private List<EmployerItem> items;
+  private List<AreaJson> items;
 
   @JsonProperty("page")
   private int page;
 
   @JsonProperty("found")
   private int found;
+
+  public AreaResponse() {
+  }
+
+  public AreaResponse(List<AreaJson> items, int page, int perPage, int found, int pages) {
+    setItems(items);
+    setPerPage(perPage);
+    setPage(page);
+    setFound(found);
+    setPages(pages);
+  }
 
   public void setPerPage(int perPage) {
     this.perPage = perPage;
@@ -33,8 +45,8 @@ public class EmployersResponse {
     this.pages = pages;
   }
 
-  public void setItems(List<EmployerItem> employerItems) {
-    items = employerItems;
+  public void setItems(List<AreaJson> items) {
+    this.items = items;
   }
 
   public void setFound(int found) {
@@ -45,20 +57,7 @@ public class EmployersResponse {
     return found;
   }
 
-  public List<EmployerItem> getItems() {
+  public List<AreaJson> getItems() {
     return items;
   }
-
-  public EmployersResponse() {
-
-  }
-
-  public EmployersResponse(List<EmployerItem> items, int page, int perPage, int found, int pages) {
-    setItems(items);
-    setPerPage(perPage);
-    setPage(page);
-    setFound(found);
-    setPages(pages);
-  }
 }
-

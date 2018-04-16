@@ -8,6 +8,7 @@ import ru.hh.nab.hibernate.HibernateCommonConfig;
 import ru.hh.nab.hibernate.MappingConfig;
 import ru.hh.school.employerreview.area.Area;
 import ru.hh.school.employerreview.area.AreaDao;
+import ru.hh.school.employerreview.area.AreaSearchResource;
 import ru.hh.school.employerreview.employer.Employer;
 import ru.hh.school.employerreview.employer.EmployerDao;
 import ru.hh.school.employerreview.employer.EmployerSearchResource;
@@ -24,6 +25,11 @@ public class CommonConfig {
   @Bean
   EmployerSearchResource employerSearchResource(EmployerDao employerDao, RatingDao ratingDao) {
     return new EmployerSearchResource(employerDao, ratingDao);
+  }
+
+  @Bean
+  AreaSearchResource areaSearchResource(AreaDao areaDao) {
+    return new AreaSearchResource(areaDao);
   }
 
   @Bean

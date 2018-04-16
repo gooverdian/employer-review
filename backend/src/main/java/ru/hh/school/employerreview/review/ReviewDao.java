@@ -49,6 +49,16 @@ public class ReviewDao {
     return query.getResultList();
   }
 
+  @Transactional(readOnly = true)
+  public Review getById(int id) {
+    return getSession().get(Review.class, id);
+  }
+
+  @Transactional
+  public void delete(Review review) {
+    getSession().delete(review);
+  }
+
   private Session getSession() {
     return sessionFactory.getCurrentSession();
   }

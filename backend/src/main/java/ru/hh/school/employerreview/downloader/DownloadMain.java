@@ -1,21 +1,21 @@
 package ru.hh.school.employerreview.downloader;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import ru.hh.school.employerreview.area.Area;
+import ru.hh.school.employerreview.area.AreaDao;
+import ru.hh.school.employerreview.downloader.dto.AreaJson;
+import ru.hh.school.employerreview.downloader.dto.EmployerJson;
+import ru.hh.school.employerreview.downloader.dto.ResponseJson;
+import ru.hh.school.employerreview.employer.Employer;
+import ru.hh.school.employerreview.employer.EmployerDao;
+
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import static ru.hh.nab.common.util.PropertiesUtils.setSystemPropertyIfAbsent;
-
-import ru.hh.school.employerreview.area.Area;
-import ru.hh.school.employerreview.area.AreaDao;
-import ru.hh.school.employerreview.downloader.json.AreaJson;
-import ru.hh.school.employerreview.downloader.json.EmployerJson;
-import ru.hh.school.employerreview.downloader.json.ResponseJson;
-import ru.hh.school.employerreview.employer.Employer;
-import ru.hh.school.employerreview.employer.EmployerDao;
 
 public class DownloadMain {
   private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
@@ -26,8 +26,17 @@ public class DownloadMain {
   private static AreaDao areaDao;
   private static EmployerDao employerDao;
   private static ApplicationContext applicationContext;
+  private static int areaSizeCounter = 0;
 
   public static void main(String[] args) {
+
+    int maxEmployersSize = Integer.MAX_VALUE;
+    int maxAreasSize = Integer.MAX_VALUE;
+    if (args.length == 2) {
+      maxAreasSize = Integer.parseInt(args[0]);
+      maxEmployersSize = Integer.parseInt(args[1]);
+    }
+
     setSystemPropertyIfAbsent("settingsDir", "src/etc");
     applicationContext = new AnnotationConfigApplicationContext(DownloaderConfig.class);
 
@@ -35,7 +44,7 @@ public class DownloadMain {
     areaDao = applicationContext.getBean(AreaDao.class);
 
     AreaJson[] areas = getAreasFromApi();
-    saveAreasToDb(areas);
+    saveAreasToDb(areas, maxAreasSize, maxEmployersSize);
   }
 
   private static AreaJson[] getAreasFromApi() {
@@ -46,12 +55,17 @@ public class DownloadMain {
     }
   }
 
-  private static void saveAreasToDb(AreaJson[] areaJsons) {
+  private static void saveAreasToDb(AreaJson[] areaJsons, int maxAreasSize, int maxEmployersSize) {
     for (AreaJson areaJson: areaJsons) {
       Area currentArea = areaJson.toArea();
-      areaDao.save(currentArea);
-      downloadEmployers(currentArea);
-      saveAreasToDb(areaJson.getAreas());
+      if (areaSizeCounter < maxAreasSize) {
+        areaDao.save(currentArea);
+        if (employerDao.countRows() < maxEmployersSize) {
+          downloadEmployers(currentArea);
+        }
+        areaSizeCounter += 1;
+        saveAreasToDb(areaJson.getAreas(), maxAreasSize, maxEmployersSize);
+      }
     }
   }
 

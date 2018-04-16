@@ -2,6 +2,7 @@ package ru.hh.school.employerreview.employer;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Projections;
 import org.hibernate.query.Query;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,16 +23,11 @@ public class EmployerDao {
   }
 
   @Transactional
-  public Employer getByHhId(int hhId) {
+  public Employer getEmployerByHhId(int hhId) {
     return getSession()
         .createQuery("FROM Employer E WHERE E.hhId = :hhid", Employer.class)
         .setParameter("hhid", hhId)
         .uniqueResult();
-  }
-
-  @Transactional
-  public Employer getById(int id) {
-    return getSession().get(Employer.class, id);
   }
 
   @Transactional(readOnly = true)
@@ -42,14 +38,18 @@ public class EmployerDao {
   @Transactional
   public void save(List<Employer> employers) {
     for (Employer employer : employers) {
-      Employer employerFromDB = getByHhId(employer.getHhId());
-      if (employerFromDB == null) {
-        getSession().save(employer);
+      save(employer);
+    }
+  }
 
-      } else if (employer.getArea().getId() > employerFromDB.getArea().getId()) {
-        employerFromDB.setArea(employer.getArea());
-        getSession().update(employerFromDB);
-      }
+  @Transactional
+  public void save(Employer employer) {
+    Employer employerFromDB = getEmployerByHhId(employer.getHhId());
+    if (employerFromDB == null) {
+      getSession().save(employer);
+    } else if (employer.getArea().getId() > employerFromDB.getArea().getId()) {
+      employerFromDB.setArea(employer.getArea());
+      getSession().update(employerFromDB);
     }
   }
 
@@ -65,7 +65,7 @@ public class EmployerDao {
   }
 
   @Transactional(readOnly = true)
-  public List<Employer> find(String text, int page, int perPage) {
+  public List<Employer> findEmployers(String text, int page, int perPage) {
     if (perPage <= 0 || page < 0) {
       return Collections.emptyList();
     }
@@ -78,6 +78,16 @@ public class EmployerDao {
     query.setFirstResult(page * perPage);
     query.setMaxResults(perPage);
     return query.getResultList();
+  }
+
+  @Transactional(readOnly = true)
+  public int countRows() {
+    return ((Number) getSession().createCriteria(Employer.class).setProjection(Projections.rowCount()).uniqueResult()).intValue();
+  }
+
+  @Transactional
+  public void deleteEmployer(Employer employer) {
+    getSession().delete(employer);
   }
 
   private Session getSession() {

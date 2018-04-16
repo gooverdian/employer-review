@@ -1,4 +1,4 @@
-package ru.hh.school.employerreview.downloader.json;
+package ru.hh.school.employerreview.downloader.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class LogoUrlsJson {

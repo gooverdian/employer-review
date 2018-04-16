@@ -1,4 +1,4 @@
-package ru.hh.school.employerreview.downloader.json;
+package ru.hh.school.employerreview.downloader.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import ru.hh.school.employerreview.area.Area;
@@ -9,10 +9,10 @@ public class AreaJson {
   private String name;
 
   @JsonProperty("id")
-  private String id;
+  private Integer id;
 
   @JsonProperty("parent_id")
-  private String parentId;
+  private Integer parentId;
 
   @JsonProperty("areas")
   private AreaJson[] areas;
@@ -21,22 +21,34 @@ public class AreaJson {
     return areas;
   }
 
-  public String getId() {
-    return this.id;
+  public Integer getId() {
+    return id;
   }
 
   public String getName() {
     return name;
   }
 
-  public String getParentId() {
+  public Integer getParentId() {
     return parentId;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public void setId(int id) {
+    this.id = id;
+  }
+
+  public void setParentId(int parentId) {
+    this.parentId = parentId;
   }
 
   public Area toArea() {
     if (parentId == null) {
-      parentId = "-1";
+      parentId = -1;
     }
-    return new Area(name, Integer.parseInt(id), Integer.parseInt(parentId));
+    return new Area(name, id, parentId);
   }
 }
