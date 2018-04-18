@@ -38,7 +38,7 @@ public class EmployerSearchResource {
   @GET
   public EmployersResponse searchEmployers(@QueryParam("text") String text,
                                            @QueryParam("page") @DefaultValue("0") int page,
-                                           @QueryParam("perPage") @DefaultValue("10") int perPage) {
+                                           @QueryParam("per_page") @DefaultValue("10") int perPage) {
 
     PaginationHelper.checkInputParameters(text, page, perPage);
 
@@ -79,7 +79,6 @@ public class EmployerSearchResource {
     employerItem.setStars(ratingDao.getStarsInRatingMap(employerId));
     return employerItem;
   }
-
 
   @POST
   @Path("/new")

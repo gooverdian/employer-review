@@ -2,6 +2,7 @@ package ru.hh.school.employerreview.review;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Projections;
 import org.hibernate.query.Query;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -57,6 +58,16 @@ public class ReviewDao {
   @Transactional
   public void deleteReview(Review review) {
     getSession().delete(review);
+  }
+
+  @Transactional(readOnly = true)
+  public int countRows() {
+    return ((Number) getSession().createCriteria(Review.class).setProjection(Projections.rowCount()).uniqueResult()).intValue();
+  }
+
+  @Transactional
+  public void deleteAllReviews() {
+    getSession().createQuery("delete from Review").executeUpdate();
   }
 
   private Session getSession() {

@@ -17,6 +17,7 @@ import ru.hh.school.employerreview.rating.RatingDao;
 import ru.hh.school.employerreview.rating.stars.StarsInRating;
 import ru.hh.school.employerreview.review.Review;
 import ru.hh.school.employerreview.review.ReviewDao;
+import ru.hh.school.employerreview.review.ReviewGenerationService;
 import ru.hh.school.employerreview.review.ReviewResource;
 import ru.hh.school.employerreview.specializations.ProfessionalField;
 import ru.hh.school.employerreview.specializations.ProfessionalFieldDao;
@@ -61,6 +62,11 @@ public class CommonConfig {
   @Bean
   ReviewResource reviewResource(ReviewDao reviewDao, EmployerDao employerDao, RatingDao ratingDao) {
     return new ReviewResource(reviewDao, employerDao, ratingDao);
+  }
+
+  @Bean
+  ReviewGenerationService reviewGenerationService(ReviewDao reviewDao, EmployerDao employerDao, RatingDao ratingDao) {
+    return new ReviewGenerationService(reviewDao, employerDao, ratingDao);
   }
 
   @Bean
