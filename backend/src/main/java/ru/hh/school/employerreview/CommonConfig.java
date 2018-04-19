@@ -14,6 +14,7 @@ import ru.hh.school.employerreview.employer.EmployerDao;
 import ru.hh.school.employerreview.employer.EmployerSearchResource;
 import ru.hh.school.employerreview.rating.Rating;
 import ru.hh.school.employerreview.rating.RatingDao;
+import ru.hh.school.employerreview.rating.stars.StarsInRating;
 import ru.hh.school.employerreview.review.Review;
 import ru.hh.school.employerreview.review.ReviewDao;
 import ru.hh.school.employerreview.review.ReviewResource;
@@ -53,7 +54,8 @@ public class CommonConfig {
 
   @Bean
   MappingConfig mappingConfig() {
-    return new MappingConfig(Employer.class, Review.class, Area.class, Rating.class, ProfessionalField.class, Specialization.class);
+    return new MappingConfig(Employer.class, Review.class, Area.class, Rating.class,
+        StarsInRating.class, ProfessionalField.class, Specialization.class);
   }
 
   @Bean

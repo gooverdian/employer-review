@@ -5,6 +5,13 @@ CREATE TABLE area (
 	name varchar NOT NULL
 );
 
+--Рейтинг
+CREATE TABLE rating (
+  id              SERIAL PRIMARY KEY,
+  people_rated    INT,
+  rating          FLOAT
+);
+
 --Компания
 CREATE TABLE employer (
     id                  SERIAL PRIMARY KEY,
@@ -17,24 +24,16 @@ CREATE TABLE employer (
     logo_url_90         varchar,
     logo_url_240        varchar,
     logo_url_original   varchar,
-    area_id             integer NOT NULL REFERENCES area
+    area_id             integer REFERENCES area,
+    rating_id           integer REFERENCES rating
 );
 
---Рейтинг
-CREATE TABLE rating (
-    employer_id     integer PRIMARY KEY REFERENCES employer,
-    rating          float,
-    people_rated    integer NOT NULL,
-    star1           integer NOT NULL,
-    star2           integer NOT NULL,
-    star3           integer NOT NULL,
-    star4           integer NOT NULL,
-    star5           integer NOT NULL,
-    star1_5         integer NOT NULL,
-    star2_5         integer NOT NULL,
-    star3_5         integer NOT NULL,
-    star4_5         integer NOT NULL,
-    star0_5         integer NOT NULL
+--Звезды в рейтинге
+CREATE TABLE stars_in_rating(
+  employer_id     INT REFERENCES employer,
+  star_value      FLOAT NOT NULL,
+  star_counter    INT NOT NULL,
+  PRIMARY KEY(employer_id, star_value)
 );
 
 --Тип озыва
@@ -52,7 +51,6 @@ CREATE TABLE review (
 	text varchar,
 	rating real NOT NULL
 );
-
 
 --Профф Область
 CREATE TABLE  proff_field (

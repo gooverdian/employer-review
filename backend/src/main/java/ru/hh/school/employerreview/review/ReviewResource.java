@@ -8,6 +8,7 @@ import ru.hh.school.employerreview.rating.RatingDao;
 import ru.hh.school.employerreview.review.dto.ResponseBodyReviewId;
 import ru.hh.school.employerreview.review.dto.ResponseBodyReviews;
 import ru.hh.school.employerreview.review.dto.ReviewDto;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
@@ -17,9 +18,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Path("/review")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -48,7 +49,8 @@ public class ReviewResource {
       errors.add("MISSING_FIELD", "rating");
     }
 
-    if (reviewDto.getRating() < 0.0 || reviewDto.getRating() > 5.0) {
+    if (reviewDto.getRating() < 0.0 || reviewDto.getRating() > 5.0
+        || Float.valueOf(reviewDto.getRating() * 10).intValue() % 5 != 0) {
       errors.add("BAD_FIELD_VALUE", "rating");
     }
     if (errors.hasErrors()) {
@@ -67,7 +69,7 @@ public class ReviewResource {
         reviewDto.getText());
     reviewDao.save(review);
 
-    ratingDao.addNewEstimate(employer.getId(), reviewDto.getRating());
+    ratingDao.addNewEstimate(employer, reviewDto.getRating());
 
     return new ResponseBodyReviewId(review.getId());
   }
@@ -105,11 +107,10 @@ public class ReviewResource {
       return 0;
     });
 
-    List<ReviewDto> reviewDtos = new ArrayList<>();
-    for (Review review : reviews) {
-      ReviewDto reviewDto = new ReviewDto(employerId, review.getId(), review.getRating(), review.getReviewType(), review.getText());
-      reviewDtos.add(reviewDto);
-    }
+    List<ReviewDto> reviewDtos = reviews.stream().map(review -> new ReviewDto(employerId,
+        review.getId(), review.getRating(), review.getReviewType(),
+        review.getText())).collect(Collectors.toList());
+
     return new ResponseBodyReviews(reviewDtos, page, pageCount, perPage);
   }
 }

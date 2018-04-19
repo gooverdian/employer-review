@@ -19,6 +19,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Path("/employers")
 @Produces(MediaType.APPLICATION_JSON)
@@ -53,10 +54,12 @@ public class EmployerSearchResource {
 
     List<Employer> resultsFromDB = employerDao.findEmployers(text, page, perPage);
 
+    List<Map> stars = ratingDao.getStarsByEmployers(resultsFromDB);
+
     List<EmployerItem> employerItems = new ArrayList<>();
     for (int i = 0; i < resultsFromDB.size(); i++) {
       EmployerItem employerItem = resultsFromDB.get(i).toEmployerItem();
-      employerItem.setRating(ratingDao.getRating(resultsFromDB.get(i).getId()));
+      employerItem.setStars(stars.get(i));
       employerItems.add(employerItem);
     }
     return new EmployersResponse(employerItems, page, perPage, rowCount, pageCount);
@@ -73,7 +76,7 @@ public class EmployerSearchResource {
       throw new Errors(Response.Status.NOT_FOUND, "NOT_FOUND", "employerId").toWebApplicationException();
     }
     EmployerItem employerItem = employer.toEmployerItem();
-    employerItem.setRating(ratingDao.getRating(employerId));
+    employerItem.setStars(ratingDao.getStarsInRatingMap(employerId));
     return employerItem;
   }
 

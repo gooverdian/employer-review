@@ -5,6 +5,8 @@ import ru.hh.school.employerreview.area.Area;
 import ru.hh.school.employerreview.employer.Employer;
 import ru.hh.school.employerreview.rating.Rating;
 
+import java.util.Map;
+
 public class EmployerItem {
 
   @JsonProperty("name")
@@ -34,35 +36,8 @@ public class EmployerItem {
   @JsonProperty("rating")
   private Float averageRating;
 
-  @JsonProperty("star1")
-  private Integer star1;
-
-  @JsonProperty("star2")
-  private Integer star2;
-
-  @JsonProperty("star3")
-  private Integer star3;
-
-  @JsonProperty("star4")
-  private Integer star4;
-
-  @JsonProperty("star5")
-  private Integer star5;
-
-  @JsonProperty("star1_5")
-  private Integer star15;
-
-  @JsonProperty("star2_5")
-  private Integer star25;
-
-  @JsonProperty("star3_5")
-  private Integer star35;
-
-  @JsonProperty("star4_5")
-  private Integer star45;
-
-  @JsonProperty("star0_5")
-  private Integer star05;
+  @JsonProperty("stars")
+  private Map<Float, Integer> stars;
 
   public void setId(Integer id) {
     this.id = id;
@@ -96,16 +71,6 @@ public class EmployerItem {
     if (rating != null) {
       averageRating = rating.getRating();
       peopleRated = rating.getPeopleRated();
-      star1 = rating.getStar1();
-      star2 = rating.getStar2();
-      star3 = rating.getStar3();
-      star4 = rating.getStar4();
-      star5 = rating.getStar5();
-      star15 = rating.getStar15();
-      star25 = rating.getStar25();
-      star35 = rating.getStar35();
-      star45 = rating.getStar45();
-      star05 = rating.getStar05();
     }
   }
 
@@ -137,5 +102,12 @@ public class EmployerItem {
 
   public Integer getHhId() {
     return hhId;
+  }
+
+  public void setStars(Map stars) {
+    this.stars = stars;
+  }
+
+  public EmployerItem() {
   }
 }

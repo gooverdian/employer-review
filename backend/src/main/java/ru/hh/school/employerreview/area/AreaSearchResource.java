@@ -13,8 +13,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Path("/areas")
 @Produces(MediaType.APPLICATION_JSON)
@@ -45,10 +45,8 @@ public class AreaSearchResource {
 
     List<Area> resultsFromDB = areaDao.findAreas(text, page, perPage);
 
-    List<AreaJson> items = new ArrayList<>();
-    for (Area area : resultsFromDB) {
-      items.add(area.toAreaJson());
-    }
+    List<AreaJson> items = resultsFromDB.stream().map(Area::toAreaJson).collect(Collectors.toList());
+
     return new AreaResponse(items, page, perPage, rowCount, pageCount);
   }
 

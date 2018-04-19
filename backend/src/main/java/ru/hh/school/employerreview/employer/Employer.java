@@ -2,6 +2,7 @@ package ru.hh.school.employerreview.employer;
 
 import ru.hh.school.employerreview.area.Area;
 import ru.hh.school.employerreview.employer.dto.EmployerItem;
+import ru.hh.school.employerreview.rating.Rating;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,6 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import java.util.Objects;
 
@@ -49,6 +51,10 @@ public class Employer {
   @ManyToOne
   @JoinColumn(name = "area_id")
   private Area area;
+
+  @OneToOne
+  @JoinColumn(name = "rating_id")
+  private Rating rating;
 
   public Employer(String name, String siteUrl, Integer hhId) {
     this.name = name;
@@ -139,6 +145,14 @@ public class Employer {
     this.logoUrlOriginal = logoUrlOriginal;
   }
 
+  public void setRating(Rating rating) {
+    this.rating = rating;
+  }
+
+  public Rating getRating() {
+    return rating;
+  }
+
   @Override
   public boolean equals(Object that) {
     if (this == that) {
@@ -148,21 +162,21 @@ public class Employer {
       return false;
     }
 
-    Employer thatUser = (Employer) that;
-    return Objects.equals(id, thatUser.id)
-        && Objects.equals(name, thatUser.name)
-        && Objects.equals(area.getId(), thatUser.area.getId());
+    Employer thatEmployer = (Employer) that;
+    return Objects.equals(id, thatEmployer.id)
+        && Objects.equals(name, thatEmployer.name)
+        && Objects.equals(area, thatEmployer.area);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, area.getId(), name);
+    return Objects.hash(id, name);
   }
 
   @Override
   public String toString() {
-    return String.format("%s{id=%d, Name='%s', Area='%d'}",
-        getClass().getSimpleName(), id, name, area.getId());
+    return String.format("%s{id=%d, Name='%s'}",
+        getClass().getSimpleName(), id, name);
   }
 
   public EmployerItem toEmployerItem() {
@@ -175,6 +189,9 @@ public class Employer {
     if (area != null) {
       employerItem.setAreaId(area.getId());
       employerItem.setAreaName(area.getName());
+    }
+    if (rating != null) {
+      employerItem.setRating(rating);
     }
     return employerItem;
   }

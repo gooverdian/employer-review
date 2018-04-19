@@ -14,6 +14,7 @@ import ru.hh.school.employerreview.area.Area;
 import ru.hh.school.employerreview.area.AreaDao;
 import ru.hh.school.employerreview.employer.Employer;
 import ru.hh.school.employerreview.employer.EmployerDao;
+import ru.hh.school.employerreview.rating.Rating;
 import ru.hh.school.employerreview.specializations.ProfessionalField;
 import ru.hh.school.employerreview.specializations.ProfessionalFieldDao;
 import ru.hh.school.employerreview.specializations.Specialization;
@@ -48,7 +49,7 @@ class DownloaderConfig {
 
   @Bean
   MappingConfig mappingConfig() {
-    return new MappingConfig(Employer.class, Area.class, ProfessionalField.class, Specialization.class);
+    return new MappingConfig(Employer.class, Area.class, ProfessionalField.class, Specialization.class, Rating.class);
   }
 
   @Bean

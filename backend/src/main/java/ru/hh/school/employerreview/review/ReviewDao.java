@@ -55,7 +55,7 @@ public class ReviewDao {
   }
 
   @Transactional
-  public void delete(Review review) {
+  public void deleteReview(Review review) {
     getSession().delete(review);
   }
 
