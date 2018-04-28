@@ -107,6 +107,10 @@ public class EmployerItem {
     return hhId;
   }
 
+  public Float getAverageRating() {
+    return averageRating;
+  }
+
   public void setStars(Map stars) {
     this.stars = stars;
   }

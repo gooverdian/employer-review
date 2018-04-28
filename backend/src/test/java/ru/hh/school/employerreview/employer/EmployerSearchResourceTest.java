@@ -6,9 +6,12 @@ import ru.hh.school.employerreview.EmployerReviewTestBase;
 import ru.hh.school.employerreview.area.AreaDao;
 import ru.hh.school.employerreview.employer.dto.EmployerItem;
 import ru.hh.school.employerreview.employer.dto.EmployersResponse;
+import ru.hh.school.employerreview.rating.Rating;
+import ru.hh.school.employerreview.rating.RatingDao;
 
 import javax.inject.Inject;
 import javax.ws.rs.WebApplicationException;
+import java.util.List;
 
 public class EmployerSearchResourceTest extends EmployerReviewTestBase {
 
@@ -18,6 +21,8 @@ public class EmployerSearchResourceTest extends EmployerReviewTestBase {
   private AreaDao areaDao;
   @Inject
   private EmployerDao employerDao;
+  @Inject
+  private RatingDao ratingDao;
 
   @Test
   public void testEmployerSearch() {
@@ -122,5 +127,53 @@ public class EmployerSearchResourceTest extends EmployerReviewTestBase {
   @Test(expected = WebApplicationException.class)
   public void testGetEmployerByNullValue() {
     resource.getEmployerById(null);
+  }
+
+  @Test
+  public void testEmployerTopBest() {
+    areaDao.save(area);
+    employer.setArea(area);
+    employerDao.save(employer);
+    employer2.setArea(area);
+    employerDao.save(employer2);
+
+    ratingDao.addNewEstimate(employer, 1);
+    ratingDao.addNewEstimate(employer2, 5);
+
+    List<EmployerItem> employerItems = resource.getTopBest(2);
+    Assert.assertTrue(employerItems.size() == 2);
+    Assert.assertTrue(employerItems.get(0).getAverageRating() > employerItems.get(1).getAverageRating());
+
+    Rating rating = employer.getRating();
+    Rating rating2 = employer2.getRating();
+    employerDao.deleteEmployer(employer);
+    employerDao.deleteEmployer(employer2);
+    ratingDao.deleteRating(rating);
+    ratingDao.deleteRating(rating2);
+    areaDao.deleteArea(area);
+  }
+
+  @Test
+  public void testEmployerTopWorst() {
+    areaDao.save(area);
+    employer.setArea(area);
+    employerDao.save(employer);
+    employer2.setArea(area);
+    employerDao.save(employer2);
+
+    ratingDao.addNewEstimate(employer, 1);
+    ratingDao.addNewEstimate(employer2, 5);
+
+    List<EmployerItem> employerItems = resource.getTopWorst(2);
+    Assert.assertEquals(employerItems.size(), 2);
+    Assert.assertTrue(employerItems.get(0).getAverageRating() < employerItems.get(1).getAverageRating());
+
+    Rating rating = employer.getRating();
+    Rating rating2 = employer2.getRating();
+    employerDao.deleteEmployer(employer);
+    employerDao.deleteEmployer(employer2);
+    ratingDao.deleteRating(rating);
+    ratingDao.deleteRating(rating2);
+    areaDao.deleteArea(area);
   }
 }

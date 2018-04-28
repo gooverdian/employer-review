@@ -12,4 +12,5 @@ abstract public class EmployerReviewTestBase extends AbstractJUnit4SpringContext
   protected final String testAreaName = "Россия";
   protected final Area area = new Area(testAreaName, testAreaId, -1);
   protected final Employer employer = new Employer(testEmployerName, "url", 1);
+  protected final Employer employer2 = new Employer(testEmployerName, "url", 2);
 }

@@ -8,11 +8,11 @@ import ru.hh.school.employerreview.employer.dto.EmployerItem;
 import ru.hh.school.employerreview.employer.dto.EmployersResponse;
 import ru.hh.school.employerreview.rating.RatingDao;
 
+import javax.ws.rs.PathParam;
+import javax.ws.rs.POST;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
-import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
@@ -52,7 +52,7 @@ public class EmployerSearchResource {
       throw new Errors(Response.Status.BAD_REQUEST, "BAD_REQUEST_PARAMETER", "page").toWebApplicationException();
     }
 
-    List<Employer> resultsFromDB = employerDao.findEmployers(text, page, perPage);
+    List<Employer> resultsFromDB = employerDao.findEmployers(text, page, perPage, true);
 
     List<Map> stars = ratingDao.getStarsByEmployers(resultsFromDB);
 
@@ -96,5 +96,34 @@ public class EmployerSearchResource {
     }
     employerDao.save(employer);
     return employer.toEmployerItem();
+  }
+
+  @GET
+  @Path("/best")
+  public List<EmployerItem> getTopBest(@QueryParam("size") @DefaultValue("20") Integer size) {
+    return getTopEmployersByRating(size, true);
+  }
+
+  @GET
+  @Path("/worst")
+  public List<EmployerItem> getTopWorst(@QueryParam("size") @DefaultValue("20") Integer size) {
+    return getTopEmployersByRating(size, false);
+  }
+
+  private List<EmployerItem> getTopEmployersByRating(Integer size, Boolean bestFirst) {
+    if (size <= 0) {
+      throw new Errors(Response.Status.BAD_REQUEST, "BAD_REQUEST_PARAMETER", "size").toWebApplicationException();
+    }
+    List<Employer> resultsFromDB = employerDao.findEmployers("", 0, size, bestFirst);
+
+    List<Map> stars = ratingDao.getStarsByEmployers(resultsFromDB);
+
+    List<EmployerItem> employerItems = new ArrayList<>();
+    for (int i = 0; i < resultsFromDB.size(); i++) {
+      EmployerItem employerItem = resultsFromDB.get(i).toEmployerItem();
+      employerItem.setStars(stars.get(i));
+      employerItems.add(employerItem);
+    }
+    return employerItems;
   }
 }

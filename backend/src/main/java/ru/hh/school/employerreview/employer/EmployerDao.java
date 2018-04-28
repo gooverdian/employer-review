@@ -70,7 +70,7 @@ public class EmployerDao {
   }
 
   @Transactional(readOnly = true)
-  public List<Employer> findEmployers(String text, int page, int perPage) {
+  public List<Employer> findEmployers(String text, int page, int perPage, boolean bestFirst) {
     if (perPage <= 0 || page < 0) {
       return Collections.emptyList();
     }
@@ -79,7 +79,9 @@ public class EmployerDao {
             "FROM Employer e LEFT JOIN Rating r " +
             "ON e.rating.id = r.id " +
             "WHERE UPPER(e.name) LIKE :text " +
-            "ORDER BY r.rating DESC NULLS LAST, r.peopleRated DESC NULLS LAST"
+            "ORDER BY r.rating " +
+            (bestFirst ? "DESC" : "ASC") +
+            " NULLS LAST, r.peopleRated DESC NULLS LAST"
     ).setParameter("text", "%" + text.toUpperCase() + "%");
     query.setFirstResult(page * perPage);
     query.setMaxResults(perPage);

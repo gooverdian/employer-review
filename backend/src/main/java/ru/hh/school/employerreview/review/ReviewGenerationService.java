@@ -48,7 +48,7 @@ public class ReviewGenerationService {
     }
     int page = 0;
     while (PER_PAGE * page < maxEmployerSize) {
-      generateReviewsOnCurrentPage(employerDao.findEmployers("", page, PER_PAGE),
+      generateReviewsOnCurrentPage(employerDao.findEmployers("", page, PER_PAGE, true),
           mathExpectedReviewCount,
           deviationReviewCount);
       page += 1;
