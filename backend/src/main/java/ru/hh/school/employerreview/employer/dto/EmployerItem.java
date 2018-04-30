@@ -39,6 +39,9 @@ public class EmployerItem {
   @JsonProperty("stars")
   private Map<Float, Integer> stars;
 
+  public EmployerItem() {
+  }
+
   public void setId(Integer id) {
     this.id = id;
   }
@@ -106,8 +109,5 @@ public class EmployerItem {
 
   public void setStars(Map stars) {
     this.stars = stars;
-  }
-
-  public EmployerItem() {
   }
 }

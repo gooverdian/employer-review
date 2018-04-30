@@ -1,0 +1,2 @@
+release: ./src/etc/release-tasks.sh
+web: java -DsettingsDir=src/etc -jar target/employer-review-backend.jar

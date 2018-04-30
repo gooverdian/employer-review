@@ -12,6 +12,9 @@ public class LogoUrlsJson {
   @JsonProperty("Original")
   private String logoOriginal;
 
+  public LogoUrlsJson() {
+  }
+
   public String getLogo90() {
     return logo90;
   }

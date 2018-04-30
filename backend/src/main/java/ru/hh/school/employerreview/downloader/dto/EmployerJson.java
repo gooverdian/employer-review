@@ -25,15 +25,45 @@ public class EmployerJson {
   private String vacanciesUrl;
 
   @JsonProperty("open_vacancies")
-  private String openVacancies;
+  private Integer openVacancies;
+
+  public String getId() {
+    return id;
+  }
+
+  public EmployerJson() {
+  }
 
   public Employer toHibernateObj(Area area) {
-    Employer employer = new Employer(name , url, Integer.parseInt(id));
+    Employer employer = new Employer(name, url, Integer.parseInt(id));
     employer.setAlternateUrl(alternateUrl);
     employer.setLogoUrl90(logoUrls.getLogo90());
     employer.setLogoUrl240(logoUrls.getLogo240());
     employer.setLogoUrlOriginal(logoUrls.getLogoOriginal());
     employer.setArea(area);
     return employer;
+  }
+
+  public Integer getOpenVacancies() {
+    return openVacancies;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    EmployerJson that = (EmployerJson) o;
+
+    return id.equals(that.id);
+  }
+
+  @Override
+  public int hashCode() {
+    return id.hashCode();
   }
 }

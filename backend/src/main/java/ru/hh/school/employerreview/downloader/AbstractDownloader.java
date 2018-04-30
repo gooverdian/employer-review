@@ -6,7 +6,7 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 
 import static ru.hh.nab.common.util.PropertiesUtils.setSystemPropertyIfAbsent;
 
-public abstract class DownloadAbstract {
+public abstract class AbstractDownloader {
   protected static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
   protected static ApplicationContext applicationContext;
 

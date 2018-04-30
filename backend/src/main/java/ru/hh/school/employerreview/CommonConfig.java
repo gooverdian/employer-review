@@ -25,7 +25,7 @@ import ru.hh.school.employerreview.specializations.Specialization;
 import ru.hh.school.employerreview.specializations.SpecializationDao;
 
 @Configuration
-@Import({HibernateCommonConfig.class})
+@Import({HibernateCommonConfig.class, FileSettingsConfig.class})
 public class CommonConfig {
 
   @Bean

@@ -18,6 +18,9 @@ public class ReviewDto {
   private Float rating;
   private String text;
 
+  public ReviewDto() {
+  }
+
   public ReviewDto(Integer employerId, Integer reviewId, Float rating, ReviewType reviewType, String text) {
     this.employerId = employerId;
     this.reviewId = reviewId;
@@ -32,9 +35,6 @@ public class ReviewDto {
 
   public void setReviewType(ReviewType reviewType) {
     this.reviewType = reviewType;
-  }
-
-  public ReviewDto() {
   }
 
   public Integer getReviewId() {

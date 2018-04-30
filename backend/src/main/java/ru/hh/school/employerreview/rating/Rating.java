@@ -21,6 +21,11 @@ public class Rating {
   @Column(name = "people_rated")
   private Integer peopleRated;
 
+  public Rating() {
+    this.peopleRated = 0;
+    this.rating = 0.f;
+  }
+
   public void setId(Integer id) {
     this.id = id;
   }
@@ -44,10 +49,4 @@ public class Rating {
   public Float getRating() {
     return this.rating;
   }
-
-  public Rating() {
-    this.peopleRated = 0;
-    this.rating = 0.f;
-  }
 }
-
