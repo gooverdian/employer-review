@@ -17,6 +17,9 @@ public class AreaJson {
   @JsonProperty("areas")
   private AreaJson[] areas;
 
+  public AreaJson() {
+  }
+
   public AreaJson[] getAreas() {
     return areas;
   }

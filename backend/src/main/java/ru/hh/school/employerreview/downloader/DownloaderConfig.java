@@ -4,12 +4,14 @@ import com.mchange.v2.c3p0.DriverManagerDataSource;
 import org.hibernate.SessionFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import ru.hh.nab.common.util.FileSettings;
 import ru.hh.nab.hibernate.MappingConfig;
+import ru.hh.school.employerreview.FileSettingsConfig;
 import ru.hh.school.employerreview.area.Area;
 import ru.hh.school.employerreview.area.AreaDao;
 import ru.hh.school.employerreview.employer.Employer;
@@ -21,19 +23,11 @@ import ru.hh.school.employerreview.specializations.Specialization;
 import ru.hh.school.employerreview.specializations.SpecializationDao;
 
 import javax.sql.DataSource;
-import java.util.Properties;
-
-import static ru.hh.nab.common.util.PropertiesUtils.fromFilesInSettingsDir;
 
 @Configuration
+@Import({FileSettingsConfig.class})
 @EnableTransactionManagement
-class DownloaderConfig {
-
-  @Bean
-  FileSettings fileSettings() throws Exception {
-    Properties properties = fromFilesInSettingsDir("service.properties", "service.properties.dev");
-    return new FileSettings(properties);
-  }
+public class DownloaderConfig {
 
   @Bean
   DataSource dataSource(FileSettings fileSettings) {

@@ -19,6 +19,9 @@ public class ResponseJson {
   @JsonProperty("found")
   private int found;
 
+  public ResponseJson() {
+  }
+
   public int getFound() {
     return found;
   }

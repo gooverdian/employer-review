@@ -21,6 +21,9 @@ public class EmployersResponse {
   @JsonProperty("found")
   private int found;
 
+  public EmployersResponse() {
+  }
+
   public void setPerPage(int perPage) {
     this.perPage = perPage;
   }
@@ -47,10 +50,6 @@ public class EmployersResponse {
 
   public List<EmployerItem> getItems() {
     return items;
-  }
-
-  public EmployersResponse() {
-
   }
 
   public EmployersResponse(List<EmployerItem> items, int page, int perPage, int found, int pages) {

@@ -12,7 +12,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DownloadEmployersAreas extends DownloadAbstract {
+public class EmployersAreasDownloader extends AbstractDownloader {
   private static final String URL_AREAS = "https://api.hh.ru/areas";
   private static final String URL_EMPLOYERS = "https://api.hh.ru/employers";
   private static final int EMPLOYERS_PAGES = 5;

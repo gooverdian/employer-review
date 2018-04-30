@@ -1,6 +1,7 @@
 package ru.hh.school.employerreview.area;
 
 import ru.hh.school.employerreview.downloader.dto.AreaJson;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -20,15 +21,14 @@ public class Area {
 
   @Column(name = "name")
   private String name;
+  
+  public Area() {
+  }
 
   public Area(String name, int id, int parentId) {
     this.name = name;
     this.id = id;
     this.parentId = parentId;
-  }
-
-  Area() {
-
   }
 
   public Integer getId() {
@@ -43,7 +43,7 @@ public class Area {
     return name;
   }
 
-  public void  setParentId(int parentId) {
+  public void setParentId(int parentId) {
     this.parentId = parentId;
   }
 
@@ -74,7 +74,7 @@ public class Area {
   @Override
   public String toString() {
     return String.format("%s{id=%d, Name='%s', ParentId='%d'}",
-            getClass().getSimpleName(), id, name, parentId);
+        getClass().getSimpleName(), id, name, parentId);
   }
 
   public AreaJson toAreaJson() {
