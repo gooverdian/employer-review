@@ -23,6 +23,7 @@ import ru.hh.school.employerreview.specializations.ProfessionalField;
 import ru.hh.school.employerreview.specializations.ProfessionalFieldDao;
 import ru.hh.school.employerreview.specializations.Specialization;
 import ru.hh.school.employerreview.specializations.SpecializationDao;
+import ru.hh.school.employerreview.specializations.SpecializationsResource;
 
 @Configuration
 @Import({HibernateCommonConfig.class, FileSettingsConfig.class})
@@ -82,5 +83,10 @@ public class CommonConfig {
   @Bean
   ProfessionalFieldDao proffFieldDao(SessionFactory sessionFactory) {
     return new ProfessionalFieldDao(sessionFactory);
+  }
+
+  @Bean
+  SpecializationsResource specializationsResource(SpecializationDao specializationDao) {
+    return new SpecializationsResource(specializationDao);
   }
 }

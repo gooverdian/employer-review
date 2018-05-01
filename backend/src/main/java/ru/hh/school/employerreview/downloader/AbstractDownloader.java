@@ -11,7 +11,13 @@ public abstract class AbstractDownloader {
   protected static ApplicationContext applicationContext;
 
   protected static void init() {
-    setSystemPropertyIfAbsent("settingsDir", "src/etc");
-    applicationContext = new AnnotationConfigApplicationContext(DownloaderConfig.class);
+    if (applicationContext == null) {
+      setSystemPropertyIfAbsent("settingsDir", "src/etc");
+      applicationContext = new AnnotationConfigApplicationContext(DownloaderConfig.class);
+    }
+  }
+
+  public static void setApplicationContext(ApplicationContext applicationContext) {
+    AbstractDownloader.applicationContext = applicationContext;
   }
 }

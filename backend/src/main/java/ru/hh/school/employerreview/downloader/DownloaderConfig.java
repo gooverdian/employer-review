@@ -28,7 +28,6 @@ import javax.sql.DataSource;
 @Import({FileSettingsConfig.class})
 @EnableTransactionManagement
 public class DownloaderConfig {
-
   @Bean
   DataSource dataSource(FileSettings fileSettings) {
     String dataSourceName = "master";
