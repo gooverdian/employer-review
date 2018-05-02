@@ -1,8 +1,8 @@
 --Регион
 CREATE TABLE area (
-	id int PRIMARY KEY,
+	id        int PRIMARY KEY,
 	parent_id integer,
-	name varchar NOT NULL
+	name      varchar NOT NULL
 );
 
 --Рейтинг
@@ -44,26 +44,26 @@ CREATE TYPE review_type_enum AS ENUM (
 
 --Отзыв
 CREATE TABLE review (
-	id SERIAL PRIMARY KEY,
+	id          SERIAL PRIMARY KEY,
 	employer_id integer NOT NULL REFERENCES employer,
-	created_on timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	created_on  timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	review_type review_type_enum NOT NULL,
-	text varchar,
-	rating real NOT NULL
+	text        varchar,
+	rating      real NOT NULL
 );
 
 --Профф Область
 CREATE TABLE  proff_field (
-	id SERIAL PRIMARY KEY,
-	hhid integer UNIQUE,
-	name varchar NOT NULL
+	id          SERIAL PRIMARY KEY,
+	hhid        integer UNIQUE,
+	name        varchar NOT NULL
 );
 
 --Специализация
 CREATE TABLE specialization (
-	id SERIAL,
-	hhid integer UNIQUE,
+	id             SERIAL,
+	hhid           integer UNIQUE,
 	proff_field_id integer REFERENCES proff_field,
-	name varchar NOT NULL,
+	name           varchar NOT NULL,
 	PRIMARY KEY (id, proff_field_id)
 );

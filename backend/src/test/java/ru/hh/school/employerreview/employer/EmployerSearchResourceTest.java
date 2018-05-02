@@ -11,6 +11,7 @@ import ru.hh.school.employerreview.rating.RatingDao;
 
 import javax.inject.Inject;
 import javax.ws.rs.WebApplicationException;
+import java.util.Date;
 import java.util.List;
 
 public class EmployerSearchResourceTest extends EmployerReviewTestBase {
@@ -44,10 +45,12 @@ public class EmployerSearchResourceTest extends EmployerReviewTestBase {
     employer.setArea(area);
     employerDao.save(employer);
 
-    Assert.assertEquals(employer, resource.getEmployerById(employer.getId()).toEmployer());
+    Assert.assertEquals(employer, resource.getEmployerById(employer.getId(), true).toEmployer());
+    Assert.assertEquals(Integer.valueOf(1), employerDao.findLastEmployerVisitBeforeDate(employer, new Date()).getVisitCounter());
 
     employerDao.deleteEmployer(employer);
     areaDao.deleteArea(area);
+    employerDao.deleteAllEmployerVisits();
   }
 
   @Test
@@ -126,7 +129,7 @@ public class EmployerSearchResourceTest extends EmployerReviewTestBase {
 
   @Test(expected = WebApplicationException.class)
   public void testGetEmployerByNullValue() {
-    resource.getEmployerById(null);
+    resource.getEmployerById(null, false);
   }
 
   @Test

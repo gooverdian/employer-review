@@ -2,6 +2,7 @@ package ru.hh.school.employerreview.employer;
 
 import ru.hh.school.employerreview.area.Area;
 import ru.hh.school.employerreview.employer.dto.EmployerItem;
+import ru.hh.school.employerreview.employer.visit.EmployerVisitDto;
 import ru.hh.school.employerreview.rating.Rating;
 
 import javax.persistence.Column;
@@ -194,5 +195,14 @@ public class Employer {
       employerItem.setRating(rating);
     }
     return employerItem;
+  }
+
+  public EmployerVisitDto toEmployerVisitDto() {
+    EmployerVisitDto employerVisitDto = new EmployerVisitDto();
+    employerVisitDto.setLogoUrl(logoUrl90);
+    employerVisitDto.setId(id);
+    employerVisitDto.setName(name);
+    employerVisitDto.setUrl(siteUrl);
+    return employerVisitDto;
   }
 }

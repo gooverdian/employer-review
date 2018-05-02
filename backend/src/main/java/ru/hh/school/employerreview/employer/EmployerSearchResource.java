@@ -6,6 +6,7 @@ import ru.hh.school.employerreview.area.Area;
 import ru.hh.school.employerreview.area.AreaDao;
 import ru.hh.school.employerreview.employer.dto.EmployerItem;
 import ru.hh.school.employerreview.employer.dto.EmployersResponse;
+import ru.hh.school.employerreview.employer.visit.EmployerVisitDto;
 import ru.hh.school.employerreview.rating.RatingDao;
 
 import javax.ws.rs.PathParam;
@@ -18,6 +19,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -67,7 +69,8 @@ public class EmployerSearchResource {
 
   @GET
   @Path("/{employer_id}")
-  public EmployerItem getEmployerById(@PathParam("employer_id") Integer employerId) {
+  public EmployerItem getEmployerById(@PathParam("employer_id") Integer employerId,
+                                      @QueryParam("add_visit_counter") @DefaultValue("false") Boolean addVisitCounter) {
     if (employerId == null) {
       throw new Errors(Response.Status.BAD_REQUEST, "BAD_REQUEST_PARAMETER", "employerId").toWebApplicationException();
     }
@@ -77,6 +80,10 @@ public class EmployerSearchResource {
     }
     EmployerItem employerItem = employer.toEmployerItem();
     employerItem.setStars(ratingDao.getStarsInRatingMap(employerId));
+
+    if (addVisitCounter) {
+      employerDao.addEmployerVisitCounter(employer, new Date());
+    }
     return employerItem;
   }
 
@@ -96,6 +103,16 @@ public class EmployerSearchResource {
     }
     employerDao.save(employer);
     return employer.toEmployerItem();
+  }
+
+  @GET
+  @Path("/visits")
+  public List<EmployerVisitDto> getTopEmployerVisited(@QueryParam("size") @DefaultValue("20") Integer size,
+                                                      @QueryParam("interval") @DefaultValue("30") Integer interval) {
+    if (size <= 0) {
+      throw new Errors(Response.Status.BAD_REQUEST, "BAD_REQUEST_PARAMETER", "size").toWebApplicationException();
+    }
+    return employerDao.getTopEmployerVisited(size, interval);
   }
 
   @GET

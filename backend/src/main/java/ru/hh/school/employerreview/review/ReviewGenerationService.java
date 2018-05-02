@@ -11,6 +11,8 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
@@ -23,6 +25,7 @@ public class ReviewGenerationService {
   private final MainPageStatisticDao mainPageStatisticDao;
 
   private static final int PER_PAGE = 1000;
+  private static final int MAX_DATE_INTERVAL = 30;
   private static final int MAX_TEXT_LENGTH = 100;
   private static final int MAX_ESTIMATE = 5;
   private static final float MIN_ESTIMATE = 0.5f;
@@ -72,6 +75,10 @@ public class ReviewGenerationService {
       }
       reviewDao.save(getReview(employer, mathExpectedEstimate));
       ratingDao.addNewEstimate(employer, getEstimate(mathExpectedEstimate));
+      Calendar calendar = Calendar.getInstance();
+      calendar.setTime(new Date());
+      calendar.add(Calendar.DATE, -randomGenerator.nextInt(MAX_DATE_INTERVAL));
+      employerDao.addEmployerVisitCounter(employer, calendar.getTime());
     }
   }
 

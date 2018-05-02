@@ -5,12 +5,18 @@ import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Projections;
 import org.hibernate.query.Query;
 import org.springframework.transaction.annotation.Transactional;
+import ru.hh.school.employerreview.employer.visit.EmployerVisit;
+import ru.hh.school.employerreview.employer.visit.EmployerVisitDto;
 
+import javax.persistence.NoResultException;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import java.util.Collections;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Calendar;
+import java.util.Collections;
 
 import static java.util.Objects.requireNonNull;
 
@@ -96,6 +102,80 @@ public class EmployerDao {
   @Transactional
   public void deleteEmployer(Employer employer) {
     getSession().delete(employer);
+  }
+
+  @Transactional(readOnly = true)
+  public EmployerVisit findLastEmployerVisitBeforeDate(Employer employer, Date maxDate) {
+    CriteriaBuilder builder = getSession().getCriteriaBuilder();
+    CriteriaQuery<EmployerVisit> criteriaQuery = builder.createQuery(EmployerVisit.class);
+    Root<EmployerVisit> root = criteriaQuery.from(EmployerVisit.class);
+    criteriaQuery.select(root);
+    criteriaQuery.where(builder.equal(root.get("employerVisitId").get("employerId"), employer.getId()),
+        builder.lessThan(root.get("employerVisitId").get("date"), maxDate));
+    criteriaQuery.orderBy(builder.desc(root.get("employerVisitId").get("employerId")));
+
+    return getSession().createQuery(criteriaQuery).setMaxResults(1).getSingleResult();
+  }
+
+  private EmployerVisit createNewEmployerVisit(Employer employer, Date date) {
+    EmployerVisit employerVisit = new EmployerVisit(employer.getId(), date);
+    try {
+      EmployerVisit previousVisits = findLastEmployerVisitBeforeDate(employer, date);
+      employerVisit.setVisitBeforeDateTotalCounter(previousVisits.getVisitBeforeDateTotalCounter() + previousVisits.getVisitCounter());
+    } catch (NoResultException e) {
+      employerVisit.setVisitBeforeDateTotalCounter(0);
+    }
+    return employerVisit;
+  }
+
+  @Transactional
+  public void addEmployerVisitCounter(Employer employer, Date date) {
+    CriteriaBuilder builder = getSession().getCriteriaBuilder();
+    CriteriaQuery<EmployerVisit> criteriaQuery = builder.createQuery(EmployerVisit.class);
+    Root<EmployerVisit> root = criteriaQuery.from(EmployerVisit.class);
+    criteriaQuery.select(root);
+    criteriaQuery.where(builder.equal(root.get("employerVisitId").get("employerId"), employer.getId()),
+        builder.equal(root.get("employerVisitId").get("date"), date));
+
+    EmployerVisit employerVisit;
+    try {
+      employerVisit = getSession().createQuery(criteriaQuery).getSingleResult();
+    } catch (NoResultException e) {
+      employerVisit = createNewEmployerVisit(employer, date);
+    }
+    employerVisit.setVisitCounter(employerVisit.getVisitCounter() + 1);
+    getSession().saveOrUpdate(employerVisit);
+  }
+
+  @Transactional(readOnly = true)
+  public List<EmployerVisitDto> getTopEmployerVisited(Integer size, Integer interval) {
+
+    Date date = new Date();
+    Calendar calendar = Calendar.getInstance();
+    calendar.setTime(date);
+    calendar.add(Calendar.DATE, -interval);
+
+    Query<Object> query = getSession().createQuery(
+        "SELECT ev, SUM(ev.visitCounter) AS counter FROM EmployerVisit AS ev " +
+        "WHERE ev.employerVisitId.date > :date " +
+        "GROUP BY ev.employerVisitId.employerId, ev.employerVisitId.date " +
+        "ORDER BY counter DESC").setMaxResults(size).setParameter("date", calendar.getTime());
+
+    List<EmployerVisitDto> top = new ArrayList<>();
+    for (Object result : query.list()) {
+      Object[] dividedResult = (Object[]) result;
+      EmployerVisit employerVisit = (EmployerVisit) dividedResult[0];
+
+      EmployerVisitDto employerVisitDto = getEmployer(employerVisit.getEmployerId()).toEmployerVisitDto();
+      employerVisitDto.setPeopleVisited(((Long) dividedResult[1]).intValue());
+      top.add(employerVisitDto);
+    }
+    return top;
+  }
+
+  @Transactional
+  public void deleteAllEmployerVisits() {
+    getSession().createQuery("delete from EmployerVisit").executeUpdate();
   }
 
   private Session getSession() {
