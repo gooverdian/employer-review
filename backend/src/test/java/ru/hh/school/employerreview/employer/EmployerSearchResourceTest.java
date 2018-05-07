@@ -39,7 +39,7 @@ public class EmployerSearchResourceTest extends EmployerReviewTestBase {
     employer.setArea(area);
     employerDao.save(employer);
 
-    Assert.assertEquals(resource.getEmployerById(employer.getId()).toEmployer(), employer);
+    Assert.assertEquals(employer, resource.getEmployerById(employer.getId()).toEmployer());
 
     employerDao.deleteEmployer(employer);
     areaDao.deleteArea(area);

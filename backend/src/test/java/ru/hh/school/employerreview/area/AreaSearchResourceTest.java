@@ -19,15 +19,15 @@ public class AreaSearchResourceTest extends EmployerReviewTestBase {
   public void testAreaSearch() {
     areaDao.save(area);
     AreaResponse areaResponse = resource.searchAreas(testAreaName, 0, 10);
-    Assert.assertEquals(areaResponse.getFound(), 1);
-    Assert.assertEquals(areaResponse.getItems().get(0).toArea(), area);
+    Assert.assertEquals(1, areaResponse.getFound());
+    Assert.assertEquals(area, areaResponse.getItems().get(0).toArea());
     areaDao.deleteArea(area);
   }
 
   @Test
   public void testGetAreaById() {
     areaDao.save(area);
-    Assert.assertEquals(resource.getAreaById(area.getId()).toArea(), area);
+    Assert.assertEquals(area, resource.getAreaById(area.getId()).toArea());
     areaDao.deleteArea(area);
   }
 

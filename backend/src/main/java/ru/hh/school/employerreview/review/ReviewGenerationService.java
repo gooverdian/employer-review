@@ -4,6 +4,7 @@ import ru.hh.errors.common.Errors;
 import ru.hh.school.employerreview.employer.Employer;
 import ru.hh.school.employerreview.employer.EmployerDao;
 import ru.hh.school.employerreview.rating.RatingDao;
+import ru.hh.school.employerreview.statistic.MainPageStatisticDao;
 
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.POST;
@@ -16,9 +17,10 @@ import java.util.Random;
 @Path("/review")
 public class ReviewGenerationService {
 
-  private ReviewDao reviewDao;
-  private EmployerDao employerDao;
-  private RatingDao ratingDao;
+  private final ReviewDao reviewDao;
+  private final EmployerDao employerDao;
+  private final RatingDao ratingDao;
+  private final MainPageStatisticDao mainPageStatisticDao;
 
   private static final int PER_PAGE = 1000;
   private static final int MAX_TEXT_LENGTH = 100;
@@ -28,10 +30,11 @@ public class ReviewGenerationService {
 
   private final Random randomGenerator = new Random();
 
-  public ReviewGenerationService(ReviewDao reviewDao, EmployerDao employerDao, RatingDao ratingDao) {
+  public ReviewGenerationService(ReviewDao reviewDao, EmployerDao employerDao, RatingDao ratingDao, MainPageStatisticDao mainPageStatisticDao) {
     this.reviewDao = reviewDao;
     this.ratingDao = ratingDao;
     this.employerDao = employerDao;
+    this.mainPageStatisticDao = mainPageStatisticDao;
   }
 
   @POST
@@ -63,6 +66,10 @@ public class ReviewGenerationService {
 
   private void generateReviewsOnCurrentEmployer(Employer employer, int reviewCount, Float mathExpectedEstimate) {
     for (int i = 0; i < reviewCount; i++) {
+      mainPageStatisticDao.addReviewCount();
+      if (employer.getRating() == null) {
+        mainPageStatisticDao.addEmployerWithReviewCount();
+      }
       reviewDao.save(getReview(employer, mathExpectedEstimate));
       ratingDao.addNewEstimate(employer, getEstimate(mathExpectedEstimate));
     }

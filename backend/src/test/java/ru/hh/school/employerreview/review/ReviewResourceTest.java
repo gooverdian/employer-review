@@ -9,6 +9,7 @@ import ru.hh.school.employerreview.employer.EmployerDao;
 import ru.hh.school.employerreview.rating.RatingDao;
 import ru.hh.school.employerreview.rating.stars.StarsInRating;
 import ru.hh.school.employerreview.review.dto.ReviewDto;
+import ru.hh.school.employerreview.statistic.MainPageStatisticDao;
 
 import javax.inject.Inject;
 import javax.ws.rs.WebApplicationException;
@@ -25,6 +26,8 @@ public class ReviewResourceTest extends EmployerReviewTestBase {
   private ReviewDao reviewDao;
   @Inject
   private RatingDao ratingDao;
+  @Inject
+  private MainPageStatisticDao mainPageStatisticDao;
 
   @Test
   public void testPostReview() {
@@ -49,17 +52,22 @@ public class ReviewResourceTest extends EmployerReviewTestBase {
     Assert.assertEquals(postedReview.getEmployer().getId(), reviewFromDB.getEmployer().getId());
 
     Employer employerFromDB = employerDao.getEmployer(employer.getId());
-    Assert.assertEquals(employerFromDB.getRating().getRating(), postedReview.getRating());
-    Assert.assertTrue(employerFromDB.getRating().getPeopleRated() == 1);
+    Assert.assertEquals(1, employerFromDB.getRating().getRating(), postedReview.getRating());
+    Assert.assertEquals(1, employerFromDB.getRating().getPeopleRated().intValue());
 
     StarsInRating starsInRating = ratingDao.getStarsInRating(employerFromDB.getId(), reviewEstimate);
-    Assert.assertTrue(starsInRating.getStarCounter() == 1);
+    Assert.assertEquals(1, starsInRating.getStarCounter().intValue());
+
+    Assert.assertEquals(1, mainPageStatisticDao.getReviewCount().getValue().intValue());
+    Assert.assertEquals(1, mainPageStatisticDao.getEmployerWithReviewCount().getValue().intValue());
 
     reviewDao.deleteReview(reviewFromDB);
     employerDao.deleteEmployer(employer);
     ratingDao.deleteRating(employerFromDB.getRating());
     ratingDao.deleteStarsInRating(starsInRating);
     areaDao.deleteArea(area);
+    mainPageStatisticDao.deleteEmployerWithReviewCount();
+    mainPageStatisticDao.deleteReviewCount();
   }
 
   @Test(expected = WebApplicationException.class)

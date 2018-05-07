@@ -23,6 +23,9 @@ import ru.hh.school.employerreview.specializations.ProfessionalField;
 import ru.hh.school.employerreview.specializations.ProfessionalFieldDao;
 import ru.hh.school.employerreview.specializations.Specialization;
 import ru.hh.school.employerreview.specializations.SpecializationDao;
+import ru.hh.school.employerreview.statistic.MainPageStatistic;
+import ru.hh.school.employerreview.statistic.MainPageStatisticDao;
+import ru.hh.school.employerreview.statistic.StatisticResource;
 import ru.hh.school.employerreview.specializations.SpecializationsResource;
 
 @Configuration
@@ -45,6 +48,11 @@ public class CommonConfig {
   }
 
   @Bean
+  MainPageStatisticDao mainPageStatisticDao(SessionFactory sessionFactory) {
+    return new MainPageStatisticDao(sessionFactory);
+  }
+
+  @Bean
   RatingDao ratingDao(SessionFactory sessionFactory) {
     return new RatingDao(sessionFactory);
   }
@@ -57,17 +65,23 @@ public class CommonConfig {
   @Bean
   MappingConfig mappingConfig() {
     return new MappingConfig(Employer.class, Review.class, Area.class, Rating.class,
-        StarsInRating.class, ProfessionalField.class, Specialization.class);
+        StarsInRating.class, ProfessionalField.class, Specialization.class, MainPageStatistic.class);
   }
 
   @Bean
-  ReviewResource reviewResource(ReviewDao reviewDao, EmployerDao employerDao, RatingDao ratingDao) {
-    return new ReviewResource(reviewDao, employerDao, ratingDao);
+  ReviewResource reviewResource(ReviewDao reviewDao, EmployerDao employerDao, RatingDao ratingDao, MainPageStatisticDao mainPageStatisticDao) {
+    return new ReviewResource(reviewDao, employerDao, ratingDao, mainPageStatisticDao);
   }
 
   @Bean
-  ReviewGenerationService reviewGenerationService(ReviewDao reviewDao, EmployerDao employerDao, RatingDao ratingDao) {
-    return new ReviewGenerationService(reviewDao, employerDao, ratingDao);
+  StatisticResource statisticResource(MainPageStatisticDao mainPageStatisticDao) {
+    return new StatisticResource(mainPageStatisticDao);
+  }
+
+  @Bean
+  ReviewGenerationService reviewGenerationService(ReviewDao reviewDao, EmployerDao employerDao,
+                                                  RatingDao ratingDao, MainPageStatisticDao mainPageStatisticDao) {
+    return new ReviewGenerationService(reviewDao, employerDao, ratingDao, mainPageStatisticDao);
   }
 
   @Bean

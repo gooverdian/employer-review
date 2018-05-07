@@ -8,6 +8,7 @@ import ru.hh.school.employerreview.rating.RatingDao;
 import ru.hh.school.employerreview.review.dto.ResponseBodyReviewId;
 import ru.hh.school.employerreview.review.dto.ResponseBodyReviews;
 import ru.hh.school.employerreview.review.dto.ReviewDto;
+import ru.hh.school.employerreview.statistic.MainPageStatisticDao;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
@@ -30,11 +31,13 @@ public class ReviewResource {
   private final ReviewDao reviewDao;
   private final EmployerDao employerDao;
   private final RatingDao ratingDao;
+  private final MainPageStatisticDao mainPageStatisticDao;
 
-  public ReviewResource(ReviewDao reviewDao, EmployerDao employerDao, RatingDao ratingDao) {
+  public ReviewResource(ReviewDao reviewDao, EmployerDao employerDao, RatingDao ratingDao, MainPageStatisticDao mainPageStatisticDao) {
     this.reviewDao = reviewDao;
     this.employerDao = employerDao;
     this.ratingDao = ratingDao;
+    this.mainPageStatisticDao = mainPageStatisticDao;
   }
 
   @POST
@@ -68,7 +71,10 @@ public class ReviewResource {
         reviewDto.getReviewType(),
         reviewDto.getText());
     reviewDao.save(review);
-
+    mainPageStatisticDao.addReviewCount();
+    if (employer.getRating() == null) {
+      mainPageStatisticDao.addEmployerWithReviewCount();
+    }
     ratingDao.addNewEstimate(employer, reviewDto.getRating());
 
     return new ResponseBodyReviewId(review.getId());
