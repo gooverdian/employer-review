@@ -1,0 +1,13 @@
+.section-title:before,
+.section-title:after {
+    content: " ";
+    display: table;
+}
+
+.section-title:after {
+    clear: both;
+}
+
+.section-title .section-title__controls {
+    float: right;
+}

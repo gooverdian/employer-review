@@ -8,16 +8,7 @@
 }
 
 .rating-input__stars {
-    margin: 0 -.2em;
-}
-
-.rating-input__stars button {
     margin: 0 -1px;
-}
-
-.rating-input__stars .rating-input_star-hover span,
-.rating-input__stars .rating-input_star-active span {
-    color: #ffd240 !important;
 }
 
 .rating-input__value {
@@ -26,13 +17,11 @@
     margin-top: .2em;
 }
 
-.rating-input_has-error label {
-    color: #de3226;
+.rating-star .rating-star__icon {
+    font-size: 40px;
 }
 
-.rating-input_has-error .help-block {
-    color: #de3226;
-    font-size: 12px;
-    line-height: 20px;
-    margin-bottom: -20px;
+.rating-star.rating-star_hover,
+.rating-star.rating-star_active {
+    color: #ffd240;
 }

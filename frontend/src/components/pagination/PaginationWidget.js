@@ -1,14 +1,16 @@
 import React from 'react';
-import IconButton from 'material-ui/IconButton';
+import PaginationButton from './PaginationButton';
 
 const paginationMaxButtonsCount = 9;
 const paginationMaxPagesCount = 15;
+
+const FIRST_PAGE = 0;
 
 export default class PaginationWidget extends React.Component {
     pagination = {};
     widgetCache = null;
 
-    handlePageChange(newPage) {
+    handlePageChange = (newPage) => {
         if (newPage === this.props.page) {
             return;
         }
@@ -16,7 +18,7 @@ export default class PaginationWidget extends React.Component {
         if (this.props.onPageChange) {
             this.props.onPageChange(newPage);
         }
-    }
+    };
 
     regenerateCache() {
         if (!this.props.pages || this.props.pages < 2) {
@@ -29,13 +31,12 @@ export default class PaginationWidget extends React.Component {
         let lastPage = Math.min(paginationMaxPagesCount, this.props.pages) - 1;
         let currentPage = this.props.page;
         linkList.push(
-            <IconButton
-                key={0}
-                color={currentPage === 0 ? "primary" : "default"}
-                onClick={() => this.handlePageChange(0)}
-            >
-                {"1"}
-            </IconButton>
+            <PaginationButton
+                key={FIRST_PAGE}
+                page={FIRST_PAGE}
+                active={currentPage === FIRST_PAGE}
+                onClick={this.handlePageChange}
+            />
         );
 
         let nearestPagesCountLow =  Math.floor((paginationMaxButtonsCount - 3) / 2);
@@ -43,19 +44,16 @@ export default class PaginationWidget extends React.Component {
 
         if (currentPage - nearestPagesCountLow > 1) {
             linkList.push(
-                <IconButton key="ellipsis-low" disabled>
-                    {".."}
-                </IconButton>
+                <PaginationButton key="ellipsis-low" disabled />
             );
         } else {
             linkList.push(
-                <IconButton
-                    key={1}
-                    color={currentPage === 1 ? "primary" : "default"}
-                    onClick={() => this.handlePageChange(1)}
-                >
-                    {"2"}
-                </IconButton>
+                <PaginationButton
+                    key={FIRST_PAGE + 1}
+                    page={FIRST_PAGE + 1}
+                    active={currentPage === FIRST_PAGE + 1}
+                    onClick={this.handlePageChange}
+                />
             );
         }
         let maxVisibleButtons = Math.min(lastPage, paginationMaxButtonsCount - 4);
@@ -71,45 +69,40 @@ export default class PaginationWidget extends React.Component {
                 break;
             }
             linkList.push(
-                <IconButton
+                <PaginationButton
                     key={currentLink}
-                    color={currentPage === currentLink ? "primary" : "default"}
-                    onClick={() => this.handlePageChange(currentLink)}
-                >
-                    {String(currentLink + 1)}
-                </IconButton>
+                    page={currentLink}
+                    active={currentPage === currentLink}
+                    onClick={this.handlePageChange}
+                />
             );
         }
 
         if (lastPage > 2) {
             if (currentPage + nearestPagesCountHigh < lastPage - 1) {
                 linkList.push(
-                    <IconButton key="ellipsis-high" disabled>
-                        {".."}
-                    </IconButton>
+                    <PaginationButton key="ellipsis-high" disabled />
                 );
             } else {
                 linkList.push(
-                    <IconButton
+                    <PaginationButton
                         key={lastPage - 1}
-                        color={currentPage === lastPage - 1 ? "primary" : "default"}
-                        onClick={() => this.handlePageChange(lastPage - 1)}
-                    >
-                        {String(lastPage)}
-                    </IconButton>
+                        page={lastPage - 1}
+                        active={currentPage === lastPage - 1}
+                        onClick={this.handlePageChange}
+                    />
                 );
             }
         }
 
         if (lastPage > 1) {
             linkList.push(
-                <IconButton
+                <PaginationButton
                     key={lastPage}
-                    color={currentPage === lastPage ? "primary" : "default"}
-                    onClick={() => this.handlePageChange(lastPage)}
-                >
-                    {String(lastPage + 1)}
-                </IconButton>
+                    page={lastPage}
+                    active={currentPage === lastPage}
+                    onClick={this.handlePageChange}
+                />
             );
         }
 
@@ -119,7 +112,7 @@ export default class PaginationWidget extends React.Component {
         };
 
         this.widgetCache = (
-            <div className="paginati1on">{linkList}</div>
+            <div className="pagination">{linkList}</div>
         );
     }
 

@@ -1,26 +1,18 @@
 import React from 'react';
-import { withStyles } from 'material-ui/styles';
 import List, { ListItem, ListItemSecondaryAction, ListItemText } from 'material-ui/List';
+import { Link } from "react-router-dom";
 import Avatar from 'material-ui/Avatar';
 import PaginationWidget from 'components/pagination/PaginationWidget';
 import IconButton from 'material-ui/IconButton';
 import CommentIcon from '@material-ui/icons/Comment';
 import './EmployerSearchResults.css';
 
-const styles = theme => ({
-    root: {
-        width: '100%',
-        maxWidth: 360,
-        backgroundColor: theme.palette.background.paper,
-    },
-});
-
 class EmployerSearchResults extends React.Component {
-    handlePageChange(page) {
+    handlePageChange = (page) => {
         if (this.props.onPageChange) {
             this.props.onPageChange(page);
         }
-    }
+    };
 
     renderResultsList() {
         if (!this.props.data || !this.props.data.items) {
@@ -30,8 +22,11 @@ class EmployerSearchResults extends React.Component {
         if (this.props.data.items.length === 0) {
             return (
                 <List>
-                    <ListItem className="employer-search-select_nothing-found">
-                        <ListItemText primary="По вашему запросу компаний не найдено" />
+                    <ListItem className="search-select-item search-select-item_nothing-found">
+                        <ListItemText
+                            classes={{primary: "search-select-item__caption"}}
+                            primary="По вашему запросу компаний не найдено"
+                        />
                     </ListItem>
                 </List>
             );
@@ -41,14 +36,15 @@ class EmployerSearchResults extends React.Component {
             <List>
                 {this.props.data.items.map((item) => (
                     <ListItem
-                        button
                         key={item.id}
-                        onClick={() => {this.props.history.push('/employer/' + item.id)}}
+                        button
+                        component={Link}
+                        to={"/employer/" + item.id}
                     >
                     <Avatar alt="Лого" src={item.logo_url} />
                     <ListItemText primary={item.name} />
                     <ListItemSecondaryAction>
-                        <IconButton title="Оставить отзыв о компании" onClick={() => {this.props.history.push('/review/add/' + item.id)}}>
+                        <IconButton component={Link} title="Оставить отзыв о компании" to={"/review/add/" + item.id}>
                             <CommentIcon />
                         </IconButton>
                     </ListItemSecondaryAction>
@@ -59,18 +55,17 @@ class EmployerSearchResults extends React.Component {
     }
 
     render() {
-        const { classes } = this.props;
         return (
             <div className="employer-search-results">
-                {this.renderResultsList(classes)}
+                {this.renderResultsList()}
                 <PaginationWidget
                     pages={this.props.data ? this.props.data.pages : undefined}
                     page={this.props.data ? this.props.data.page : undefined}
-                    onPageChange={page => this.handlePageChange(page)}
+                    onPageChange={this.handlePageChange}
                 />
             </div>
         );
     }
 }
 
-export default withStyles(styles)(EmployerSearchResults);
+export default EmployerSearchResults;

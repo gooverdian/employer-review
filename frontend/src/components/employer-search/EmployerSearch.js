@@ -85,7 +85,8 @@ class EmployerSearch extends React.Component {
         }
     }
 
-    handleTextChange = (value) => {
+    handleTextChange = (event) => {
+        const value = event.target.value;
         this.setState({searchValue: value});
 
         if (this.requestThresholdTimer) {
@@ -119,11 +120,11 @@ class EmployerSearch extends React.Component {
                                     label="Поиск по компаниям"
                                     placeholder="Начните вводить название компании"
                                     value={this.state.searchValue}
-                                    onChange={event => this.handleTextChange(event.target.value)}
+                                    onChange={this.handleTextChange}
                                 />
                             </Grid>
                             <EmployerSearchResults
-                                onPageChange={page => (this.handlePageChange(page))}
+                                onPageChange={this.handlePageChange}
                                 history={this.props.history}
                                 data={this.state.results}
                             />

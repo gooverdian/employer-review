@@ -1,6 +1,5 @@
 import React from 'react';
 import Grid from 'material-ui/Grid';
-import { withStyles } from 'material-ui/styles';
 import TextField from 'material-ui/TextField';
 import RatingInput from 'components/rating-input/RatingInput';
 import EmployerSearchSelect from 'components/employer-search/EmployerSearchSelect';
@@ -9,15 +8,6 @@ import ExchangeInterface from 'components/exchange/ExchangeInterface';
 import Validator from 'helpers/validator/Validator';
 import SendIcon from '@material-ui/icons/Send';
 import './AddReviewForm.css';
-
-const styles = theme => ({
-    leftIcon: {
-        marginRight: theme.spacing.unit,
-    },
-    rightIcon: {
-        marginLeft: theme.spacing.unit,
-    },
-});
 
 class AddReviewForm extends React.Component {
     state = {
@@ -105,10 +95,12 @@ class AddReviewForm extends React.Component {
 
         this.setState({attributes: validatedAttributes});
 
-        return hasErrors;
+        return !hasErrors;
     }
 
-    submit = () => {
+    submit = (event) => {
+        event.preventDefault();
+
         if (!this.validate()) {
             return;
         }
@@ -127,9 +119,8 @@ class AddReviewForm extends React.Component {
     };
 
     render () {
-        const { classes } = this.props;
         return (
-            <form className="page-add-review">
+            <form onSubmit={this.submit} className="form-add-review">
                 <Grid container className="form-group">
                     <Grid item md={8}>
                         <EmployerSearchSelect
@@ -153,7 +144,8 @@ class AddReviewForm extends React.Component {
                     <Grid item md={8}>
                         <TextField
                             multiline fullWidth
-                            label="Текст отзыва" maxLength={1000}
+                            label="Ваше мнение о компании"
+                            maxLength={1000}
                             value={this.state.attributes.reviewText.value}
                             onChange={this.updateText.bind(this, 'reviewText')}
                             error={this.state.attributes.reviewText.error}
@@ -162,9 +154,8 @@ class AddReviewForm extends React.Component {
                 </Grid>
                 <Grid container className="form-group">
                     <Grid item md={8}>
-                        <Button variant="raised" color="primary" onClick={this.submit}>
-                            Отправить
-                            <SendIcon className={classes.rightIcon} />
+                        <Button variant="raised" color="primary" type="submit">
+                            Отправить <SendIcon className="button-icon button-icon_right" />
                         </Button>
                     </Grid>
                 </Grid>
@@ -173,4 +164,4 @@ class AddReviewForm extends React.Component {
     }
 }
 
-export default withStyles(styles)(AddReviewForm);
+export default AddReviewForm;

@@ -3,21 +3,23 @@ import TextField from 'material-ui/TextField';
 import ExchangeInterface from 'components/exchange/ExchangeInterface';
 import EmployerSearchSelectResults from './EmployerSearchSelectResults';
 import settings from 'config/settings';
+import classNames from 'classnames';
 import './EmployerSearchSelect.css';
 
 class EmployerSearchSelect extends React.Component {
     state = {
         searchValue: '',
-        selectedItem: null,
-        results: {}
+        results: {},
+        selectedItem: undefined,
+        highlightedIndex: 0,
+        resultsVisible: false
     };
 
     requestThresholdTimer = null;
 
-    constructor(props, context) {
-        super(props, context);
-        if (props.employerId) {
-            ExchangeInterface.getEmployer(props.employerId).then((data) => {
+    componentDidMount() {
+        if (this.props.employerId) {
+            ExchangeInterface.getEmployer(this.props.employerId).then((data) => {
                 this.handleSelection(data);
             }, (error) => {
                 console.log(error);
@@ -36,8 +38,7 @@ class EmployerSearchSelect extends React.Component {
             this.invalidateSelection();
         }
 
-        this.requestThresholdTimer = setTimeout(
-            () => {
+        this.requestThresholdTimer = setTimeout(() => {
                 if (value === '') {
                     this.setState({results: {}});
                 } else {
@@ -47,65 +48,102 @@ class EmployerSearchSelect extends React.Component {
                         console.log(error);
                     });
                 }
-
             },
             settings.searchRequestThreshold
         );
     };
 
+    highlightNext() {
+        let currentlyHighlighted = this.state.highlightedIndex;
+        if (!this.state.results.items
+            || this.state.results.items.length === 0
+            || currentlyHighlighted + 1 >= this.state.results.items.length
+        ) {
+            return false;
+        }
+        this.setState({highlightedIndex: currentlyHighlighted + 1});
+
+        return true;
+    }
+
+    highlightPrev() {
+        let currentlyHighlighted = this.state.highlightedIndex;
+        if (!this.state.results.items
+            || this.state.results.items.length === 0
+            || currentlyHighlighted <= 0
+        ) {
+            return false;
+        }
+        this.setState({highlightedIndex: currentlyHighlighted - 1});
+
+        return true;
+    }
+
+    selectHighlighted() {
+        this.handleSelection(this.state.results.items[this.state.highlightedIndex]);
+    }
+
     invalidateSelection = () => {
         if (this.props.onChange) {
-            this.props.onChange(null);
+            this.props.onChange(undefined);
         }
-        this.setState({selectedItem: null});
-        this.resultsComponent.invalidateSelection();
-        this.resultsComponent.show();
+        this.setState({
+            selectedItem: undefined,
+            resultsVisible: true,
+        });
     };
 
     handleSelection = (item) => {
         if (this.props.onChange) {
             this.props.onChange(item.id);
         }
-        this.setState({searchValue: item.name, selectedItem: item});
+        this.setState({
+            searchValue: item.name,
+            selectedItem: item,
+            resultsVisible: false
+        });
     };
 
     showResults = () => {
         if (!this.state.selectedItem) {
-            this.resultsComponent.show();
+            this.setState({resultsVisible: true});
         }
     };
 
     hideResults = () => {
-        this.resultsComponent.hide();
+        this.setState({resultsVisible: false});
     };
 
-    handleInputKeyDown = (eventProxy) => {
-        let key = eventProxy.key;
-        if (!this.resultsComponent.state.visible) {
+    handleInputKeyDown = (event) => {
+        let key = event.key;
+        if (!this.state.resultsVisible) {
             return;
         }
         let preventionNeeded = true;
         switch (key) {
             case 'ArrowDown':
-                this.resultsComponent.highlightNext();
+                this.highlightNext();
                 break;
             case 'ArrowUp':
-                this.resultsComponent.highlightPrev();
+                this.highlightPrev();
                 break;
             case 'Enter':
-                this.resultsComponent.selectHighlighted();
+                this.selectHighlighted();
                 break;
             default:
                 preventionNeeded = false;
         }
         if (preventionNeeded) {
-            eventProxy.preventDefault();
+            event.preventDefault();
         }
     };
 
     render() {
         return (
-            <div className="employer-search-select">
+            <div className={classNames(
+                'employer-search-select',
+                {'employer-search-select_results-hidden': !this.state.resultsVisible}
+            )}>
                 <TextField
                     error={Boolean(this.props.error)}
                     fullWidth
@@ -120,9 +158,10 @@ class EmployerSearchSelect extends React.Component {
                     helperText={this.props.error ? this.props.error : undefined}
                 />
                 <EmployerSearchSelectResults
-                    ref={ref => (this.resultsComponent = ref)}
                     onSelect={this.handleSelection}
-                    data={this.state.results}
+                    items={this.state.results ? this.state.results.items : undefined}
+                    highlightedIndex={this.state.highlightedIndex}
+                    selectedItem={this.state.selectedItem}
                 />
             </div>
         );

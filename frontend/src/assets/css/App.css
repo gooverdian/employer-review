@@ -1,7 +1,14 @@
-.page-wrap {
-    padding: 15px;
+.container {
+    box-sizing: border-box;
+    margin-left: auto;
+    margin-right: auto;
+    padding-right: 8px;
+    padding-left: 8px;
 }
 
-.page-home {
-    text-align: center;
+@media only screen and (min-width: 1200px) {
+    .container {
+        width: 1184px;
+        max-width: 100%;
+    }
 }

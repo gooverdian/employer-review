@@ -1,5 +1,5 @@
 import React from 'react';
-import List, { ListItem } from 'material-ui/List';
+import List, { ListItem, ListItemText } from 'material-ui/List';
 import ExchangeInterface from 'components/exchange/ExchangeInterface';
 import EmployerReview from './EmployerReview';
 
@@ -8,17 +8,11 @@ class EmployerReviews extends React.Component {
         data: {}
     };
 
-    constructor(params) {
-        super();
-        this.state.data = params.data || {};
-    }
-
     componentDidMount() {
         if (this.props.employerId) {
-            let instance = this;
             ExchangeInterface.getReviews(this.props.employerId).then(
-                function(data) {
-                    instance.setState({data: data});
+                (data) => {
+                    this.setState({data: data});
                 },
                 function(error) {
                     console.log(error);
@@ -28,31 +22,27 @@ class EmployerReviews extends React.Component {
     }
 
     generateResultsList() {
-        if (!this.state.data.reviews) {
-            return '';
-        }
-
-        if (this.state.data.reviews.length === 0) {
+        if (!this.state.data.reviews || this.state.data.reviews.length === 0) {
             return (
                 <List>
-                    <ListItem
-                        className="nothing-found"
-                        caption="Отзывов по компании не найдено"
-                    />
+                    <ListItem className="nothing-found">
+                        <ListItemText primary="Отзывов по компании не найдено" />
+                    </ListItem>
                 </List>
             );
         }
 
         return (
-            <List ripple>
+            <List>
                 {this.state.data.reviews.map((item, index) => (
                     <ListItem
                         key={index}
-                        itemContent={<EmployerReview
+                    >
+                        <EmployerReview
                             data={item}
-                            highlight={String(item.reviewId) === String(this.props.reviewId)}
-                        />}
-                    />
+                            highlight={Number(item.reviewId) === Number(this.props.reviewId)}
+                        />
+                    </ListItem>
                 ))}
             </List>
         );
