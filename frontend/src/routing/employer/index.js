@@ -1,26 +1,26 @@
 import React from 'react';
+import Grid from 'material-ui/Grid';
 import EmployerCard from 'components/employer/EmployerCard';
 import EmployerReviews from 'components/employer/EmployerReviews';
-import {Col, Grid, Row} from 'react-flexbox-grid';
 
 const ViewEmployerIndex = function({match, history}) {
     return (
         <div className="page-employer-index">
-            <Grid>
-                <Row>
-                    <Col>
-                        <EmployerCard
-                            employerId={match.params.employerId}
-                        />
-                    </Col>
-                </Row>
-                <Row>
+            <Grid container>
+                <Grid item xs>
+                    <EmployerCard
+                        employerId={match.params.employerId}
+                    />
+                </Grid>
+            </Grid>
+            <Grid container>
+                <Grid item md={9} className="employer-reviews">
                     <EmployerReviews
                         employerId={match.params.employerId}
                         reviewId={match.params.reviewId}
                         history={history}
                     />
-                </Row>
+                </Grid>
             </Grid>
         </div>
     );

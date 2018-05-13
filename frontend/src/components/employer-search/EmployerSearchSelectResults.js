@@ -1,7 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import List from 'react-toolbox/lib/list/List';
-import ListItem from 'react-toolbox/lib/list/ListItem';
+import List, { ListItem, ListItemText } from 'material-ui/List';
 
 class EmployerSearchSelectResults extends React.Component {
     state = {
@@ -136,15 +135,15 @@ class EmployerSearchSelectResults extends React.Component {
             <List ripple>
                 {this.props.data.items.map((item, index) => (
                     <ListItem
-                        selectable
+                        button
                         className={
                             (index === this.state.selectedIndex ? 'employer-search-select_active' : '')
                             + (index === this.state.highlightedIndex ? 'employer-search-select_highlighted' : '')
                         }
                         key={index}
-                        caption={String(item.name)}
-                        onMouseDown={this.handleSelection.bind(this, index)}
+                        onClick={this.handleSelection.bind(this, index)}
                     >
+                        <ListItemText primary={item.name} />
                     </ListItem>
                 ))}
             </List>

@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button} from 'components/router-button/RouterButton';
+import IconButton from 'material-ui/IconButton';
 
 const paginationMaxButtonsCount = 9;
 const paginationMaxPagesCount = 15;
@@ -29,12 +29,13 @@ export default class PaginationWidget extends React.Component {
         let lastPage = Math.min(paginationMaxPagesCount, this.props.pages) - 1;
         let currentPage = this.props.page;
         linkList.push(
-            <Button
-                key={0} label="1"
-                raised mini
-                accent={currentPage === 0}
+            <IconButton
+                key={0}
+                color={currentPage === 0 ? "primary" : "default"}
                 onClick={() => this.handlePageChange(0)}
-            />
+            >
+                {"1"}
+            </IconButton>
         );
 
         let nearestPagesCountLow =  Math.floor((paginationMaxButtonsCount - 3) / 2);
@@ -42,19 +43,19 @@ export default class PaginationWidget extends React.Component {
 
         if (currentPage - nearestPagesCountLow > 1) {
             linkList.push(
-                <Button
-                    key="ellipsis-low" label="..."
-                    flat mini disabled
-                />
+                <IconButton key="ellipsis-low" disabled>
+                    {".."}
+                </IconButton>
             );
         } else {
             linkList.push(
-                <Button
-                    key={1} label="2"
-                    raised mini
-                    accent={currentPage === 1}
+                <IconButton
+                    key={1}
+                    color={currentPage === 1 ? "primary" : "default"}
                     onClick={() => this.handlePageChange(1)}
-                />
+                >
+                    {"2"}
+                </IconButton>
             );
         }
         let maxVisibleButtons = Math.min(lastPage, paginationMaxButtonsCount - 4);
@@ -70,43 +71,45 @@ export default class PaginationWidget extends React.Component {
                 break;
             }
             linkList.push(
-                <Button
-                    key={currentLink} label={String(currentLink + 1)}
-                    raised mini
-                    accent={currentPage === currentLink}
+                <IconButton
+                    key={currentLink}
+                    color={currentPage === currentLink ? "primary" : "default"}
                     onClick={() => this.handlePageChange(currentLink)}
-                />
+                >
+                    {String(currentLink + 1)}
+                </IconButton>
             );
         }
 
         if (lastPage > 2) {
             if (currentPage + nearestPagesCountHigh < lastPage - 1) {
                 linkList.push(
-                    <Button
-                        key="ellipsis-high" label="..."
-                        flat mini disabled
-                    />
+                    <IconButton key="ellipsis-high" disabled>
+                        {".."}
+                    </IconButton>
                 );
             } else {
                 linkList.push(
-                    <Button
-                        key={lastPage - 1} label={String(lastPage)}
-                        raised mini
-                        accent={currentPage === lastPage - 1}
+                    <IconButton
+                        key={lastPage - 1}
+                        color={currentPage === lastPage - 1 ? "primary" : "default"}
                         onClick={() => this.handlePageChange(lastPage - 1)}
-                    />
+                    >
+                        {String(lastPage)}
+                    </IconButton>
                 );
             }
         }
 
         if (lastPage > 1) {
             linkList.push(
-                <Button
-                    key={lastPage} label={String(lastPage + 1)}
-                    raised mini floating
-                    accent={currentPage === lastPage}
+                <IconButton
+                    key={lastPage}
+                    color={currentPage === lastPage ? "primary" : "default"}
                     onClick={() => this.handlePageChange(lastPage)}
-                />
+                >
+                    {String(lastPage + 1)}
+                </IconButton>
             );
         }
 
@@ -116,7 +119,7 @@ export default class PaginationWidget extends React.Component {
         };
 
         this.widgetCache = (
-            <div className="pagination">{linkList}</div>
+            <div className="paginati1on">{linkList}</div>
         );
     }
 

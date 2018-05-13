@@ -1,13 +1,23 @@
 import React from 'react';
-import Input from 'react-toolbox/lib/input/Input';
-import {Col, Row} from 'react-flexbox-grid';
+import Grid from 'material-ui/Grid';
+import { withStyles } from 'material-ui/styles';
+import TextField from 'material-ui/TextField';
 import RatingInput from 'components/rating-input/RatingInput';
 import EmployerSearchSelect from 'components/employer-search/EmployerSearchSelect';
-import './AddReviewForm.css';
-import Button from "react-toolbox/lib/button/Button";
-import FontAwesome from 'react-fontawesome';
+import Button from 'material-ui/Button';
 import ExchangeInterface from 'components/exchange/ExchangeInterface';
 import Validator from 'helpers/validator/Validator';
+import SendIcon from '@material-ui/icons/Send';
+import './AddReviewForm.css';
+
+const styles = theme => ({
+    leftIcon: {
+        marginRight: theme.spacing.unit,
+    },
+    rightIcon: {
+        marginLeft: theme.spacing.unit,
+    },
+});
 
 class AddReviewForm extends React.Component {
     state = {
@@ -35,7 +45,7 @@ class AddReviewForm extends React.Component {
             {rule: 'required', message: 'Необходимо выбрать компанию'}
         ],
         rating: [
-            {rule: 'required', message: 'Необходимо указать рейтинг'}
+            {rule: 'required', message: 'Необходимо выбрать оценку'}
         ]
     };
 
@@ -49,6 +59,11 @@ class AddReviewForm extends React.Component {
                 error: validationResult.error
             }
         }});
+    };
+
+    updateText = (name, event) => {
+        const value = event.target.value;
+        this.updateAttribute(name, value);
     };
 
     validateAttribute(name, value) {
@@ -112,61 +127,50 @@ class AddReviewForm extends React.Component {
     };
 
     render () {
+        const { classes } = this.props;
         return (
             <form className="page-add-review">
-                <Row className="form-group">
-                    <Col md={8}>
+                <Grid container className="form-group">
+                    <Grid item md={8}>
                         <EmployerSearchSelect
                             value={this.state.attributes.employerId.value}
                             onChange={this.updateAttribute.bind(this, 'employerId')}
                             employerId={this.props.employerId}
                             error={this.state.attributes.employerId.error}
                         />
-                    </Col>
-                    <Col md={4} className="form-group__description">
-                        Начните вводить название компании
-                    </Col>
-                </Row>
-                <Row className="form-group">
-                    <Col md={8}>
+                    </Grid>
+                </Grid>
+                <Grid container className="form-group">
+                    <Grid item md={8}>
                         <RatingInput
                             value={this.state.attributes.rating.value}
                             onChange={this.updateAttribute.bind(this, 'rating')}
                             error={this.state.attributes.rating.error}
                         />
-                    </Col>
-                    <Col md={4} className="form-group__description">
-                        1 - очень плохо, 5 - отлично
-                    </Col>
-                </Row>
-                <Row className="form-group">
-                    <Col md={8}>
-                        <Input
-                            type="text" multiline
+                    </Grid>
+                </Grid>
+                <Grid container className="form-group">
+                    <Grid item md={8}>
+                        <TextField
+                            multiline fullWidth
                             label="Текст отзыва" maxLength={1000}
                             value={this.state.attributes.reviewText.value}
-                            onChange={this.updateAttribute.bind(this, 'reviewText')}
+                            onChange={this.updateText.bind(this, 'reviewText')}
                             error={this.state.attributes.reviewText.error}
                         />
-                    </Col>
-                    <Col md={4} className="form-group__description">
-                        Напишите Ваше мнение о компании
-                    </Col>
-                </Row>
-                <Row className="form-group">
-                    <Col md={8}>
-                        <Button
-                            raised primary
-                            className="pull-right"
-                            icon={<FontAwesome name="send" />}
-                            label="Отправить"
-                            onClick={this.submit}
-                        />
-                    </Col>
-                </Row>
+                    </Grid>
+                </Grid>
+                <Grid container className="form-group">
+                    <Grid item md={8}>
+                        <Button variant="raised" color="primary" onClick={this.submit}>
+                            Отправить
+                            <SendIcon className={classes.rightIcon} />
+                        </Button>
+                    </Grid>
+                </Grid>
             </form>
         );
     }
 }
 
-export default AddReviewForm;
+export default withStyles(styles)(AddReviewForm);

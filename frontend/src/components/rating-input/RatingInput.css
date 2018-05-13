@@ -1,3 +1,7 @@
+.rating-input__selector {
+    margin-top: 20px;
+}
+
 .rating-input__label {
     color: rgba(0,0,0,.26);
     display: block;
@@ -7,19 +11,19 @@
     margin: 0 -.2em;
 }
 
-.rating-input__stars span {
-    margin: 0 .2em;
-    color: rgba(0,0,0,.26);
+.rating-input__stars button {
+    margin: 0 -1px;
 }
 
-.rating-input__stars .rating-input_star-hover span {
+.rating-input__stars .rating-input_star-hover span,
+.rating-input__stars .rating-input_star-active span {
     color: #ffd240 !important;
 }
 
 .rating-input__value {
     vertical-align: middle;
     margin-left: 1em;
-    font-size: 2em;
+    margin-top: .2em;
 }
 
 .rating-input_has-error label {

@@ -1,11 +1,19 @@
 import React from 'react';
-import {Col} from 'react-flexbox-grid';
-import List from 'react-toolbox/lib/list/List';
-import ListItem from 'react-toolbox/lib/list/ListItem';
-import {Button} from 'components/router-button/RouterButton';
-import FontAwesome from 'react-fontawesome';
+import { withStyles } from 'material-ui/styles';
+import List, { ListItem, ListItemSecondaryAction, ListItemText } from 'material-ui/List';
+import Avatar from 'material-ui/Avatar';
 import PaginationWidget from 'components/pagination/PaginationWidget';
+import IconButton from 'material-ui/IconButton';
+import CommentIcon from '@material-ui/icons/Comment';
 import './EmployerSearchResults.css';
+
+const styles = theme => ({
+    root: {
+        width: '100%',
+        maxWidth: 360,
+        backgroundColor: theme.palette.background.paper,
+    },
+});
 
 class EmployerSearchResults extends React.Component {
     handlePageChange(page) {
@@ -22,36 +30,28 @@ class EmployerSearchResults extends React.Component {
         if (this.props.data.items.length === 0) {
             return (
                 <List>
-                    <ListItem
-                        className="employer-search-select_nothing-found"
-                        caption="По вашему запросу компаний не найдено"
-                    />
+                    <ListItem className="employer-search-select_nothing-found">
+                        <ListItemText primary="По вашему запросу компаний не найдено" />
+                    </ListItem>
                 </List>
             );
         }
 
         return (
-            <List className="employer-search-results__list" ripple>
+            <List>
                 {this.props.data.items.map((item) => (
                     <ListItem
-                        selectable
+                        button
                         key={item.id}
-                        avatar={item.logo_url}
-                        caption={item.name}
                         onClick={() => {this.props.history.push('/employer/' + item.id)}}
-                        rightActions={[
-                            <Button
-                                floating mini
-                                key={item.id + 'button'}
-                                icon={<FontAwesome name="plus" />}
-                                onClick={(event) => {
-                                    event.stopPropagation();
-                                    this.props.history.push('/review/add/' + item.id)
-                                }}
-                                title="Оставить отзыв о компании"
-                            />
-                        ]}
                     >
+                    <Avatar alt="Лого" src={item.logo_url} />
+                    <ListItemText primary={item.name} />
+                    <ListItemSecondaryAction>
+                        <IconButton title="Оставить отзыв о компании" onClick={() => {this.props.history.push('/review/add/' + item.id)}}>
+                            <CommentIcon />
+                        </IconButton>
+                    </ListItemSecondaryAction>
                     </ListItem>
                 ))}
             </List>
@@ -59,17 +59,18 @@ class EmployerSearchResults extends React.Component {
     }
 
     render() {
+        const { classes } = this.props;
         return (
-            <Col md={9} className="employer-search-results">
+            <div className="employer-search-results">
+                {this.renderResultsList(classes)}
                 <PaginationWidget
                     pages={this.props.data ? this.props.data.pages : undefined}
                     page={this.props.data ? this.props.data.page : undefined}
                     onPageChange={page => this.handlePageChange(page)}
                 />
-                {this.renderResultsList()}
-            </Col>
+            </div>
         );
     }
 }
 
-export default EmployerSearchResults;
+export default withStyles(styles)(EmployerSearchResults);

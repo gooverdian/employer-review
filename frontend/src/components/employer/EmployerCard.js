@@ -1,7 +1,7 @@
 import React from 'react';
-import {Grid} from 'react-flexbox-grid';
 import ExchangeInterface from 'components/exchange/ExchangeInterface';
-import {Button} from 'components/router-button/RouterButton';
+import Button from 'material-ui/Button';
+import { Link } from 'react-router-dom';
 
 class EmployerCard extends React.Component {
     state = {
@@ -22,17 +22,18 @@ class EmployerCard extends React.Component {
 
     render () {
         return (
-            <Grid>
-                <h1>
-                    <Button
-                        className="pull-right"
-                        raised primary
-                        href={"/review/add/" + this.state.employer.id}
-                        label="Оставить отзыв о компании"
-                    />
-                    {this.state.employer.name}
-                </h1>
-            </Grid>
+            <h1>
+                <Button
+                    variant="raised"
+                    color="primary"
+                    className="pull-right"
+                    component={Link}
+                    to={"/review/add/" + this.state.employer.id}
+                >
+                    {"Оставить отзыв о компании"}
+                </Button>
+                {this.state.employer.name}
+            </h1>
         );
     }
 }

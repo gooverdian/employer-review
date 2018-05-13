@@ -1,6 +1,6 @@
 import React from 'react';
-import Input from 'react-toolbox/lib/input/Input';
-import {Grid, Row, Col} from 'react-flexbox-grid';
+import TextField from 'material-ui/TextField';
+import Grid from 'material-ui/Grid';
 import ExchangeInterface from 'components/exchange/ExchangeInterface';
 import EmployerSearchResults from './EmployerSearchResults';
 import settings from 'config/settings';
@@ -39,7 +39,7 @@ class EmployerSearch extends React.Component {
             this.popLocationState(location.state);
         });
 
-        if (String(this.state.searchValue).length > 0) {
+        if (this.state.searchValue) {
             this.fetchEmployers(this.state);
         }
     }
@@ -109,24 +109,26 @@ class EmployerSearch extends React.Component {
 
     render () {
         return (
-            <Grid>
-                <form className="form-employer-search">
-                    <Row center="xs">
-                        <Col md={9}>
-                            <Input
-                                type="text"
-                                label="Поиск по компаниям"
-                                value={this.state.searchValue}
-                                onChange={value => this.handleTextChange(value)}
+            <Grid container justify="center">
+                <Grid item md={9}>
+                    <form className="form-employer-search">
+                            <Grid item xs={12}>
+                                <TextField
+                                    fullWidth
+                                    type="text"
+                                    label="Поиск по компаниям"
+                                    placeholder="Начните вводить название компании"
+                                    value={this.state.searchValue}
+                                    onChange={event => this.handleTextChange(event.target.value)}
+                                />
+                            </Grid>
+                            <EmployerSearchResults
+                                onPageChange={page => (this.handlePageChange(page))}
+                                history={this.props.history}
+                                data={this.state.results}
                             />
-                        </Col>
-                        <EmployerSearchResults
-                            onPageChange={page => (this.handlePageChange(page))}
-                            history={this.props.history}
-                            data={this.state.results}
-                        />
-                    </Row>
-                </form>
+                    </form>
+                </Grid>
             </Grid>
         );
     }

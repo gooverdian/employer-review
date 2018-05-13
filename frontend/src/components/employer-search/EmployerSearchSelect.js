@@ -1,9 +1,9 @@
 import React from 'react';
-import Input from 'react-toolbox/lib/input/Input';
+import TextField from 'material-ui/TextField';
 import ExchangeInterface from 'components/exchange/ExchangeInterface';
 import EmployerSearchSelectResults from './EmployerSearchSelectResults';
-import './EmployerSearchSelect.css';
 import settings from 'config/settings';
+import './EmployerSearchSelect.css';
 
 class EmployerSearchSelect extends React.Component {
     state = {
@@ -25,7 +25,8 @@ class EmployerSearchSelect extends React.Component {
         }
     }
 
-    handleTextChange = (value) => {
+    handleTextChange = (event) => {
+        let value = event.target.value;
         this.setState({searchValue: value});
         if (this.requestThresholdTimer) {
             clearTimeout(this.requestThresholdTimer);
@@ -105,16 +106,18 @@ class EmployerSearchSelect extends React.Component {
     render() {
         return (
             <div className="employer-search-select">
-                <Input
+                <TextField
+                    error={Boolean(this.props.error)}
+                    fullWidth
                     className="employer-search-select-input"
-                    type="text"
                     label="Выберите компанию"
+                    placeholder="Начните вводить название"
                     value={this.state.searchValue}
                     onChange={this.handleTextChange}
                     onKeyDown={this.handleInputKeyDown}
                     onFocus={this.showResults}
                     onBlur={this.hideResults}
-                    error={this.props.error}
+                    helperText={this.props.error ? this.props.error : undefined}
                 />
                 <EmployerSearchSelectResults
                     ref={ref => (this.resultsComponent = ref)}

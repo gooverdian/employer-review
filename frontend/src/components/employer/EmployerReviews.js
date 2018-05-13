@@ -1,7 +1,5 @@
 import React from 'react';
-import {Col} from 'react-flexbox-grid';
-import List from 'react-toolbox/lib/list/List';
-import ListItem from 'react-toolbox/lib/list/ListItem';
+import List, { ListItem } from 'material-ui/List';
 import ExchangeInterface from 'components/exchange/ExchangeInterface';
 import EmployerReview from './EmployerReview';
 
@@ -62,10 +60,10 @@ class EmployerReviews extends React.Component {
 
     render() {
         return (
-            <Col md={9} className="employer-reviews">
-                <div>Отзывы о компании</div>
+            <div>
+                <h3>Отзывы о компании</h3>
                 {this.generateResultsList()}
-            </Col>
+            </div>
         );
     }
 }
