@@ -6,11 +6,12 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.io.Serializable;
 import java.util.Objects;
 
 @Entity
 @Table(name = "area")
-public class Area {
+public class Area implements Serializable {
 
   @Id
   @Column(name = "id")

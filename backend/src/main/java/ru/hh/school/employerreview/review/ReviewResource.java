@@ -19,6 +19,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -90,7 +91,7 @@ public class ReviewResource {
 
     Integer rowCount = Math.toIntExact(reviewDao.getRowCountFilteredByEmployer(employerId));
     if (rowCount == 0) {
-      throw new Errors(Response.Status.BAD_REQUEST, "NO_DATA", "review").toWebApplicationException();
+      return new ResponseBodyReviews(Collections.emptyList(), 0, 0, 0);
     }
 
     int pageCount = PaginationHelper.calculatePagesCount(rowCount, perPage);

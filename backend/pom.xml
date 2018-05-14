@@ -87,22 +87,39 @@
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>1.6.0</version>
+                
                 <executions>
                     <execution>
+                        <id>main</id>
                         <goals>
                             <goal>java</goal>
                         </goals>
+                        <configuration>
+                            <systemProperties>
+                                <systemProperty>
+                                    <key>settingsDir</key>
+                                    <value>${basedir}/src/etc</value>
+                                </systemProperty>
+                            </systemProperties>
+                            <mainClass>ru.hh.school.employerreview.EmployerReviewMain</mainClass>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>downloader</id>
+                        <goals>
+                            <goal>java</goal>
+                        </goals>
+                        <configuration>
+                            <systemProperties>
+                                <systemProperty>
+                                    <key>settingsDir</key>
+                                    <value>${basedir}/src/etc</value>
+                                </systemProperty>
+                            </systemProperties>
+                            <mainClass>ru.hh.school.employerreview.downloader.EmployersAreasDownloader</mainClass>
+                        </configuration>
                     </execution>
                 </executions>
-                <configuration>
-                    <systemProperties>
-                        <systemProperty>
-                            <key>settingsDir</key>
-                            <value>${basedir}/src/etc</value>
-                        </systemProperty>
-                    </systemProperties>
-                    <mainClass>ru.hh.school.employerreview.EmployerReviewMain</mainClass>
-                </configuration>
             </plugin>
 
             <plugin>

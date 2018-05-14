@@ -29,7 +29,7 @@ public class AreaSearchResource {
   @GET
   public AreaResponse searchAreas(@QueryParam("text") String text,
                                   @QueryParam("page") @DefaultValue("0") int page,
-                                  @QueryParam("perPage") @DefaultValue("10") int perPage) {
+                                  @QueryParam("per_page") @DefaultValue("10") int perPage) {
 
     PaginationHelper.checkInputParameters(text, page, perPage);
 

@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Path("/employers")
 @Produces(MediaType.APPLICATION_JSON)
@@ -30,6 +31,8 @@ public class EmployerSearchResource {
   private final EmployerDao employerDao;
   private final RatingDao ratingDao;
   private final AreaDao areaDao;
+
+  private final static Integer MAX_TOP_SIZE = 50;
 
   public EmployerSearchResource(EmployerDao employerDao, RatingDao ratingDao, AreaDao areaDao) {
     this.employerDao = employerDao;
@@ -88,7 +91,6 @@ public class EmployerSearchResource {
   }
 
   @POST
-  @Path("/new")
   public EmployerItem postEmployer(EmployerItem employerItem) {
     if (employerItem == null || employerItem.getHhId() != null) {
       throw new Errors(Response.Status.BAD_REQUEST, "BAD_REQUEST_PARAMETER", "employerItem").toWebApplicationException();
@@ -109,8 +111,9 @@ public class EmployerSearchResource {
   @Path("/visits")
   public List<EmployerVisitDto> getTopEmployerVisited(@QueryParam("size") @DefaultValue("20") Integer size,
                                                       @QueryParam("interval") @DefaultValue("30") Integer interval) {
-    if (size <= 0) {
-      throw new Errors(Response.Status.BAD_REQUEST, "BAD_REQUEST_PARAMETER", "size").toWebApplicationException();
+    if (size <= 0 || size > MAX_TOP_SIZE) {
+      throw new Errors(Response.Status.BAD_REQUEST, "BAD_REQUEST_PARAMETER",
+          "size parameter must be from 1 to " + MAX_TOP_SIZE).toWebApplicationException();
     }
     return employerDao.getTopEmployerVisited(size, interval);
   }
@@ -128,8 +131,9 @@ public class EmployerSearchResource {
   }
 
   private List<EmployerItem> getTopEmployersByRating(Integer size, Boolean bestFirst) {
-    if (size <= 0) {
-      throw new Errors(Response.Status.BAD_REQUEST, "BAD_REQUEST_PARAMETER", "size").toWebApplicationException();
+    if (size <= 0 || size > MAX_TOP_SIZE) {
+      throw new Errors(Response.Status.BAD_REQUEST, "BAD_REQUEST_PARAMETER",
+          "size parameter must be from 1 to " + MAX_TOP_SIZE).toWebApplicationException();
     }
     List<Employer> resultsFromDB = employerDao.findEmployers("", 0, size, bestFirst);
 
@@ -142,5 +146,26 @@ public class EmployerSearchResource {
       employerItems.add(employerItem);
     }
     return employerItems;
+  }
+
+  @GET
+  @Path("/disbalanced")
+  public List<EmployerItem> getTopDisbalanced(@QueryParam("size") @DefaultValue("20") Integer size) {
+    return getTopBalancedEmployerItems(size, false);
+  }
+
+  @GET
+  @Path("/balanced")
+  public List<EmployerItem> getTopBalanced(@QueryParam("size") @DefaultValue("20") Integer size) {
+    return getTopBalancedEmployerItems(size, true);
+  }
+
+  private List<EmployerItem> getTopBalancedEmployerItems(Integer size, Boolean isBalanced) {
+    if (size <= 0 || size > MAX_TOP_SIZE) {
+      throw new Errors(Response.Status.BAD_REQUEST, "BAD_REQUEST_PARAMETER",
+          "size parameter must be from 1 to " + MAX_TOP_SIZE).toWebApplicationException();
+    }
+    List<Employer> employers = ratingDao.getTopBalanced(size, isBalanced);
+    return employers.stream().map(employer -> employer.toEmployerItem()).collect(Collectors.toList());
   }
 }

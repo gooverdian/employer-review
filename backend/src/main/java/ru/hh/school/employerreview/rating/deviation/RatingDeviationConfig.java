@@ -1,4 +1,4 @@
-package ru.hh.school.employerreview.downloader;
+package ru.hh.school.employerreview.rating.deviation;
 
 import org.hibernate.SessionFactory;
 import org.springframework.context.annotation.Bean;
@@ -11,25 +11,22 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import ru.hh.nab.hibernate.MappingConfig;
 import ru.hh.school.employerreview.FileSettingsConfig;
 import ru.hh.school.employerreview.area.Area;
-import ru.hh.school.employerreview.area.AreaDao;
 import ru.hh.school.employerreview.employer.Employer;
 import ru.hh.school.employerreview.employer.EmployerDao;
 import ru.hh.school.employerreview.rating.Rating;
-import ru.hh.school.employerreview.specializations.ProfessionalField;
-import ru.hh.school.employerreview.specializations.ProfessionalFieldDao;
-import ru.hh.school.employerreview.specializations.Specialization;
-import ru.hh.school.employerreview.specializations.SpecializationDao;
+import ru.hh.school.employerreview.rating.RatingDao;
+import ru.hh.school.employerreview.rating.stars.StarsInRating;
 
 import javax.sql.DataSource;
 
 @Configuration
 @Import({FileSettingsConfig.class})
 @EnableTransactionManagement
-public class DownloaderConfig {
+public class RatingDeviationConfig {
 
   @Bean
   MappingConfig mappingConfig() {
-    return new MappingConfig(Employer.class, Area.class, ProfessionalField.class, Specialization.class, Rating.class);
+    return new MappingConfig(Employer.class, Area.class, Rating.class, RatingDeviation.class, StarsInRating.class);
   }
 
   @Bean
@@ -53,17 +50,7 @@ public class DownloaderConfig {
   }
 
   @Bean
-  AreaDao areaDao(SessionFactory sessionFactory) {
-    return new AreaDao(sessionFactory);
-  }
-
-  @Bean
-  SpecializationDao specializationDao(SessionFactory sessionFactory) {
-    return new SpecializationDao(sessionFactory);
-  }
-
-  @Bean
-  ProfessionalFieldDao proffFieldDao(SessionFactory sessionFactory) {
-    return new ProfessionalFieldDao(sessionFactory);
+  RatingDao ratingDao(SessionFactory sessionFactory) {
+    return new RatingDao(sessionFactory);
   }
 }

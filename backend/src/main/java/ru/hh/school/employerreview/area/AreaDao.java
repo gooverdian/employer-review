@@ -45,9 +45,9 @@ public class AreaDao {
   public int getRowCountFilteredByArea(String text) {
     CriteriaBuilder builder = getSession().getCriteriaBuilder();
     CriteriaQuery criteria = builder.createQuery();
-    Root<Area> arearRoot = criteria.from(Area.class);
-    criteria.select(builder.count(arearRoot));
-    criteria.where(builder.like(arearRoot.get("name"), "%" + text + "%"));
+    Root<Area> areaRoot = criteria.from(Area.class);
+    criteria.select(builder.count(areaRoot));
+    criteria.where(builder.like(builder.upper(areaRoot.get("name")), "%" + text.toUpperCase() + "%"));
     Query<Long> query = getSession().createQuery(criteria);
     return query.getSingleResult().intValue();
   }
@@ -59,9 +59,9 @@ public class AreaDao {
     }
     CriteriaBuilder builder = getSession().getCriteriaBuilder();
     CriteriaQuery<Area> criteria = builder.createQuery(Area.class);
-    Root<Area> arearRoot = criteria.from(Area.class);
-    criteria.select(arearRoot);
-    criteria.where(builder.like(arearRoot.get("name"), "%" + text + "%"));
+    Root<Area> areaRoot = criteria.from(Area.class);
+    criteria.select(areaRoot);
+    criteria.where(builder.like(builder.upper(areaRoot.get("name")), "%" + text.toUpperCase() + "%"));
     Query<Area> query = getSession().createQuery(criteria);
     query.setFirstResult(page * perPage);
     query.setMaxResults(perPage);

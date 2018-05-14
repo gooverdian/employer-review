@@ -5,6 +5,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.springframework.transaction.annotation.Transactional;
 import ru.hh.school.employerreview.employer.Employer;
+import ru.hh.school.employerreview.rating.deviation.RatingDeviation;
 import ru.hh.school.employerreview.rating.stars.StarsInRating;
 
 import javax.persistence.NoResultException;
@@ -99,6 +100,27 @@ public class RatingDao {
       result.add(getStarsInRatingMap(employer.getId()));
     }
     return result;
+  }
+
+  @Transactional
+  public void deleteAllRatingDeviations() {
+    getSession().createQuery("delete from RatingDeviation").executeUpdate();
+  }
+
+  @Transactional(readOnly = true)
+  public List<Employer> getTopBalanced(Integer size, Boolean balancedFirst) {
+    Query<Employer> query = getSession().createQuery(
+        "SELECT rd.employer " +
+            "FROM RatingDeviation rd  " +
+            "ORDER BY rd.deviation " +
+            (balancedFirst ? "ASC" : "DESC")
+    ).setMaxResults(size);
+    return query.getResultList();
+  }
+
+  @Transactional
+  public void saveRatingDeviation(RatingDeviation ratingDeviation) {
+    getSession().save(ratingDeviation);
   }
 
   @Transactional

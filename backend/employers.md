@@ -59,7 +59,7 @@
 
 **POST**
 
-**URL** /employers/new
+**URL** /employers
 
 пример входного json 
 ```json
@@ -181,6 +181,82 @@
         "url":"https://api.hh.ru/employers/65471",
         "people_visited":8,
         "logo_url":"https://hh.ru/employer/logo/65471"
+    }
+]
+```
+
+# Топ сбалансированых компаний (минимальная дисперсия оценки в озыве)
+
+**GET**
+
+**URL** /employers/balanced 
+
+параметры: `size` (по умолчанию - 20) - размер топа компаний
+
+пример ответа:
+```json
+[
+    {
+        "id":870,
+        "name":"22Стиля",
+        "url":"https://api.hh.ru/employers/677383", 
+        "stars":{"4.0":19},
+        "rating":4.0,
+        "hh_id":677383,
+        "logo_url":"https://hh.ru/employer/logo/677383",
+        "area_name":"Россия",
+        "area_id":113,
+        "people_rated":19
+    },
+    {
+        "id":371,
+        "name":"12 Месяцев",
+        "url":"https://api.hh.ru/employers/1884825",
+        "stars":{"4.5":4,"5.0":8},
+        "rating":4.8333335,
+        "hh_id":1884825,
+        "logo_url":"https://hh.ru/employer/logo/1884825",
+        "area_name":"Россия",
+        "area_id":113,
+        "people_rated":12
+    }
+]
+```
+
+# Топ несбалансированых компаний (максимальная дисперсия оценки в озыве)
+
+**GET**
+
+**URL** /employers/disbalanced 
+
+параметры: `size` (по умолчанию - 20) - размер топа компаний
+
+пример ответа:
+```json
+[
+    {
+        "id":371,
+        "name":"12 Месяцев",
+        "url":"https://api.hh.ru/employers/1884825",
+        "stars":{"4.5":4,"5.0":8},
+        "rating":4.8333335,
+        "hh_id":1884825,
+        "logo_url":"https://hh.ru/employer/logo/1884825",
+        "area_name":"Россия",
+        "area_id":113,
+        "people_rated":12
+    },
+    {
+        "id":870,
+        "name":"22Стиля",
+        "url":"https://api.hh.ru/employers/677383", 
+        "stars":{"4.0":19},
+        "rating":4.0,
+        "hh_id":677383,
+        "logo_url":"https://hh.ru/employer/logo/677383",
+        "area_name":"Россия",
+        "area_id":113,
+        "people_rated":19
     }
 ]
 ```
