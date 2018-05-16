@@ -1,0 +1,17 @@
+.nav {
+    flex-grow: 1;
+}
+
+.nav__logo {
+    height: 32px;
+    width: 32px;
+}
+
+.nav__brand-link {
+    color: inherit;
+    text-decoration: none;
+}
+
+.flex_max {
+    flex: 1;
+}

@@ -1,0 +1,27 @@
+.rating-input__selector {
+    margin-top: 20px;
+}
+
+.rating-input__label {
+    color: rgba(0,0,0,.26);
+    display: block;
+}
+
+.rating-input__stars {
+    margin: 0 -1px;
+}
+
+.rating-input__value {
+    vertical-align: middle;
+    margin-left: 1em;
+    margin-top: .2em;
+}
+
+.rating-star .rating-star__icon {
+    font-size: 40px;
+}
+
+.rating-star.rating-star_hover,
+.rating-star.rating-star_active {
+    color: #ffd240;
+}
