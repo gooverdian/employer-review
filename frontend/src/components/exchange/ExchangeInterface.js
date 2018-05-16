@@ -16,7 +16,7 @@ const ExchangeInterface = {
         return new ExchangeRequest({
             url: settings.apiUrls.review,
             params: {
-                employerId: employerId,
+                employer_id: employerId,
                 page: page,
                 per_page: perPage,
             }

@@ -21,7 +21,7 @@ class RatingStarButton extends React.Component {
         let isHovering = this.props.value <= this.props.activeIndex;
         return classNames('rating-star', {
             'rating-star_hover': isHovering,
-            'rating-star_active': !this.props.activeIndex && this.props.value <= this.props.currentRating
+            'rating-star_active': this.props.activeIndex === undefined && this.props.value <= this.props.currentRating
         });
     }
 

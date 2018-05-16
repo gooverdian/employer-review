@@ -57,14 +57,14 @@ class AddReviewForm extends React.Component {
     };
 
     validateAttribute(name, value) {
+        let attributeResult = {
+            valid: true,
+            error: undefined
+        };
         if (!this.validationRules[name]) {
-            return true;
+            return attributeResult;
         }
-        let ruleSet = this.validationRules[name],
-            attributeResult = {
-                valid: true,
-                error: undefined
-            };
+        let ruleSet = this.validationRules[name];
         for (let i = 0; i < ruleSet.length; i++) {
             let rule = ruleSet[i];
             if (!Validator.validate(rule.rule, value)) {
@@ -106,13 +106,14 @@ class AddReviewForm extends React.Component {
         }
 
         let formData = {
-            employerId: this.state.attributes.employerId.value,
+            employer_id: this.state.attributes.employerId.value,
             rating: this.state.attributes.rating.value,
-            text: this.state.attributes.reviewText.value
+            text: this.state.attributes.reviewText.value,
+            review_type: 'EMPLOYEE'
         };
 
         ExchangeInterface.addReview(formData).then((data) => {
-            this.props.history.push(`/employer/${this.state.attributes.employerId}/${data.reviewId}`);
+            this.props.history.push(`/employer/${formData.employer_id}/${data.review_id}`);
         }, (error) => {
             console.log(error);
         });
