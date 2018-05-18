@@ -1,6 +1,8 @@
 package ru.hh.school.employerreview.review;
 
+import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import ru.hh.school.employerreview.EmployerReviewTestBase;
 import ru.hh.school.employerreview.TestConfig;
@@ -32,6 +34,8 @@ public class ReviewResourceTest extends EmployerReviewTestBase {
   private RatingDao ratingDao;
   @Inject
   private MainPageStatisticDao mainPageStatisticDao;
+  @Inject
+  protected TestConfig.TestQueryExecutorDao testQueryExecutorDao;
 
   @Test
   public void testPostReview() {
@@ -64,14 +68,6 @@ public class ReviewResourceTest extends EmployerReviewTestBase {
 
     Assert.assertEquals(1, mainPageStatisticDao.getReviewCount().getValue().intValue());
     Assert.assertEquals(1, mainPageStatisticDao.getEmployerWithReviewCount().getValue().intValue());
-
-    reviewDao.deleteReview(reviewFromDB);
-    employerDao.deleteEmployer(employer);
-    ratingDao.deleteRating(employerFromDB.getRating());
-    ratingDao.deleteStarsInRating(starsInRating);
-    areaDao.deleteArea(area);
-    mainPageStatisticDao.deleteEmployerWithReviewCount();
-    mainPageStatisticDao.deleteReviewCount();
   }
 
   @Test(expected = WebApplicationException.class)
@@ -118,10 +114,14 @@ public class ReviewResourceTest extends EmployerReviewTestBase {
 
     Assert.assertEquals(employer.getId(), reviewCounterDto.getEmployerId());
     Assert.assertEquals((Integer) 1, reviewCounterDto.getCounter());
+  }
 
-    TestConfig.TestQueryExecutorDao testQueryExecutorDao = applicationContext.getBean(TestConfig.TestQueryExecutorDao.class);
+  @Before
+  @After
+  public void deleteEntities() {
     testQueryExecutorDao.executeQuery("delete from Review");
     testQueryExecutorDao.executeQuery("delete from Employer");
-    testQueryExecutorDao.executeQuery("delete from Rating");
+    testQueryExecutorDao.executeQuery("delete from MainPageStatistic");
+    testQueryExecutorDao.executeQuery("delete from Area");
   }
 }

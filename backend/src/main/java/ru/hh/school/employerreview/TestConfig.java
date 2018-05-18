@@ -8,10 +8,10 @@ import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
+import org.springframework.transaction.annotation.Transactional;
 import ru.hh.nab.core.CoreCommonConfig;
 
 import javax.sql.DataSource;
-import javax.transaction.Transactional;
 
 @Configuration
 @Import({CoreCommonConfig.class, CommonConfig.class})

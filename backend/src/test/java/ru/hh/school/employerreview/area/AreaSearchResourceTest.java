@@ -1,8 +1,10 @@
 package ru.hh.school.employerreview.area;
 
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
 import ru.hh.school.employerreview.EmployerReviewTestBase;
+import ru.hh.school.employerreview.TestConfig;
 import ru.hh.school.employerreview.area.dto.AreaResponse;
 
 import javax.inject.Inject;
@@ -14,6 +16,8 @@ public class AreaSearchResourceTest extends EmployerReviewTestBase {
   private AreaSearchResource resource;
   @Inject
   private AreaDao areaDao;
+  @Inject
+  protected TestConfig.TestQueryExecutorDao testQueryExecutorDao;
 
   @Test
   public void testAreaSearch() {
@@ -49,5 +53,10 @@ public class AreaSearchResourceTest extends EmployerReviewTestBase {
   @Test(expected = WebApplicationException.class)
   public void testGetAreaByNullValue() {
     resource.getAreaById(null);
+  }
+
+  @After
+  public void deleteEntities() {
+    testQueryExecutorDao.executeQuery("delete from Area");
   }
 }

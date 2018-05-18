@@ -11,8 +11,10 @@ public class SpecializationDaoTest extends SpecializationsCommonTest {
 
   @Test
   public void getByIdTest() {
-    assertNotNull(specializationDao);
-    assertNotNull(specializationDao.getById(1));
+    List<Specialization> specializations = specializationDao.getAll();
+    assertNotNull(specializations);
+    assertTrue(specializations.size() > 0);
+    assertNotNull(specializationDao.getById(specializations.get(0).getId()));
   }
 
   @Test

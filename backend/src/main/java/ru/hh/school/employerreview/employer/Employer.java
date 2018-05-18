@@ -67,6 +67,10 @@ public class Employer implements Serializable {
   public Employer() {
   }
 
+  public Employer(Integer id) {
+    this.id = id;
+  }
+
   public Integer getId() {
     return id;
   }

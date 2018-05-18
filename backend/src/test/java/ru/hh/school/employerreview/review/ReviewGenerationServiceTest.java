@@ -1,8 +1,11 @@
 package ru.hh.school.employerreview.review;
 
+import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import ru.hh.school.employerreview.EmployerReviewTestBase;
+import ru.hh.school.employerreview.TestConfig;
 import ru.hh.school.employerreview.area.AreaDao;
 import ru.hh.school.employerreview.employer.EmployerDao;
 import ru.hh.school.employerreview.statistic.MainPageStatisticDao;
@@ -21,6 +24,8 @@ public class ReviewGenerationServiceTest extends EmployerReviewTestBase {
   private ReviewDao reviewDao;
   @Inject
   private MainPageStatisticDao mainPageStatisticDao;
+  @Inject
+  protected TestConfig.TestQueryExecutorDao testQueryExecutorDao;
 
   @Test
   public void testGenerateReview() {
@@ -38,5 +43,14 @@ public class ReviewGenerationServiceTest extends EmployerReviewTestBase {
     areaDao.deleteArea(area);
     mainPageStatisticDao.deleteEmployerWithReviewCount();
     mainPageStatisticDao.deleteReviewCount();
+  }
+
+  @Before
+  @After
+  public void deleteEntities() {
+    testQueryExecutorDao.executeQuery("delete from Review");
+    testQueryExecutorDao.executeQuery("delete from Employer");
+    testQueryExecutorDao.executeQuery("delete from MainPageStatistic");
+    testQueryExecutorDao.executeQuery("delete from Area");
   }
 }

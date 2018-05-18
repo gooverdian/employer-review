@@ -1,22 +1,31 @@
 package ru.hh.school.employerreview.specializations;
 
+import org.junit.After;
 import org.junit.Before;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import ru.hh.school.employerreview.EmployerReviewTestBase;
 import ru.hh.school.employerreview.TestConfig;
 import ru.hh.school.employerreview.downloader.AbstractDownloader;
 import ru.hh.school.employerreview.downloader.SpecializationsDownloader;
 
-public class SpecializationsCommonTest {
+import javax.inject.Inject;
 
-  protected ApplicationContext applicationContext;
+public abstract class SpecializationsCommonTest extends EmployerReviewTestBase {
+
+  @Inject
   protected SpecializationDao specializationDao;
+  @Inject
+  protected TestConfig.TestQueryExecutorDao testQueryExecutorDao;
 
   @Before
   public void prepareDb() {
-    applicationContext = new AnnotationConfigApplicationContext(TestConfig.class);
     AbstractDownloader.setApplicationContext(applicationContext);
     SpecializationsDownloader.main();
-    specializationDao = applicationContext.getBean(SpecializationDao.class);
+  }
+
+  @After
+  public void deleteEntities() {
+    testQueryExecutorDao.executeQuery("delete from Specialization");
+    testQueryExecutorDao.executeQuery("delete from ProfessionalField");
+    testQueryExecutorDao.executeQuery("delete from Area");
   }
 }

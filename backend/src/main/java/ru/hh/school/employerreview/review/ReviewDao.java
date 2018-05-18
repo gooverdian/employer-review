@@ -52,8 +52,32 @@ public class ReviewDao {
   }
 
   @Transactional(readOnly = true)
+  public List<Review> getPaginatedFilteredByEmployerWithSpecializations(Integer employerId, Integer page, Integer perPage) {
+    CriteriaBuilder builder = getSession().getCriteriaBuilder();
+    CriteriaQuery<Review> criteria = builder.createQuery(Review.class);
+    Root<Review> reviewRoot = criteria.from(Review.class);
+    criteria.select(reviewRoot);
+    reviewRoot.fetch("specializations");
+    criteria.where(builder.equal(reviewRoot.get("employer").get("id"), employerId));
+    Query<Review> query = getSession().createQuery(criteria);
+
+    query.setFirstResult(page);
+    query.setMaxResults(perPage);
+    return query.getResultList();
+  }
+
+  @Transactional(readOnly = true)
   public Review getById(int id) {
     return getSession().get(Review.class, id);
+  }
+
+  @Transactional(readOnly = true)
+  public Review getByIdWithSpecializations(int id) {
+    return (Review) getSession().createQuery(
+        "SELECT r FROM Review r " +
+            "JOIN FETCH r.specializations " +
+            "WHERE r.id = :id"
+    ).setParameter("id", id).getSingleResult();
   }
 
   @Transactional

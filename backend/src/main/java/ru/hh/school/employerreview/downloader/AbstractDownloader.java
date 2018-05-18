@@ -19,5 +19,6 @@ public abstract class AbstractDownloader {
 
   public static void setApplicationContext(ApplicationContext applicationContext) {
     AbstractDownloader.applicationContext = applicationContext;
+
   }
 }

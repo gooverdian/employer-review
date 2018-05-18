@@ -1,5 +1,6 @@
 package ru.hh.school.employerreview.rating.deviation;
 
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -12,11 +13,15 @@ import ru.hh.school.employerreview.review.ReviewResource;
 import ru.hh.school.employerreview.review.ReviewType;
 import ru.hh.school.employerreview.review.dto.ReviewDto;
 
+import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class RatingDeviationCalculationWorkerTest extends EmployerReviewTestBase {
+
+  @Inject
+  protected TestConfig.TestQueryExecutorDao testQueryExecutorDao;
 
   @Test
   public void calculateDeviationTest() {
@@ -102,11 +107,14 @@ public class RatingDeviationCalculationWorkerTest extends EmployerReviewTestBase
     Assert.assertEquals(2, top.size());
     Assert.assertEquals(employer.getId(), top.get(1).getId());
     Assert.assertEquals(employer2.getId(), top.get(0).getId());
+  }
 
-    TestConfig.TestQueryExecutorDao testQueryExecutorDao = applicationContext.getBean(TestConfig.TestQueryExecutorDao.class);
-    testQueryExecutorDao.executeQuery("delete from Review");
+  @After
+  public void deleteEntities() {
     testQueryExecutorDao.executeQuery("delete from RatingDeviation");
+    testQueryExecutorDao.executeQuery("delete from Review");
     testQueryExecutorDao.executeQuery("delete from Employer");
     testQueryExecutorDao.executeQuery("delete from Rating");
+    testQueryExecutorDao.executeQuery("delete from Area");
   }
 }

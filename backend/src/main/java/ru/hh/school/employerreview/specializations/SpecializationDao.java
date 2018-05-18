@@ -41,6 +41,11 @@ public class SpecializationDao {
     getSession().save(specialization);
   }
 
+  @Transactional
+  public void delete(Specialization specialization) {
+    getSession().delete(specialization);
+  }
+
   @Transactional(readOnly = true)
   public Specialization getById(Integer id) {
     return getSession().get(Specialization.class, id);

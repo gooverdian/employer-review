@@ -1,8 +1,10 @@
 package ru.hh.school.employerreview.employer;
 
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
 import ru.hh.school.employerreview.EmployerReviewTestBase;
+import ru.hh.school.employerreview.TestConfig;
 import ru.hh.school.employerreview.area.AreaDao;
 import ru.hh.school.employerreview.employer.dto.EmployerItem;
 import ru.hh.school.employerreview.employer.dto.EmployersResponse;
@@ -24,6 +26,8 @@ public class EmployerSearchResourceTest extends EmployerReviewTestBase {
   private EmployerDao employerDao;
   @Inject
   private RatingDao ratingDao;
+  @Inject
+  protected TestConfig.TestQueryExecutorDao testQueryExecutorDao;
 
   @Test
   public void testEmployerSearch() {
@@ -178,5 +182,12 @@ public class EmployerSearchResourceTest extends EmployerReviewTestBase {
     ratingDao.deleteRating(rating);
     ratingDao.deleteRating(rating2);
     areaDao.deleteArea(area);
+  }
+
+  @After
+  public void deleteEntities() {
+    testQueryExecutorDao.executeQuery("delete from Review");
+    testQueryExecutorDao.executeQuery("delete from Employer");
+    testQueryExecutorDao.executeQuery("delete from Area");
   }
 }

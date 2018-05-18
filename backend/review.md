@@ -7,13 +7,21 @@
 Принимает на вход тело запроса:
 ```json
 {
-	"employer_id":5,
-	"rating":5.0,
-	"review_type":"EMPLOYEE",
-	"text":"Review for 5"
+	"employer_id":0,
+	"rating":2.5,
+	"review_type":"INTERVIEWEE",
+	"text":"ReviewText 01",
+	"salary":100000,
+	"specializations":[{"name":"Specialization 01","specialization_id":0},{"name":"Specialization 02","specialization_id":1}],
+	"review_id":null,
+	"position_id":0,
+	"employment_duration":0,
+	"employment_terminated":false
 }
 ```
 Где review_type - enumeration, который принимает 2 значения: EMPLOYEE, INTERVIEWEE
+
+Обязательными являются поля employer_id, rating, review_type, text
 
 
 В случае успешного сохранения возвращается:

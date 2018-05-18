@@ -37,6 +37,14 @@ public class Specialization {
     this.professionalField = professionalField;
   }
 
+  public Specialization(Integer id) {
+    this.id = id;
+  }
+
+  public Specialization(String name) {
+    this.name = name;
+  }
+
   public Integer getId() {
     return id;
   }
@@ -67,5 +75,24 @@ public class Specialization {
 
   public void setProfessionalField(ProfessionalField professionalField) {
     this.professionalField = professionalField;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    Specialization that = (Specialization) o;
+
+    return id != null ? id.equals(that.id) : that.id == null;
+  }
+
+  @Override
+  public int hashCode() {
+    return id != null ? id.hashCode() : 0;
   }
 }

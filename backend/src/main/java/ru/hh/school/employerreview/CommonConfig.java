@@ -13,6 +13,9 @@ import ru.hh.school.employerreview.employer.Employer;
 import ru.hh.school.employerreview.employer.EmployerDao;
 import ru.hh.school.employerreview.employer.EmployerSearchResource;
 import ru.hh.school.employerreview.employer.visit.EmployerVisit;
+import ru.hh.school.employerreview.position.Position;
+import ru.hh.school.employerreview.position.PositionDao;
+import ru.hh.school.employerreview.position.PositionResource;
 import ru.hh.school.employerreview.rating.Rating;
 import ru.hh.school.employerreview.rating.RatingDao;
 import ru.hh.school.employerreview.rating.deviation.RatingDeviation;
@@ -21,9 +24,9 @@ import ru.hh.school.employerreview.review.Review;
 import ru.hh.school.employerreview.review.ReviewDao;
 import ru.hh.school.employerreview.review.ReviewGenerationService;
 import ru.hh.school.employerreview.review.ReviewResource;
-import ru.hh.school.employerreview.specializations.Specialization;
 import ru.hh.school.employerreview.specializations.ProfessionalField;
 import ru.hh.school.employerreview.specializations.ProfessionalFieldDao;
+import ru.hh.school.employerreview.specializations.Specialization;
 import ru.hh.school.employerreview.specializations.SpecializationDao;
 import ru.hh.school.employerreview.specializations.SpecializationsResource;
 import ru.hh.school.employerreview.statistic.MainPageStatistic;
@@ -66,8 +69,8 @@ public class CommonConfig {
 
   @Bean
   MappingConfig mappingConfig() {
-    return new MappingConfig(Employer.class, Review.class, Area.class, Rating.class, RatingDeviation.class, EmployerVisit.class,
-        StarsInRating.class, ProfessionalField.class, Specialization.class, MainPageStatistic.class, MainPageStatistic.class);
+    return new MappingConfig(Employer.class, Review.class, Area.class, Rating.class, MainPageStatistic.class,
+        StarsInRating.class, ProfessionalField.class, Specialization.class, EmployerVisit.class, Position.class, RatingDeviation.class);
   }
 
   @Bean
@@ -104,5 +107,15 @@ public class CommonConfig {
   @Bean
   SpecializationsResource specializationsResource(SpecializationDao specializationDao) {
     return new SpecializationsResource(specializationDao);
+  }
+
+  @Bean
+  PositionDao positionDao(SessionFactory sessionFactory) {
+    return new PositionDao(sessionFactory);
+  }
+
+  @Bean
+  PositionResource positionResource(PositionDao positionDao) {
+    return new PositionResource(positionDao);
   }
 }
