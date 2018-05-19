@@ -1,0 +1,7 @@
+.dialog .dialog__paper {
+    overflow-y: visible;
+}
+
+.dialog .dialog__content {
+    overflow-y: visible;
+}

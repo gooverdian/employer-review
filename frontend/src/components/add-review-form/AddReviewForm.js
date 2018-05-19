@@ -5,16 +5,20 @@ import RatingInput from 'components/rating-input/RatingInput';
 import SearchSelect from 'components/search-select/SearchSelect';
 import Button from 'material-ui/Button';
 import ExchangeInterface from 'components/exchange/ExchangeInterface';
-import Validator from 'helpers/validator/Validator';
 import SendIcon from '@material-ui/icons/Send';
+import AddIcon from '@material-ui/icons/Add';
 import settings from 'config/settings';
+import AddEmployerDialog from 'components/add-employer-dialog/AddEmployerDialog';
+import Validator from 'helpers/validator/Validator';
+import 'assets/css/Form.css';
 import './AddReviewForm.css';
 
 class AddReviewForm extends React.Component {
     state = {
+        employerInfo: undefined,
         attributes: {
             employerId: {
-                value: null,
+                value: this.props.employerId || null,
                 valid: undefined,
                 error: undefined
             },
@@ -40,91 +44,58 @@ class AddReviewForm extends React.Component {
         ]
     };
 
-    updateAttribute = (name, value) => {
-        let validationResult = this.validateAttribute(name, value);
-        this.setState({attributes: {
-            ...this.state.attributes,
-            [name]: {
-                value: value,
-                valid: validationResult.valid,
-                error: validationResult.error
-            }
-        }});
-    };
+    employerName;
 
-    updateText = (name, event) => {
-        const value = event.target.value;
+    componentDidMount() {
+        if (this.props.employerId) {
+            ExchangeInterface.getEmployer(this.props.employerId).then(
+                (data) => this.updateSelectedEmployer(data),
+                () => this.updateAttribute('employerId', undefined)
+            );
+        }
+    }
+
+    handleTextFieldChange = (event) => {
+        const { name, value } = event.target;
         this.updateAttribute(name, value);
     };
 
-    validateAttribute(name, value) {
-        let attributeResult = {
-            valid: true,
-            error: undefined
-        };
-        if (!this.validationRules[name]) {
-            return attributeResult;
-        }
-        let ruleSet = this.validationRules[name];
-        for (let i = 0; i < ruleSet.length; i++) {
-            let rule = ruleSet[i];
-            if (!Validator.validate(rule.rule, value)) {
-                attributeResult.valid = false;
-                // Будет показано только сообщение от последнего нарушенного правила
-                attributeResult.error = rule.message || 'Неправильное значение поля ' + name;
+    updateAttribute = (name, value) => {
+        this.setState({
+            attributes: {
+                ...this.state.attributes,
+                [name]: Validator.validateAttribute(name, value, this.validationRules)
             }
-        }
-
-        return attributeResult;
-    }
-
-    validate() {
-        let validatedAttributes = {},
-            hasErrors = false,
-            attributeResult;
-        Object.keys(this.state.attributes).forEach((key) => {
-             attributeResult = this.validateAttribute(key, this.state.attributes[key].value);
-             if (!attributeResult.valid) {
-                 hasErrors = true;
-             }
-             validatedAttributes[key] = {
-                value: this.state.attributes[key].value,
-                valid: attributeResult.valid,
-                error: attributeResult.error
-             };
-        });
-
-        this.setState({attributes: validatedAttributes});
-
-        return !hasErrors;
-    }
-
-    submit = (event) => {
-        event.preventDefault();
-
-        if (!this.validate()) {
-            return;
-        }
-
-        let formData = {
-            employer_id: this.state.attributes.employerId.value,
-            rating: this.state.attributes.rating.value,
-            text: this.state.attributes.reviewText.value,
-            review_type: 'EMPLOYEE'
-        };
-
-        ExchangeInterface.addReview(formData).then((data) => {
-            this.props.history.push(`/employer/${formData.employer_id}/${data.review_id}`);
-        }, (error) => {
-            console.log(error);
         });
     };
 
-    getSelectItem = (id, success, failure) => {
-        ExchangeInterface.getEmployer(id).then(
-            (data) => success(data),
-            (error) => failure(error)
+    handleSubmission = (event) => {
+        event.preventDefault();
+
+        let { valid, attributes, } = Validator.validateForm(this.state.attributes, this.validationRules);
+        this.setState({attributes: attributes});
+
+        if(!valid) {
+            return;
+        }
+
+        let formData = Validator.getFormData(attributes);
+        // TODO: delete this when input implemented (backend require this field)
+        formData.reviewType = 'EMPLOYEE';
+        ExchangeInterface.addReview(formData).then(
+            (data) => this.props.history.push(`/employer/${formData.employer_id}/${data.review_id}`),
+            (error) => console.log(error)
         );
+    };
+
+    updateSelectedEmployer = (data) => {
+        this.setState({
+            employerInfo: data,
+            attributes: {
+                ...this.state.attributes,
+                employerId: Validator.validateAttribute('employerId', data.id, this.validationRules),
+            }
+        });
     };
 
     getSelectSearchResults = (search, success, failure) => {
@@ -134,50 +105,72 @@ class AddReviewForm extends React.Component {
         );
     };
 
+    handleAddEmployerClick = () => {
+        if (this.addEmployerDialog) {
+            this.addEmployerDialog.show(this.employerName);
+        }
+    };
+
     render () {
         return (
-            <form onSubmit={this.submit} className="form-add-review">
-                <Grid container className="form-group">
-                    <Grid item md={8}>
-                        <SearchSelect
-                            label="Выберите компанию"
-                            value={this.props.employerId}
-                            getItem={this.getSelectItem}
-                            getSearchResults={this.getSelectSearchResults}
-                            onChange={this.updateAttribute.bind(this, 'employerId')}
-                            error={this.state.attributes.employerId.error}
-                        />
+            <div>
+                <AddEmployerDialog
+                    ref={component => this.addEmployerDialog = component}
+                    onEmployerCreated={this.updateSelectedEmployer}
+                />
+                <form onSubmit={this.handleSubmission} className="form-add-review">
+                    <Grid container className="form-group">
+                        <Grid item md={8}>
+                            <SearchSelect
+                                label="Выберите компанию"
+                                selectedItem={this.state.employerInfo}
+                                getSearchResults={this.getSelectSearchResults}
+                                onChange={this.updateAttribute.bind(this, 'employerId')}
+                                onTextChange={(newText) => this.employerName = newText}
+                                error={this.state.attributes.employerId.error}
+                                controls={
+                                    <Button
+                                        variant="raised"
+                                        color="primary"
+                                        onMouseDown={this.handleAddEmployerClick}
+                                    >
+                                        <AddIcon className="button-icon button-icon_left" /> Новая компания
+                                    </Button>
+                                }
+                            />
+                        </Grid>
                     </Grid>
-                </Grid>
-                <Grid container className="form-group">
-                    <Grid item md={8}>
-                        <RatingInput
-                            value={this.state.attributes.rating.value}
-                            onChange={this.updateAttribute.bind(this, 'rating')}
-                            error={this.state.attributes.rating.error}
-                        />
+                    <Grid container className="form-group">
+                        <Grid item md={8}>
+                            <RatingInput
+                                value={this.state.attributes.rating.value}
+                                onChange={this.updateAttribute.bind(this, 'rating')}
+                                error={this.state.attributes.rating.error}
+                            />
+                        </Grid>
                     </Grid>
-                </Grid>
-                <Grid container className="form-group">
-                    <Grid item md={8}>
-                        <TextField
-                            multiline fullWidth
-                            label="Ваше мнение о компании"
-                            maxLength={1000}
-                            value={this.state.attributes.reviewText.value}
-                            onChange={this.updateText.bind(this, 'reviewText')}
-                            error={this.state.attributes.reviewText.error}
-                        />
+                    <Grid container className="form-group">
+                        <Grid item md={8}>
+                            <TextField
+                                multiline fullWidth
+                                label="Ваше мнение о компании"
+                                maxLength={1000}
+                                name="reviewText"
+                                value={this.state.attributes.reviewText.value}
+                                onChange={this.handleTextFieldChange}
+                                error={this.state.attributes.reviewText.error}
+                            />
+                        </Grid>
                     </Grid>
-                </Grid>
-                <Grid container className="form-group">
-                    <Grid item md={8}>
-                        <Button variant="raised" color="primary" type="submit">
-                            Отправить <SendIcon className="button-icon button-icon_right" />
-                        </Button>
+                    <Grid container className="form-group">
+                        <Grid item md={8}>
+                            <Button variant="raised" color="primary" type="submit">
+                                Отправить <SendIcon className="button-icon button-icon_right" />
+                            </Button>
+                        </Grid>
                     </Grid>
-                </Grid>
-            </form>
+                </form>
+            </div>
         );
     }
 }

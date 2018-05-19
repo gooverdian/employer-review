@@ -10,31 +10,23 @@ class SearchSelect extends React.Component {
         searchValue: '',
         results: {},
         selectedItem: undefined,
+        derivedSelectedItem: undefined,
         highlightedIndex: 0,
         resultsVisible: false
     };
 
     requestThresholdTimer = null;
 
-    constructor(props) {
-        super(props);
-        if (props.text) {
-            this.state.searchValue = props.text;
+    static getDerivedStateFromProps(nextProps, prevState) {
+        if (nextProps.selectedItem !== prevState.derivedSelectedItem) {
+            return {
+                derivedSelectedItem: nextProps.selectedItem,
+                selectedItem: nextProps.selectedItem,
+                searchValue: nextProps.selectedItem.name
+            };
         }
-    }
 
-    componentDidMount() {
-        if (this.props.value) {
-            this.props.getItem(this.props.value, this.getItemSuccess, this.getItemFailure);
-        }
-    }
-
-    getItemSuccess = (data) => {
-        this.handleSelection(data);
-    };
-
-    static getItemFailure(error) {
-        console.log(error);
+        return null;
     }
 
     searchSuccess = (data) => {

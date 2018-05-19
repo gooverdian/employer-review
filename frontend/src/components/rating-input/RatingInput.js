@@ -3,6 +3,7 @@ import { InputLabel } from 'material-ui/Input';
 import { FormControl, FormHelperText } from 'material-ui/Form';
 import RatingStarButton from './RatingStarButton';
 import 'components/rating-input/RatingInput.css';
+import classNames from 'classnames';
 
 const valuesDescription = [
     '1 — Ужасно',
@@ -53,7 +54,12 @@ class RatingInput extends React.Component {
             <FormControl fullWidth error={Boolean(this.props.error)}>
                 <InputLabel htmlFor="rating-input" shrink={true}>Ваша оценка</InputLabel>
                 <div className="rating-input__selector">
-                    <span className="rating-input__stars">
+                    <span
+                        className={classNames(
+                            'rating-input__stars',
+                            {'rating-input_error': Boolean(this.props.error)}
+                        )}
+                    >
                         {ratingButtons}
                     </span>
                     <span className="rating-input__value">
