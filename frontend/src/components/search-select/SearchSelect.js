@@ -1,12 +1,11 @@
 import React from 'react';
 import TextField from 'material-ui/TextField';
-import ExchangeInterface from 'components/exchange/ExchangeInterface';
-import EmployerSearchSelectResults from './EmployerSearchSelectResults';
+import SearchSelectResults from './SearchSelectResults';
 import settings from 'config/settings';
 import classNames from 'classnames';
-import './EmployerSearchSelect.css';
+import './SearchSelect.css';
 
-class EmployerSearchSelect extends React.Component {
+class SearchSelect extends React.Component {
     state = {
         searchValue: '',
         results: {},
@@ -17,18 +16,40 @@ class EmployerSearchSelect extends React.Component {
 
     requestThresholdTimer = null;
 
-    componentDidMount() {
-        if (this.props.employerId) {
-            ExchangeInterface.getEmployer(this.props.employerId).then((data) => {
-                this.handleSelection(data);
-            }, (error) => {
-                console.log(error);
-            });
+    constructor(props) {
+        super(props);
+        if (props.text) {
+            this.state.searchValue = props.text;
         }
+    }
+
+    componentDidMount() {
+        if (this.props.value) {
+            this.props.getItem(this.props.value, this.getItemSuccess, this.getItemFailure);
+        }
+    }
+
+    getItemSuccess = (data) => {
+        this.handleSelection(data);
+    };
+
+    static getItemFailure(error) {
+        console.log(error);
+    }
+
+    searchSuccess = (data) => {
+        this.setState({results: data});
+    };
+
+    static searchFailure(error) {
+        console.log(error)
     }
 
     handleTextChange = (event) => {
         let value = event.target.value;
+        if (this.props.onTextChange) {
+            this.props.onTextChange(value);
+        }
         this.setState({searchValue: value});
         if (this.requestThresholdTimer) {
             clearTimeout(this.requestThresholdTimer);
@@ -42,11 +63,7 @@ class EmployerSearchSelect extends React.Component {
                 if (value === '') {
                     this.setState({results: {}});
                 } else {
-                    ExchangeInterface.employerSearch(value, 0, settings.selectPageSize).then((data) => {
-                        this.setState({results: data});
-                    }, (error) => {
-                        console.log(error);
-                    });
+                    this.props.getSearchResults(value, this.searchSuccess, this.searchFailure);
                 }
             },
             settings.searchRequestThreshold
@@ -141,14 +158,14 @@ class EmployerSearchSelect extends React.Component {
     render() {
         return (
             <div className={classNames(
-                'employer-search-select',
-                {'employer-search-select_results-hidden': !this.state.resultsVisible}
+                'search-select',
+                {'search-select_picker-hidden': !this.state.resultsVisible}
             )}>
                 <TextField
                     error={Boolean(this.props.error)}
                     fullWidth
-                    className="employer-search-select-input"
-                    label="Выберите компанию"
+                    className="search-select__input"
+                    label={this.props.label}
                     placeholder="Начните вводить название"
                     value={this.state.searchValue}
                     onChange={this.handleTextChange}
@@ -157,15 +174,16 @@ class EmployerSearchSelect extends React.Component {
                     onBlur={this.hideResults}
                     helperText={this.props.error ? this.props.error : undefined}
                 />
-                <EmployerSearchSelectResults
+                <SearchSelectResults
                     onSelect={this.handleSelection}
                     items={this.state.results ? this.state.results.items : undefined}
                     highlightedIndex={this.state.highlightedIndex}
                     selectedItem={this.state.selectedItem}
+                    controls={this.props.controls}
                 />
             </div>
         );
     }
 }
 
-export default EmployerSearchSelect;
+export default SearchSelect;

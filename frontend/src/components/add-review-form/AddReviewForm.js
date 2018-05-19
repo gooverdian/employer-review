@@ -2,11 +2,12 @@ import React from 'react';
 import Grid from 'material-ui/Grid';
 import TextField from 'material-ui/TextField';
 import RatingInput from 'components/rating-input/RatingInput';
-import EmployerSearchSelect from 'components/employer-search/EmployerSearchSelect';
+import SearchSelect from 'components/search-select/SearchSelect';
 import Button from 'material-ui/Button';
 import ExchangeInterface from 'components/exchange/ExchangeInterface';
 import Validator from 'helpers/validator/Validator';
 import SendIcon from '@material-ui/icons/Send';
+import settings from 'config/settings';
 import './AddReviewForm.css';
 
 class AddReviewForm extends React.Component {
@@ -119,15 +120,31 @@ class AddReviewForm extends React.Component {
         });
     };
 
+    getSelectItem = (id, success, failure) => {
+        ExchangeInterface.getEmployer(id).then(
+            (data) => success(data),
+            (error) => failure(error)
+        );
+    };
+
+    getSelectSearchResults = (search, success, failure) => {
+        ExchangeInterface.employerSearch(search, 0, settings.selectPageSize).then(
+            (data) => success(data),
+            (error) => failure(error)
+        );
+    };
+
     render () {
         return (
             <form onSubmit={this.submit} className="form-add-review">
                 <Grid container className="form-group">
                     <Grid item md={8}>
-                        <EmployerSearchSelect
-                            value={this.state.attributes.employerId.value}
+                        <SearchSelect
+                            label="Выберите компанию"
+                            value={this.props.employerId}
+                            getItem={this.getSelectItem}
+                            getSearchResults={this.getSelectSearchResults}
                             onChange={this.updateAttribute.bind(this, 'employerId')}
-                            employerId={this.props.employerId}
                             error={this.state.attributes.employerId.error}
                         />
                     </Grid>
