@@ -7,16 +7,19 @@ import ru.hh.school.employerreview.employer.EmployerDao;
 import ru.hh.school.employerreview.rating.RatingDao;
 import ru.hh.school.employerreview.review.dto.ResponseBodyReviewId;
 import ru.hh.school.employerreview.review.dto.ResponseBodyReviews;
+import ru.hh.school.employerreview.review.dto.ReviewCounterDto;
 import ru.hh.school.employerreview.review.dto.ReviewDto;
 import ru.hh.school.employerreview.statistic.MainPageStatisticDao;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DefaultValue;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.POST;
+import javax.ws.rs.GET;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.DefaultValue;
+
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.Collections;
@@ -119,5 +122,15 @@ public class ReviewResource {
         review.getText())).collect(Collectors.toList());
 
     return new ResponseBodyReviews(reviewDtos, page, pageCount, perPage);
+  }
+
+  @GET
+  @Path("/count/{employer_id}")
+  public ReviewCounterDto getRecentEmployerReview(@PathParam("employer_id") int employerId,
+                                                  @QueryParam("interval") @DefaultValue("1") int interval) {
+    if (employerDao.getEmployer(employerId) == null) {
+      throw new Errors(Response.Status.NOT_FOUND, "NOT_FOUND", "employer_id").toWebApplicationException();
+    }
+    return new ReviewCounterDto(employerId, reviewDao.countRecentReviews(employerId, interval));
   }
 }

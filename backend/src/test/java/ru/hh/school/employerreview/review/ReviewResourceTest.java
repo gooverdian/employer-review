@@ -3,16 +3,20 @@ package ru.hh.school.employerreview.review;
 import org.junit.Assert;
 import org.junit.Test;
 import ru.hh.school.employerreview.EmployerReviewTestBase;
+import ru.hh.school.employerreview.TestConfig;
 import ru.hh.school.employerreview.area.AreaDao;
 import ru.hh.school.employerreview.employer.Employer;
 import ru.hh.school.employerreview.employer.EmployerDao;
 import ru.hh.school.employerreview.rating.RatingDao;
 import ru.hh.school.employerreview.rating.stars.StarsInRating;
+import ru.hh.school.employerreview.review.dto.ReviewCounterDto;
 import ru.hh.school.employerreview.review.dto.ReviewDto;
 import ru.hh.school.employerreview.statistic.MainPageStatisticDao;
 
 import javax.inject.Inject;
 import javax.ws.rs.WebApplicationException;
+import java.sql.Timestamp;
+import java.util.Calendar;
 
 public class ReviewResourceTest extends EmployerReviewTestBase {
 
@@ -88,5 +92,36 @@ public class ReviewResourceTest extends EmployerReviewTestBase {
   @Test(expected = WebApplicationException.class)
   public void testZeroPerPageRequest() {
     resource.getReviews(1, 0, 0);
+  }
+
+  @Test
+  public void testCountRecentReviews() {
+    employerDao.save(employer);
+
+    Calendar calendar = Calendar.getInstance();
+
+    Review review = new Review();
+    review.setEmployer(employer);
+    review.setRating(2f);
+    review.setReviewType(ReviewType.EMPLOYEE);
+    review.setText("Yeah");
+    review.setCreatedOn(new Timestamp(calendar.getTime().getTime()));
+
+    reviewDao.save(review);
+
+    calendar.add(Calendar.DATE, -2);
+    review.setCreatedOn(new Timestamp(calendar.getTime().getTime()));
+
+    reviewDao.save(review);
+
+    ReviewCounterDto reviewCounterDto = resource.getRecentEmployerReview(employer.getId(), 1);
+
+    Assert.assertEquals(employer.getId(), reviewCounterDto.getEmployerId());
+    Assert.assertEquals((Integer) 1, reviewCounterDto.getCounter());
+
+    TestConfig.TestQueryExecutorDao testQueryExecutorDao = applicationContext.getBean(TestConfig.TestQueryExecutorDao.class);
+    testQueryExecutorDao.executeQuery("delete from Review");
+    testQueryExecutorDao.executeQuery("delete from Employer");
+    testQueryExecutorDao.executeQuery("delete from Rating");
   }
 }

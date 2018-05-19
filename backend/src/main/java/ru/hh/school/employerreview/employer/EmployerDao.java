@@ -150,9 +150,7 @@ public class EmployerDao {
   @Transactional(readOnly = true)
   public List<EmployerVisitDto> getTopEmployerVisited(Integer size, Integer interval) {
 
-    Date date = new Date();
     Calendar calendar = Calendar.getInstance();
-    calendar.setTime(date);
     calendar.add(Calendar.DATE, -interval);
 
     Query<Object> query = getSession().createQuery(
