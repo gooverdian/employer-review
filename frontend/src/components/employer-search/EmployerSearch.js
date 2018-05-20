@@ -1,52 +1,29 @@
 import React from 'react';
 import TextField from 'material-ui/TextField';
 import Grid from 'material-ui/Grid';
-import ExchangeInterface from 'components/exchange/ExchangeInterface';
 import EmployerSearchResults from './EmployerSearchResults';
 import settings from 'config/settings';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
+import { searchEmployers } from 'modules/employerSearch';
 
 class EmployerSearch extends React.Component {
-    stopListeningHistory = undefined;
     requestThresholdTimer = null;
+    state = {
+        searchValue: this.props.search || '',
+    };
 
-    constructor(props, context) {
-        super(props, context);
-        let locationState = props.history.location.state;
-        if (!locationState) {
-            locationState = {
-                search: this.props.search || '',
-                page: this.props.page || 0
+    static getDerivedStateFromProps(nextProps, prevState) {
+        if (nextProps.search !== prevState.derivedSearch || nextProps.page !== prevState.derivedPage) {
+            nextProps.searchEmployers(nextProps.search, nextProps.page);
+            return {
+                searchValue: nextProps.search || '',
+                derivedSearch: nextProps.search,
+                derivedPage: nextProps.page,
             };
-            this.props.history.replace(
-                this.props.history.pathname,
-                locationState
-            );
         }
 
-        this.state = this.getStateFromLocation(locationState);
-    }
-
-    fetchEmployers(state) {
-        ExchangeInterface.employerSearch(state.searchValue, state.page).then((data) => {
-            this.setState({...state, results: data});
-        }, (error) => {
-            console.log(error);
-        });
-    }
-
-    componentDidMount() {
-        this.stopListeningHistory = this.props.history.listen((location) => {
-            this.popLocationState(location.state);
-        });
-
-        if (this.state.searchValue) {
-            this.fetchEmployers(this.state);
-        }
-    }
-
-    componentWillUnmount() {
-        this.stopListeningHistory();
-        this.stopListeningHistory = undefined;
+        return null;
     }
 
     pushLocationState(locationState) {
@@ -58,31 +35,7 @@ class EmployerSearch extends React.Component {
             url += '/' + locationState.page;
         }
 
-        this.props.history.push(url, locationState);
-    }
-
-    getStateFromLocation(locationState) {
-        locationState = locationState || {};
-        let state = {
-            searchValue: locationState.search || '',
-            page: locationState.page || 0,
-        };
-
-        if (String(state.searchValue).length === 0) {
-            state.results = {};
-        }
-
-        return state;
-    }
-
-    popLocationState(locationState) {
-        let state = this.getStateFromLocation(locationState);
-
-        if(!state.results) {
-            this.fetchEmployers(state);
-        } else {
-            this.setState(state);
-        }
+        this.props.history.push(url);
     }
 
     handleTextChange = (event) => {
@@ -126,7 +79,9 @@ class EmployerSearch extends React.Component {
                             <EmployerSearchResults
                                 onPageChange={this.handlePageChange}
                                 history={this.props.history}
-                                data={this.state.results}
+                                items={this.props.data.items}
+                                pages={this.props.data.pages}
+                                page={this.props.data.page}
                             />
                     </form>
                 </Grid>
@@ -135,4 +90,12 @@ class EmployerSearch extends React.Component {
     }
 }
 
-export default EmployerSearch;
+const mapStateToProps = (state, ownProps) => {
+    return {
+        search: ownProps.match.params.search,
+        page: ownProps.match.params.page,
+        data: state.employerSearch.data
+    }
+};
+
+export default withRouter(connect(mapStateToProps, {searchEmployers})(EmployerSearch));

@@ -1,4 +1,5 @@
 const settings = {
+    unknownErrorMessage: 'Произошла неизвестная и непредвиденная ошибка',
     searchRequestThreshold: 400,
     defaultPageSize: 10,
     selectPageSize: 50,

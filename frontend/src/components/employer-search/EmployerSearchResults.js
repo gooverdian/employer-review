@@ -15,11 +15,11 @@ class EmployerSearchResults extends React.Component {
     };
 
     renderResultsList() {
-        if (!this.props.data || !this.props.data.items) {
+        if (typeof this.props.items === 'undefined') {
             return null;
         }
 
-        if (this.props.data.items.length === 0) {
+        if (!this.props.items || this.props.items.length === 0) {
             return (
                 <List>
                     <ListItem className="search-select-item search-select-item_nothing-found">
@@ -34,14 +34,14 @@ class EmployerSearchResults extends React.Component {
 
         return (
             <List>
-                {this.props.data.items.map((item) => (
+                {this.props.items.map((item) => (
                     <ListItem
                         key={item.id}
                         button
                         component={Link}
                         to={"/employer/" + item.id}
                     >
-                    <Avatar alt="Лого" src={item.logo_url} />
+                    <Avatar alt="Лого" src={item.logoUrl} />
                     <ListItemText primary={item.name} />
                     <ListItemSecondaryAction>
                         <IconButton component={Link} title="Оставить отзыв о компании" to={"/review/add/" + item.id}>
@@ -59,8 +59,8 @@ class EmployerSearchResults extends React.Component {
             <div className="employer-search-results">
                 {this.renderResultsList()}
                 <PaginationWidget
-                    pages={this.props.data ? this.props.data.pages : undefined}
-                    page={this.props.data ? this.props.data.page : undefined}
+                    pages={this.props.pages}
+                    page={this.props.page}
                     onPageChange={this.handlePageChange}
                 />
             </div>

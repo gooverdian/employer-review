@@ -1,8 +1,17 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-import App from 'App';
+import { render } from 'react-dom';
+import { BrowserRouter as Router } from 'react-router-dom';
+import Root from 'containers/Root';
 import registerServiceWorker from 'registerServiceWorker';
+import configureStore from 'store/configureStore'
 import 'assets/css/reset.css';
 
-ReactDOM.render(<App />, document.getElementById('root'));
+const store = configureStore();
+
+render(
+    <Router>
+        <Root store={store} />
+    </Router>,
+    document.getElementById('root')
+);
 registerServiceWorker();

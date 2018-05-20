@@ -2,25 +2,34 @@
     "name": "hh-frontend-review",
     "version": "0.1.0",
     "private": true,
+    "devDependencies": {
+        "cross-env": "^5.1.5",
+        "redux-devtools": "^3.4.1",
+        "redux-devtools-dock-monitor": "^1.1.3",
+        "redux-devtools-log-monitor": "^1.4.0",
+        "redux-logger": "^3.0.6"
+    },
     "dependencies": {
         "@material-ui/core": "^1.0.0",
         "@material-ui/icons": "^1.0.0-beta.43",
         "axios": "^0.18.0",
         "classnames": "^2.2.5",
+        "humps": "^2.0.1",
         "material-ui": "^1.0.0-beta.47",
+        "normalizr": "^3.2.4",
         "npm": "^6.0.1",
         "react": "^16.3.2",
         "react-dom": "^16.3.2",
+        "react-redux": "^5.0.7",
         "react-router-dom": "^4.2.2",
-        "react-scripts": "1.1.1"
+        "react-scripts": "1.1.1",
+        "redux": "^4.0.0",
+        "redux-thunk": "^2.2.0"
     },
     "scripts": {
         "start": "cross-env NODE_PATH=src react-scripts start",
         "build": "cross-env NODE_PATH=src react-scripts build",
         "test": "cross-env NODE_PATH=src react-scripts test --env=jsdom",
         "eject": "react-scripts eject"
-    },
-    "devDependencies": {
-        "cross-env": "^5.1.5"
     }
 }
