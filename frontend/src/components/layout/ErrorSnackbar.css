@@ -1,0 +1,17 @@
+.error-bar {
+    font-size: 16px;
+    color: rgb(255, 57, 49);
+}
+
+.error-bar .error-bar__icon {
+    vertical-align: middle;
+    height: 24px;
+    width: 24px;
+    margin-right: .2em;
+    margin-top: -3px;
+    text-shadow: 0 0 3px #000;
+}
+
+.error-bar__text {
+    font-weight: 500;
+}
