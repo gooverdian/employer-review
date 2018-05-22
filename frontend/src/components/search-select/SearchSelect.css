@@ -1,21 +1,30 @@
-.employer-search-select {
+.search-select {
     position: relative;
 }
 
-.employer-search-select__results {
+.search-select__picker {
     background: #fff;
-    box-shadow: 0 3px 10px 1px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 3px 10px 1px rgba(0, 0, 0, .5);
     position: absolute;
-    top: 100%;
+    top: 48px;
     left: 0;
     right: 0;
     z-index: 10;
     margin-top: -1px;
+    overflow: hidden;
+}
+
+.search-select__results {
     overflow-y: auto;
     max-height: 300px;
 }
 
-.employer-search-select_results-hidden .employer-search-select__results {
+.search-select__controls {
+    padding: 12px 24px;
+    box-shadow: 0 0 5px 1px rgba(0, 0, 0, .5);
+}
+
+.search-select_picker-hidden .search-select__picker {
     display: none;
 }
 

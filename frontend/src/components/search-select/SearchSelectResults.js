@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import List, { ListItem, ListItemText } from 'material-ui/List';
 import classNames from 'classnames';
 
-class EmployerSearchSelectResults extends React.Component {
+class SearchSelectResults extends React.Component {
     state = {
         listScrollPosition: undefined
     };
@@ -73,8 +73,8 @@ class EmployerSearchSelectResults extends React.Component {
                 <List>
                     <ListItem className="search-select-item search-select-item_nothing-found">
                         <ListItemText
-                            classes={{primary: "search-select-item__caption"}}
-                            primary="По вашему запросу компаний не найдено"
+                            classes={{primary: 'search-select-item__caption'}}
+                            primary="Ничего не найдено"
                         />
                     </ListItem>
                 </List>
@@ -95,7 +95,7 @@ class EmployerSearchSelectResults extends React.Component {
                         }
                         onMouseDown={this.handleSelection.bind(this, index)}
                     >
-                        <ListItemText classes={{primary: "search-select-item__caption"}} primary={item.name} />
+                        <ListItemText classes={{primary: 'search-select-item__caption'}} primary={item.name} />
                     </ListItem>
                 ))}
             </List>
@@ -104,11 +104,18 @@ class EmployerSearchSelectResults extends React.Component {
 
     render() {
         return (
-            <div className="employer-search-select__results">
-                {this.renderResultsList()}
+            <div className="search-select__picker">
+                <div className="search-select__results">
+                    {this.renderResultsList()}
+                </div>
+                {
+                    this.props.controls
+                        ? <div className="search-select__controls">{this.props.controls}</div>
+                        : ''
+                }
             </div>
         );
     }
 }
 
-export default EmployerSearchSelectResults;
+export default SearchSelectResults;

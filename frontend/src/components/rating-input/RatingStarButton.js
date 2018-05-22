@@ -19,7 +19,7 @@ class RatingStarButton extends React.Component {
 
     getClassName() {
         let isHovering = this.props.value <= this.props.activeIndex;
-        return classNames('rating-star', {
+        return classNames('rating-star rating-input__star', {
             'rating-star_hover': isHovering,
             'rating-star_active': this.props.activeIndex === undefined && this.props.value <= this.props.currentRating
         });

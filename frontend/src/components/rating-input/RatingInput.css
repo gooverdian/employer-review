@@ -11,6 +11,10 @@
     margin: 0 -1px;
 }
 
+.rating-input_error .rating-input__star {
+    color: #f44336;
+}
+
 .rating-input__value {
     vertical-align: middle;
     margin-left: 1em;
