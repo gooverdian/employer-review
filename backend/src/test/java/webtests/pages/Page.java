@@ -2,6 +2,7 @@ package webtests.pages;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class Page {
@@ -9,6 +10,9 @@ public class Page {
   private WebDriverWait wait;
   protected String handle;
   String url;
+
+  @FindBy(xpath = "//input")
+  protected WebElement searchLine;
 
   Page(WebDriver driver) {
     this.driver = driver;
@@ -24,5 +28,11 @@ public class Page {
     element.click();
     element.clear();
     element.sendKeys(text);
+  }
+
+  public void search(String request) {
+    searchLine.click();
+    searchLine.clear();
+    searchLine.sendKeys(request);
   }
 }

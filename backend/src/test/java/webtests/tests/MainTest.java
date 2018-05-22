@@ -8,6 +8,8 @@ import webtests.pages.AddReviewPage;
 import webtests.pages.MainPage;
 import webtests.pages.ReviewsPage;
 
+import java.util.Random;
+
 public class MainTest {
 
   static final Application app = new Application();
@@ -41,5 +43,28 @@ public class MainTest {
     reviewsPage.open();
     Assert.assertEquals(text, reviewsPage.getLastEstimateText());
     Assert.assertEquals(starValue, reviewsPage.getLastReviewStarValue());
+  }
+
+  @Test
+  public void addEmployerTest() {
+    AddReviewPage addReviewPage = app.addReviewPage;
+    addReviewPage.open();
+
+    Random randomGenerator = new Random();
+    String employerName;
+
+    do {
+      employerName = "Тест-" + Integer.valueOf(randomGenerator.nextInt(9999999)).toString();
+      addReviewPage.search(employerName);
+    } while (addReviewPage.isResultDisplayed());
+
+    addReviewPage.callAddEmployerForm();
+
+    addReviewPage.fillFormInputsAndSave("Россия", "ya.ru");
+
+    MainPage mainPage = app.mainPage;
+    mainPage.open();
+    mainPage.search(employerName);
+    Assert.assertTrue(mainPage.isResultDisplayed());
   }
 }

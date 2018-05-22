@@ -9,14 +9,12 @@ import org.openqa.selenium.support.PageFactory;
 import java.util.List;
 
 public class MainPage extends Page {
-  @FindBy(xpath = "//input")
-  private WebElement searchLine;
 
   @FindBy(xpath = "//*[text()='ОСТАВИТЬ ОТЗЫВ']")
-  public WebElement feedbackButton;
+  private WebElement feedbackButton;
 
   @FindBy(xpath = "//*[@class='employer-search-results']")
-  public WebElement searchResultsList;
+  private WebElement searchResultsList;
 
   public MainPage(WebDriver driver, String url) {
     super(driver);
@@ -29,9 +27,8 @@ public class MainPage extends Page {
     return !list.isEmpty();
   }
 
-  public void search(String request) {
-    searchLine.click();
-    searchLine.clear();
-    searchLine.sendKeys(request);
+  public void clickOnResult(int index) {
+    List<WebElement> list = driver.findElements(By.xpath("//*[@class='employer-search-results']"));
+    list.get(index).click();
   }
 }
