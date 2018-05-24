@@ -9,6 +9,7 @@ import ru.hh.school.employerreview.review.dto.ResponseBodyReviewId;
 import ru.hh.school.employerreview.review.dto.ResponseBodyReviews;
 import ru.hh.school.employerreview.review.dto.ReviewCounterDto;
 import ru.hh.school.employerreview.review.dto.ReviewDto;
+import ru.hh.school.employerreview.specializations.dto.SpecializationDto;
 import ru.hh.school.employerreview.statistic.MainPageStatisticDao;
 
 import javax.ws.rs.Consumes;
@@ -83,13 +84,14 @@ public class ReviewResource {
   public ResponseBodyReviews getReviews(
       @QueryParam("employer_id") Integer employerId,
       @QueryParam("page") @DefaultValue("0") int page,
-      @QueryParam("per_page") @DefaultValue("10") int perPage
+      @QueryParam("per_page") @DefaultValue("10") int perPage,
+      @QueryParam("review_type") ReviewType reviewType
   ) {
     PaginationHelper.checkInputParameters(Objects.toString(employerId, ""), page, perPage);
 
-    Integer rowCount = Math.toIntExact(reviewDao.getRowCountFilteredByEmployer(employerId));
+    Integer rowCount = Math.toIntExact(reviewDao.getRowCountFilteredByEmployer(employerId, reviewType));
     if (rowCount == 0) {
-      return new ResponseBodyReviews(Collections.emptyList(), 0, 0, 0);
+      return new ResponseBodyReviews(Collections.emptyList(), 0, 0, 0, 0);
     }
 
     int pageCount = PaginationHelper.calculatePagesCount(rowCount, perPage);
@@ -97,7 +99,7 @@ public class ReviewResource {
       throw new Errors(Response.Status.BAD_REQUEST, "BAD_REQUEST_PARAMETER", "page").toWebApplicationException();
     }
 
-    List<Review> reviews = reviewDao.getPaginatedFilteredByEmployer(employerId, page * perPage, perPage);
+    List<Review> reviews = reviewDao.getPaginatedFilteredByEmployerWithSpecializations(employerId, page * perPage, perPage, reviewType);
     if (reviews == null) {
       return new ResponseBodyReviews();
     }
@@ -112,11 +114,19 @@ public class ReviewResource {
       return 0;
     });
 
-    List<ReviewDto> reviewDtos = reviews.stream().map(review -> new ReviewDto(employerId,
-        review.getId(), review.getRating(), review.getReviewType(),
-        review.getText())).collect(Collectors.toList());
+    List<ReviewDto> reviewDtos = reviews.stream().map(review -> {
+      ReviewDto reviewDto = new ReviewDto(employerId, review.getId(), review.getRating(), review.getReviewType(), review.getText());
+      reviewDto.setSalary(review.getSalary());
+      reviewDto.setEmploymentTerminated(review.getEmploymentTerminated());
+      reviewDto.setEmploymentDuration(review.getEmploymentDuration());
+      reviewDto.setPositionId(review.getPosition() == null ? null : review.getPosition().getId());
+      reviewDto.getSpecializations()
+          .addAll(review.getSpecializations().stream().map(specialization -> SpecializationDto.fromSpecialization(specialization))
+              .collect(Collectors.toList()));
+      return reviewDto;
+    }).collect(Collectors.toList());
 
-    return new ResponseBodyReviews(reviewDtos, page, pageCount, perPage);
+    return new ResponseBodyReviews(reviewDtos, page, pageCount, perPage, rowCount);
   }
 
   @GET

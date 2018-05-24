@@ -41,9 +41,9 @@ public class ReviewResourceHttpTest extends HttpResourceTestBase {
   private final List<SpecializationDto> specializations01 = new ArrayList<>();
   private final List<SpecializationDto> specializations02 = new ArrayList<>();
   private final static String REVIEW_TEXT_01 = "ReviewText 01";
-  private final static Float REVIEW_RTING_01 = 2.5f;
+  private final static Float REVIEW_RATING_01 = 2.5f;
   private final static String REVIEW_TEXT_02 = "ReviewText 02";
-  private final static Float REVIEW_RTING_02 = 3f;
+  private final static Float REVIEW_RATING_02 = 3f;
   private Specialization specialization01 = new Specialization("Specialization 01");
   private Specialization specialization02 = new Specialization("Specialization 02");
 
@@ -71,7 +71,7 @@ public class ReviewResourceHttpTest extends HttpResourceTestBase {
     ReviewDto reviewDto = new ReviewDto();
     reviewDto.setEmployerId(employer01.getId());
     reviewDto.setText(REVIEW_TEXT_01);
-    reviewDto.setRating(REVIEW_RTING_01);
+    reviewDto.setRating(REVIEW_RATING_01);
     String reviewJson = OBJECT_MAPPER.writeValueAsString(reviewDto);
 
     HttpPost httpPost = new HttpPost(HOST + "review");
@@ -83,7 +83,7 @@ public class ReviewResourceHttpTest extends HttpResourceTestBase {
     String result = new BufferedReader(new InputStreamReader(response.getEntity().getContent())).lines().collect(Collectors.joining("\n"));
     ResponseBodyReviewId responseBody = OBJECT_MAPPER.readValue(result, ResponseBodyReviewId.class);
 
-    List<Review> reviews = reviewDao.getPaginatedFilteredByEmployer(employer01.getId(), 0, 100);
+    List<Review> reviews = reviewDao.getPaginatedFilteredByEmployer(employer01.getId(), 0, 100, null);
     assertNotNull(reviews);
     assertEquals(1, reviews.size());
 
@@ -91,7 +91,7 @@ public class ReviewResourceHttpTest extends HttpResourceTestBase {
     assertEquals(responseBody.getReviewId(), review.getId());
     assertEquals(employer01, review.getEmployer());
     assertEquals(REVIEW_TEXT_01, review.getText());
-    assertEquals(REVIEW_RTING_01, review.getRating());
+    assertEquals(REVIEW_RATING_01, review.getRating());
   }
 
   @Test
@@ -101,7 +101,7 @@ public class ReviewResourceHttpTest extends HttpResourceTestBase {
     ReviewDto reviewDto01 = new ReviewDto();
     reviewDto01.setEmployerId(employer01.getId());
     reviewDto01.setText(REVIEW_TEXT_01);
-    reviewDto01.setRating(REVIEW_RTING_01);
+    reviewDto01.setRating(REVIEW_RATING_01);
     reviewDto01.setReviewType(ReviewType.INTERVIEWEE);
     reviewDto01.setPositionId(position01.getId());
     reviewDto01.setEmploymentDuration((short) 0);
@@ -122,7 +122,7 @@ public class ReviewResourceHttpTest extends HttpResourceTestBase {
     ReviewDto reviewDto02 = new ReviewDto();
     reviewDto02.setEmployerId(employer01.getId());
     reviewDto02.setText(REVIEW_TEXT_02);
-    reviewDto02.setRating(REVIEW_RTING_02);
+    reviewDto02.setRating(REVIEW_RATING_02);
     reviewDto02.setReviewType(ReviewType.EMPLOYEE);
     reviewDto02.setPositionId(position02.getId());
     reviewDto02.setEmploymentDuration((short) 12);
@@ -140,7 +140,7 @@ public class ReviewResourceHttpTest extends HttpResourceTestBase {
     result = new BufferedReader(new InputStreamReader(response.getEntity().getContent())).lines().collect(Collectors.joining("\n"));
     ResponseBodyReviewId responseBody02 = OBJECT_MAPPER.readValue(result, ResponseBodyReviewId.class);
 
-    List<Review> reviews = reviewDao.getPaginatedFilteredByEmployerWithSpecializations(employer01.getId(), 0, 100);
+    List<Review> reviews = reviewDao.getPaginatedFilteredByEmployerWithSpecializations(employer01.getId(), 0, 100, null);
     assertNotNull(reviews);
     assertEquals(2, reviews.size());
 
@@ -151,7 +151,7 @@ public class ReviewResourceHttpTest extends HttpResourceTestBase {
     assertEquals(responseBody01.getReviewId(), review01.getId());
     assertEquals(employer01, review01.getEmployer());
     assertEquals(REVIEW_TEXT_01, review01.getText());
-    assertEquals(REVIEW_RTING_01, review01.getRating());
+    assertEquals(REVIEW_RATING_01, review01.getRating());
     assertEquals(ReviewType.INTERVIEWEE, review01.getReviewType());
     assertEquals(position01, review01.getPosition());
     assertEquals(Short.valueOf((short) 0), review01.getEmploymentDuration());
@@ -166,7 +166,7 @@ public class ReviewResourceHttpTest extends HttpResourceTestBase {
     assertEquals(responseBody02.getReviewId(), review02.getId());
     assertEquals(employer01, review02.getEmployer());
     assertEquals(REVIEW_TEXT_02, review02.getText());
-    assertEquals(REVIEW_RTING_02, review02.getRating());
+    assertEquals(REVIEW_RATING_02, review02.getRating());
     assertEquals(ReviewType.EMPLOYEE, review02.getReviewType());
     assertEquals(position02, review02.getPosition());
     assertEquals(Short.valueOf((short) 12), review02.getEmploymentDuration());
@@ -175,6 +175,69 @@ public class ReviewResourceHttpTest extends HttpResourceTestBase {
     assertNotNull(review02.getSpecializations());
     assertEquals(review02.getSpecializations().size(), 1);
     assertTrue(review02.getSpecializations().contains(specialization02));
+  }
+
+  @Test
+  public void postReviewsReviewTypeFiltrationTest() throws IOException {
+    CloseableHttpClient httpClient = httpClient();
+
+    ReviewDto reviewDto01 = new ReviewDto();
+    reviewDto01.setEmployerId(employer01.getId());
+    reviewDto01.setText(REVIEW_TEXT_01);
+    reviewDto01.setRating(REVIEW_RATING_01);
+    reviewDto01.setReviewType(ReviewType.INTERVIEWEE);
+    reviewDto01.setPositionId(position01.getId());
+    reviewDto01.setEmploymentDuration((short) 0);
+    reviewDto01.setEmploymentTerminated(false);
+    reviewDto01.setSalary(100_000);
+    reviewDto01.setSpecializations(specializations01);
+    String reviewJson01 = OBJECT_MAPPER.writeValueAsString(reviewDto01);
+
+    HttpPost httpPost = new HttpPost(HOST + "review");
+    HttpEntity entity = new ByteArrayEntity(reviewJson01.getBytes("UTF-8"));
+    httpPost.setHeader("Content-Type", "application/json");
+    httpPost.setEntity(entity);
+    HttpResponse response = httpClient.execute(httpPost);
+
+    ReviewDto reviewDto02 = new ReviewDto();
+    reviewDto02.setEmployerId(employer01.getId());
+    reviewDto02.setText(REVIEW_TEXT_02);
+    reviewDto02.setRating(REVIEW_RATING_02);
+    reviewDto02.setReviewType(ReviewType.EMPLOYEE);
+    reviewDto02.setPositionId(position02.getId());
+    reviewDto02.setEmploymentDuration((short) 12);
+    reviewDto02.setEmploymentTerminated(true);
+    reviewDto02.setSalary(170_000);
+    reviewDto02.setSpecializations(specializations02);
+    String reviewJson02 = OBJECT_MAPPER.writeValueAsString(reviewDto02);
+
+    httpPost = new HttpPost(HOST + "review");
+    entity = new ByteArrayEntity(reviewJson02.getBytes("UTF-8"));
+    httpPost.setHeader("Content-Type", "application/json");
+    httpPost.setEntity(entity);
+    response = httpClient.execute(httpPost);
+
+    ResponseBodyReviews responseBodyReviews = OBJECT_MAPPER
+        .readValue(new URL("http://localhost:8081/review?employer_id=" + employer01.getId() + "&review_type=EMPLOYEE"), ResponseBodyReviews.class);
+
+    assertNotNull(responseBodyReviews);
+    List<ReviewDto> reviewDtos = responseBodyReviews.getReviews();
+    assertNotNull(reviewDtos);
+    assertEquals(1, reviewDtos.size());
+
+    ReviewDto reviewDto = reviewDtos.get(0);
+
+    assertNotNull(reviewDto);
+    assertEquals(employer01.getId(), reviewDto.getEmployerId());
+    assertEquals(REVIEW_TEXT_02, reviewDto.getText());
+    assertEquals(REVIEW_RATING_02, reviewDto.getRating());
+    assertEquals(ReviewType.EMPLOYEE, reviewDto.getReviewType());
+    assertEquals(position02.getId(), reviewDto.getPositionId());
+    assertEquals(Short.valueOf((short) 12), reviewDto.getEmploymentDuration());
+    assertEquals(true, reviewDto.getEmploymentTerminated());
+    assertEquals(Integer.valueOf(170_000), reviewDto.getSalary());
+    assertNotNull(reviewDto.getSpecializations());
+    assertEquals(reviewDto.getSpecializations().size(), 1);
   }
 
   @Test
@@ -191,7 +254,7 @@ public class ReviewResourceHttpTest extends HttpResourceTestBase {
     String result = new BufferedReader(new InputStreamReader(response.getEntity().getContent())).lines().collect(Collectors.joining("\n"));
     ResponseBodyReviewId responseBody01 = OBJECT_MAPPER.readValue(result, ResponseBodyReviewId.class);
 
-    List<Review> reviews = reviewDao.getPaginatedFilteredByEmployer(employer01.getId(), 0, 100);
+    List<Review> reviews = reviewDao.getPaginatedFilteredByEmployer(employer01.getId(), 0, 100, null);
     assertNotNull(reviews);
     assertEquals(1, reviews.size());
 
@@ -199,7 +262,7 @@ public class ReviewResourceHttpTest extends HttpResourceTestBase {
     assertEquals(responseBody01.getReviewId(), review.getId());
     assertEquals(employer01, review.getEmployer());
     assertEquals(REVIEW_TEXT_01, review.getText());
-    assertEquals(REVIEW_RTING_01, review.getRating());
+    assertEquals(REVIEW_RATING_01, review.getRating());
   }
 
   @Test

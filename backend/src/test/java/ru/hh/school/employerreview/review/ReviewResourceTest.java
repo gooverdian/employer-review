@@ -72,22 +72,22 @@ public class ReviewResourceTest extends EmployerReviewTestBase {
 
   @Test(expected = WebApplicationException.class)
   public void testEmptyRequest() {
-    resource.getReviews(null, 0, 1);
+    resource.getReviews(null, 0, 1, null);
   }
 
   @Test(expected = WebApplicationException.class)
   public void testNegativePerPageRequest() {
-    resource.getReviews(1, 0, -1);
+    resource.getReviews(1, 0, -1, null);
   }
 
   @Test(expected = WebApplicationException.class)
   public void testNegativePageRequest() {
-    resource.getReviews(1, -1, 10);
+    resource.getReviews(1, -1, 10, null);
   }
 
   @Test(expected = WebApplicationException.class)
   public void testZeroPerPageRequest() {
-    resource.getReviews(1, 0, 0);
+    resource.getReviews(1, 0, 0, null);
   }
 
   @Test

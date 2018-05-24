@@ -26,25 +26,37 @@ public class ReviewDao {
   }
 
   @Transactional(readOnly = true)
-  public Long getRowCountFilteredByEmployer(Integer employerId) {
+  public Long getRowCountFilteredByEmployer(Integer employerId, ReviewType reviewType) {
     CriteriaBuilder builder = getSession().getCriteriaBuilder();
     CriteriaQuery criteria = builder.createQuery();
     Root<Review> reviewRoot = criteria.from(Review.class);
     criteria.select(builder.count(reviewRoot));
-    criteria.where(builder.equal(reviewRoot.get("employer").get("id"), employerId));
-
+    if (reviewType == null) {
+      criteria.where(builder.equal(reviewRoot.get("employer").get("id"), employerId));
+    } else {
+      criteria.where(builder.and(
+          builder.equal(reviewRoot.get("employer").get("id"), employerId),
+          builder.equal(reviewRoot.get("reviewType"), reviewType)
+      ));
+    }
     Query<Long> query = getSession().createQuery(criteria);
     return query.getSingleResult();
   }
 
   @Transactional(readOnly = true)
-  public List<Review> getPaginatedFilteredByEmployer(Integer employerId, Integer page, Integer perPage) {
+  public List<Review> getPaginatedFilteredByEmployer(Integer employerId, Integer page, Integer perPage, ReviewType reviewType) {
     CriteriaBuilder builder = getSession().getCriteriaBuilder();
     CriteriaQuery<Review> criteria = builder.createQuery(Review.class);
     Root<Review> reviewRoot = criteria.from(Review.class);
     criteria.select(reviewRoot);
-    criteria.where(builder.equal(reviewRoot.get("employer").get("id"), employerId));
-    Query<Review> query = getSession().createQuery(criteria);
+    if (reviewType == null) {
+      criteria.where(builder.equal(reviewRoot.get("employer").get("id"), employerId));
+    } else {
+      criteria.where(builder.and(
+          builder.equal(reviewRoot.get("employer").get("id"), employerId),
+          builder.equal(reviewRoot.get("reviewType"), reviewType)
+      ));
+    }    Query<Review> query = getSession().createQuery(criteria);
 
     query.setFirstResult(page);
     query.setMaxResults(perPage);
@@ -52,13 +64,20 @@ public class ReviewDao {
   }
 
   @Transactional(readOnly = true)
-  public List<Review> getPaginatedFilteredByEmployerWithSpecializations(Integer employerId, Integer page, Integer perPage) {
+  public List<Review> getPaginatedFilteredByEmployerWithSpecializations(Integer employerId, Integer page, Integer perPage, ReviewType reviewType) {
     CriteriaBuilder builder = getSession().getCriteriaBuilder();
     CriteriaQuery<Review> criteria = builder.createQuery(Review.class);
     Root<Review> reviewRoot = criteria.from(Review.class);
     criteria.select(reviewRoot);
     reviewRoot.fetch("specializations");
-    criteria.where(builder.equal(reviewRoot.get("employer").get("id"), employerId));
+    if (reviewType == null) {
+      criteria.where(builder.equal(reviewRoot.get("employer").get("id"), employerId));
+    } else {
+      criteria.where(builder.and(
+          builder.equal(reviewRoot.get("employer").get("id"), employerId),
+          builder.equal(reviewRoot.get("reviewType"), reviewType)
+      ));
+    }
     Query<Review> query = getSession().createQuery(criteria);
 
     query.setFirstResult(page);
