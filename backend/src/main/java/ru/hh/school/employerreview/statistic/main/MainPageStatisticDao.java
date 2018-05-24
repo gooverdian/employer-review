@@ -1,4 +1,4 @@
-package ru.hh.school.employerreview.statistic;
+package ru.hh.school.employerreview.statistic.main;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;

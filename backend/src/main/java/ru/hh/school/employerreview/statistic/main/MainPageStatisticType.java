@@ -1,4 +1,4 @@
-package ru.hh.school.employerreview.statistic;
+package ru.hh.school.employerreview.statistic.main;
 
 public enum MainPageStatisticType {
   REVIEW_COUNT,

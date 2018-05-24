@@ -4,7 +4,7 @@ import ru.hh.errors.common.Errors;
 import ru.hh.school.employerreview.employer.Employer;
 import ru.hh.school.employerreview.employer.EmployerDao;
 import ru.hh.school.employerreview.rating.RatingDao;
-import ru.hh.school.employerreview.statistic.MainPageStatisticDao;
+import ru.hh.school.employerreview.statistic.main.MainPageStatisticDao;
 
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.POST;

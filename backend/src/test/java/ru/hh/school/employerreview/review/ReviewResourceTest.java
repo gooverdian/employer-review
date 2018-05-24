@@ -13,7 +13,7 @@ import ru.hh.school.employerreview.rating.RatingDao;
 import ru.hh.school.employerreview.rating.stars.StarsInRating;
 import ru.hh.school.employerreview.review.dto.ReviewCounterDto;
 import ru.hh.school.employerreview.review.dto.ReviewDto;
-import ru.hh.school.employerreview.statistic.MainPageStatisticDao;
+import ru.hh.school.employerreview.statistic.main.MainPageStatisticDao;
 
 import javax.inject.Inject;
 import javax.ws.rs.WebApplicationException;

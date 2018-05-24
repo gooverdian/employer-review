@@ -9,8 +9,9 @@ import ru.hh.school.employerreview.review.dto.ResponseBodyReviewId;
 import ru.hh.school.employerreview.review.dto.ResponseBodyReviews;
 import ru.hh.school.employerreview.review.dto.ReviewCounterDto;
 import ru.hh.school.employerreview.review.dto.ReviewDto;
+import ru.hh.school.employerreview.statistic.main.MainPageStatisticDao;
 import ru.hh.school.employerreview.specializations.dto.SpecializationDto;
-import ru.hh.school.employerreview.statistic.MainPageStatisticDao;
+
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;

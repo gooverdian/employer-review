@@ -1,4 +1,4 @@
-package ru.hh.school.employerreview.statistic;
+package ru.hh.school.employerreview.statistic.main;
 
 import javax.persistence.Entity;
 import javax.persistence.Enumerated;

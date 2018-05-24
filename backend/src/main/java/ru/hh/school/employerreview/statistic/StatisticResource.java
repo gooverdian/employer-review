@@ -1,8 +1,14 @@
 package ru.hh.school.employerreview.statistic;
 
-import javax.ws.rs.GET;
+import ru.hh.school.employerreview.statistic.main.MainPageStatistic;
+import ru.hh.school.employerreview.statistic.main.MainPageStatisticDao;
+import ru.hh.school.employerreview.statistic.main.MainPageStatisticType;
+import ru.hh.school.employerreview.statistic.salary.AverageSalaryEmployerByProffFieldDao;
+
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.GET;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
 import java.util.HashMap;
 import java.util.Map;
@@ -11,9 +17,12 @@ import java.util.Map;
 @Produces(MediaType.APPLICATION_JSON)
 public class StatisticResource {
   private final MainPageStatisticDao mainPageStatisticDao;
+  private final AverageSalaryEmployerByProffFieldDao averageSalaryEmployerByProffFieldDao;
 
-  public StatisticResource(MainPageStatisticDao mainPageStatisticDao) {
+  public StatisticResource(MainPageStatisticDao mainPageStatisticDao,
+                           AverageSalaryEmployerByProffFieldDao averageSalaryEmployerByProffFieldDao) {
     this.mainPageStatisticDao = mainPageStatisticDao;
+    this.averageSalaryEmployerByProffFieldDao = averageSalaryEmployerByProffFieldDao;
   }
 
   @GET
@@ -27,5 +36,11 @@ public class StatisticResource {
     statistic.put(employerCountWithReview.getKey(), employerCountWithReview.getValue());
 
     return statistic;
+  }
+
+  @GET
+  @Path("/salary/by_proff_field/{employer_id}")
+  public Map<String, Float> getAverageSalaryEmployerByProffField(@PathParam("employer_id") Integer employerId) {
+    return averageSalaryEmployerByProffFieldDao.getAverageSalaryEmployerByProffField(employerId);
   }
 }

@@ -29,9 +29,12 @@ import ru.hh.school.employerreview.specializations.ProfessionalFieldDao;
 import ru.hh.school.employerreview.specializations.Specialization;
 import ru.hh.school.employerreview.specializations.SpecializationDao;
 import ru.hh.school.employerreview.specializations.SpecializationsResource;
-import ru.hh.school.employerreview.statistic.MainPageStatistic;
-import ru.hh.school.employerreview.statistic.MainPageStatisticDao;
+import ru.hh.school.employerreview.statistic.main.MainPageStatistic;
+import ru.hh.school.employerreview.statistic.main.MainPageStatisticDao;
 import ru.hh.school.employerreview.statistic.StatisticResource;
+import ru.hh.school.employerreview.statistic.salary.AverageSalaryEmployerByProffField;
+import ru.hh.school.employerreview.statistic.salary.AverageSalaryEmployerByProffFieldCalculationWorker;
+import ru.hh.school.employerreview.statistic.salary.AverageSalaryEmployerByProffFieldDao;
 
 @Configuration
 @Import({HibernateCommonConfig.class, FileSettingsConfig.class})
@@ -70,7 +73,8 @@ public class CommonConfig {
   @Bean
   MappingConfig mappingConfig() {
     return new MappingConfig(Employer.class, Review.class, Area.class, Rating.class, MainPageStatistic.class,
-        StarsInRating.class, ProfessionalField.class, Specialization.class, EmployerVisit.class, Position.class, RatingDeviation.class);
+        StarsInRating.class, ProfessionalField.class, Specialization.class, EmployerVisit.class, Position.class, RatingDeviation.class,
+        AverageSalaryEmployerByProffField.class);
   }
 
   @Bean
@@ -79,8 +83,9 @@ public class CommonConfig {
   }
 
   @Bean
-  StatisticResource statisticResource(MainPageStatisticDao mainPageStatisticDao) {
-    return new StatisticResource(mainPageStatisticDao);
+  StatisticResource statisticResource(MainPageStatisticDao mainPageStatisticDao,
+                                      AverageSalaryEmployerByProffFieldDao averageSalaryEmployerByProffFieldDao) {
+    return new StatisticResource(mainPageStatisticDao, averageSalaryEmployerByProffFieldDao);
   }
 
   @Bean
@@ -117,5 +122,22 @@ public class CommonConfig {
   @Bean
   PositionResource positionResource(PositionDao positionDao) {
     return new PositionResource(positionDao);
+  }
+
+  @Bean
+  AverageSalaryEmployerByProffFieldDao averageSalaryEmployerByProffFieldDao(SessionFactory sessionFactory) {
+    return new AverageSalaryEmployerByProffFieldDao(sessionFactory);
+  }
+
+  @Bean
+  AverageSalaryEmployerByProffFieldCalculationWorker averageSalaryEmployerByProffFieldCalculationWorker(
+        AverageSalaryEmployerByProffFieldDao averageSalaryEmployerByProffFieldDao,
+        ReviewDao reviewDao,
+        ProfessionalFieldDao professionalFieldDao,
+        EmployerDao employerDao) {
+    return new AverageSalaryEmployerByProffFieldCalculationWorker(averageSalaryEmployerByProffFieldDao,
+        reviewDao,
+        professionalFieldDao,
+        employerDao);
   }
 }
