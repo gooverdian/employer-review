@@ -62,4 +62,17 @@ public class AreaSearchResource {
     }
     return area.toAreaJson();
   }
+
+  @GET
+  @Path("/default")
+  public AreaJson getDefaultArea() {
+    Area area = areaDao.getAreaById(1);
+    if (area == null) {
+      area = areaDao.getAreaById(113);
+      if (area == null) {
+        throw new Errors(Response.Status.NOT_FOUND, "NOT_FOUND", "area").toWebApplicationException();
+      }
+    }
+    return area.toAreaJson();
+  }
 }
