@@ -4,16 +4,26 @@ import { Route, Switch } from 'react-router-dom';
 import routeMap from 'config/routeMap';
 import NavigationBar from 'components/layout/NavigationBar';
 import ErrorSnackbar from 'components/layout/ErrorSnackbar';
+import green from '@material-ui/core/colors/green';
 import 'assets/css/App.css';
 
-const theme = createMuiTheme();
+const theme = createMuiTheme({
+    palette: {
+        secondary: {
+            light: green[500],
+            main: green[600],
+            dark: green[700],
+            contrastText: '#fff',
+        },
+    },
+});
 
 class App extends React.Component {
     render() {
         return (
             <MuiThemeProvider theme={theme}>
                 <NavigationBar />
-                <div className="container">
+                <div className="container container_content">
                     <Switch>
                         {routeMap.map((item, index) => (
                             <Route

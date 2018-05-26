@@ -1,9 +1,9 @@
 import React from 'react';
 import AddReviewForm from 'components/add-review-form/AddReviewForm';
 
-const ViewReviewAdd = function({match, history}) {
+const ReviewAddView = function({match, history}) {
     return (
-        <div className="page-add-review">
+        <div>
             <h1>Оставить отзыв</h1>
             <AddReviewForm
                 employerId={match.params.employerId}
@@ -13,4 +13,4 @@ const ViewReviewAdd = function({match, history}) {
     );
 };
 
-export default ViewReviewAdd;
+export default ReviewAddView;

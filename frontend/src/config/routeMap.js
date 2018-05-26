@@ -1,21 +1,21 @@
-import ViewHome from 'routing/default/home';
-import ViewReviewAdd from 'routing/review/add';
-import ViewEmployerIndex from 'routing/employer';
+import EmployerSearchView from 'containers/EmployerSearchView';
+import ReviewAddView from 'containers/ReviewAddView';
+import EmployerView from 'containers/EmployerView';
 
 const routeMap = [
     {
-        path: '(/|/search)/:search?/:page?',
+        path: '/search/:search?/:page?',
         exact: true,
-        component: ViewHome
-    },
-    {
-        path: '/review/add/:employerId?',
-        component: ViewReviewAdd
+        component: EmployerSearchView
     },
     {
         path: '/employer/:employerId/:reviewId?',
-        component: ViewEmployerIndex
-    }
-];
+        component: EmployerView
+    },
+    {
+        path: '/review/add/:employerId?',
+        component: ReviewAddView
+    },
+ ];
 
 export default routeMap;

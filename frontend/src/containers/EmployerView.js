@@ -3,9 +3,9 @@ import Grid from 'material-ui/Grid';
 import EmployerCard from 'components/employer/EmployerCard';
 import EmployerReviews from 'components/employer/EmployerReviews';
 
-const ViewEmployerIndex = function({match, history}) {
+const EmployerView = function({match, history}) {
     return (
-        <div className="page-employer-index">
+        <div>
             <Grid container>
                 <Grid item xs>
                     <EmployerCard
@@ -26,4 +26,4 @@ const ViewEmployerIndex = function({match, history}) {
     );
 };
 
-export default ViewEmployerIndex;
+export default EmployerView;

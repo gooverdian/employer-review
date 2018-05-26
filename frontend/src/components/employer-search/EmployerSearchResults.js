@@ -6,13 +6,37 @@ import PaginationWidget from 'components/pagination/PaginationWidget';
 import IconButton from 'material-ui/IconButton';
 import CommentIcon from '@material-ui/icons/Comment';
 import './EmployerSearchResults.css';
+import { searchEmployers } from 'modules/employerSearch';
+import { withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
 
 class EmployerSearchResults extends React.Component {
+    state = {};
+
     handlePageChange = (page) => {
-        if (this.props.onPageChange) {
-            this.props.onPageChange(page);
+        let url = '/';
+        if (this.props.search) {
+            url += 'search/' + encodeURIComponent(this.props.search);
         }
+
+        if (page) {
+            url += '/' + encodeURIComponent(page);
+        }
+
+        this.props.history.push(url);
     };
+
+    static getDerivedStateFromProps(nextProps, prevState) {
+        if (nextProps.search !== prevState.derivedSearch || nextProps.page !== prevState.derivedPage) {
+            nextProps.searchEmployers(nextProps.search, nextProps.page);
+            return {
+                derivedSearch: nextProps.search,
+                derivedPage: nextProps.page,
+            };
+        }
+
+        return null;
+    }
 
     renderResultsList() {
         if (typeof this.props.items === 'undefined') {
@@ -68,4 +92,13 @@ class EmployerSearchResults extends React.Component {
     }
 }
 
-export default EmployerSearchResults;
+const mapStateToProps = (state, ownProps) => {
+    return {
+        search: ownProps.search,
+        page: ownProps.page,
+        pages: state.employerSearch.data.pages,
+        items: state.employerSearch.data.items
+    }
+};
+
+export default withRouter(connect(mapStateToProps, { searchEmployers })(EmployerSearchResults));

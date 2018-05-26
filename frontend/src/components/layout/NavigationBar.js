@@ -1,9 +1,8 @@
 import React from 'react';
-import AppBar from 'material-ui/AppBar';
-import ToolBar from 'material-ui/Toolbar';
 import Typography from 'material-ui/Typography';
-import Button from 'material-ui/Button';
-import { Link } from 'react-router-dom';
+import { Link, Route } from 'react-router-dom';
+import EmployerSearchFormView from 'containers/EmployerSearchFormView';
+import ReviewButtonView from 'containers/ReviewButtonView';
 import logo from './logo.svg';
 import './NavigationBar.css';
 
@@ -14,19 +13,20 @@ const LogoIcon = (props) => (
 const NavigationBar = () => {
     return (
         <div className="nav">
-            <AppBar position="static">
-                <ToolBar disableGutters className="container">
-                    <LogoIcon className="nav__logo" />
-                    <Typography variant="title" color="inherit" className="flex flex_max">
-                        <Link to="/" className="nav__brand-link">
-                            HH Employer Review
-                        </Link>
-                    </Typography>
-                    <Button component={Link} to="/review/add" color="inherit">
-                        Оставить отзыв
-                    </Button>
-                </ToolBar>
-            </AppBar>
+            <div className="nav__header">
+                <div className="nav__wrapper container container_header">
+                    <div className="breadcrumbs">
+                        <Typography variant="title" color="inherit">
+                            <Link to="/" className="nav__brand-link">
+                                <LogoIcon className="nav__logo"/>
+                                HH Employer Review
+                            </Link>
+                        </Typography>
+                    </div>
+                    <Route exact path="(/|/search)/:search?/:page?" component={EmployerSearchFormView} />
+                    <Route exact path="/" component={ReviewButtonView} />
+                </div>
+            </div>
         </div>
     );
 };

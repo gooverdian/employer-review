@@ -1,8 +1,6 @@
 import React from 'react';
 import PaginationButton from './PaginationButton';
-
-const paginationMaxButtonsCount = 9;
-const paginationMaxPagesCount = 15;
+import settings from 'config/settings';
 
 const FIRST_PAGE = 0;
 
@@ -28,8 +26,8 @@ export default class PaginationWidget extends React.Component {
         }
 
         let linkList = [];
-        let lastPage = Math.min(paginationMaxPagesCount, this.props.pages) - 1;
-        let currentPage = this.props.page;
+        let lastPage = Math.min(settings.paginationMaxPagesCount, this.props.pages) - 1;
+        let currentPage = Number(this.props.page) || 0;
         linkList.push(
             <PaginationButton
                 key={FIRST_PAGE}
@@ -39,8 +37,8 @@ export default class PaginationWidget extends React.Component {
             />
         );
 
-        let nearestPagesCountLow =  Math.floor((paginationMaxButtonsCount - 3) / 2);
-        let nearestPagesCountHigh = Math.ceil((paginationMaxButtonsCount - 3) / 2);
+        let nearestPagesCountLow =  Math.floor((settings.paginationMaxButtonsCount - 3) / 2);
+        let nearestPagesCountHigh = Math.ceil((settings.paginationMaxButtonsCount - 3) / 2);
 
         if (currentPage - nearestPagesCountLow > 1) {
             linkList.push(
@@ -56,7 +54,7 @@ export default class PaginationWidget extends React.Component {
                 />
             );
         }
-        let maxVisibleButtons = Math.min(lastPage, paginationMaxButtonsCount - 4);
+        let maxVisibleButtons = Math.min(lastPage, settings.paginationMaxButtonsCount - 4);
         let firstVisiblePage = Math.max(2, currentPage - nearestPagesCountLow + 1);
 
         if (lastPage - currentPage < nearestPagesCountHigh + 1) {

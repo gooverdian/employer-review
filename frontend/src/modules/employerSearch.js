@@ -1,4 +1,5 @@
 import ExchangeInterface from 'components/exchange/ExchangeInterface';
+import settings from 'config/settings';
 import { camelizeKeys } from 'humps';
 import { setErrorMessage } from './errorMessage';
 
@@ -31,7 +32,8 @@ export const searchEmployers = (query, page) => {
                 });
             },
             (error) => {
-                dispatch(setErrorMessage(`${error.status} ${error.statusText}`));
+                let errorMessage = error ? `${error.status} ${error.statusText}` : settings.unknownErrorMessage;
+                dispatch(setErrorMessage(errorMessage));
             }
         );
     }
