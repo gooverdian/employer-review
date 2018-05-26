@@ -79,9 +79,15 @@ class AddReviewForm extends React.Component {
             return;
         }
 
-        let formData = Validator.getFormData(attributes);
+        let formData = Validator.getFormData(
+            attributes,
+            {
+                employerId: 'employer_id',
+                reviewText: 'text',
+            }
+        );
         // TODO: delete this when input implemented (backend require this field)
-        formData.reviewType = 'EMPLOYEE';
+        formData.review_type = 'EMPLOYEE';
         ExchangeInterface.addReview(formData).then(
             (data) => this.props.history.push(`/employer/${formData.employer_id}/${data.review_id}`),
             (error) => console.log(error)
