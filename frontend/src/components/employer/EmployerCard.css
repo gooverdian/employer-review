@@ -1,13 +1,56 @@
-.section-title:before,
-.section-title:after {
-    content: " ";
-    display: table;
+.employer {
+    display: flex;
+    align-items: stretch;
 }
 
-.section-title:after {
-    clear: both;
+.employer .employer__name {
+    padding: 0 8px;
+    display: flex;
+    flex-flow: column;
+    align-items: flex-start;
+    margin-bottom: 8px;
 }
 
-.section-title .section-title__controls {
-    float: right;
+.employer .employer__name-button {
+    margin-top: auto;
+}
+
+.employer .employer__info {
+    background: #f5f5f5;
+    padding: 12px 12px 4px;
+    margin-bottom: 8px;
+    box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2),0 4px 5px 0 rgba(0, 0, 0, 0.14),0 1px 10px 0 rgba(0, 0, 0, 0.12);
+}
+
+.employer .employer__info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.employer__info-row-name {
+    flex: 1;
+    color: #999;
+}
+
+.employer__info-row-item {
+    width: 100%;
+    display: block;
+    text-align: center;
+}
+
+.employer__info-row-value {
+    flex: 0;
+}
+
+.employer .employer__info-button {
+    display: block;
+    text-align: center;
+}
+
+.employer__logo {
+    display: block;
+    margin: 0 auto;
+    max-width: 100%;
+    max-height: 100px;
 }

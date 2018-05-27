@@ -21,7 +21,7 @@ class EmployerReviews extends React.Component {
         }
     }
 
-    generateResultsList() {
+    render() {
         if (!this.state.data.reviews || this.state.data.reviews.length === 0) {
             return (
                 <List>
@@ -45,15 +45,6 @@ class EmployerReviews extends React.Component {
                     </ListItem>
                 ))}
             </List>
-        );
-    }
-
-    render() {
-        return (
-            <div>
-                <h3>Отзывы о компании</h3>
-                {this.generateResultsList()}
-            </div>
         );
     }
 }

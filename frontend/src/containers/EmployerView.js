@@ -1,7 +1,7 @@
 import React from 'react';
 import Grid from 'material-ui/Grid';
 import EmployerCard from 'components/employer/EmployerCard';
-import EmployerReviews from 'components/employer/EmployerReviews';
+import EmployerTabs from 'components/employer/EmployerTabs';
 
 const EmployerView = function({match, history}) {
     return (
@@ -13,15 +13,10 @@ const EmployerView = function({match, history}) {
                     />
                 </Grid>
             </Grid>
-            <Grid container>
-                <Grid item md={9} className="employer-reviews">
-                    <EmployerReviews
-                        employerId={match.params.employerId}
-                        reviewId={match.params.reviewId}
-                        history={history}
-                    />
-                </Grid>
-            </Grid>
+            <EmployerTabs
+                match={match}
+                history={history}
+            />
         </div>
     );
 };
