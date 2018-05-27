@@ -14,15 +14,18 @@ public class ResponseBodyReviews {
   private Integer pages = 0;
   @JsonProperty("per_page")
   private Integer perPage = 0;
+  @JsonProperty("found")
+  private Integer found = 0;
 
   public ResponseBodyReviews() {
   }
 
-  public ResponseBodyReviews(List<ReviewDto> reviews, Integer page, Integer pages, Integer perPage) {
+  public ResponseBodyReviews(List<ReviewDto> reviews, Integer page, Integer pages, Integer perPage, Integer found) {
     this.reviews = reviews;
     this.page = page;
     this.pages = pages;
     this.perPage = perPage;
+    this.found = found;
   }
 
   public Integer getPage() {
