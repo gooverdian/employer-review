@@ -65,7 +65,7 @@ class EmployerSearchResults extends React.Component {
                         component={Link}
                         to={"/employer/" + item.id}
                     >
-                    <Avatar alt="Лого" src={item.logoUrl} />
+                    <Avatar alt="" src={item.logoUrl} />
                     <ListItemText primary={item.name} />
                     <ListItemSecondaryAction>
                         <IconButton component={Link} title="Оставить отзыв о компании" to={"/review/add/" + item.id}>

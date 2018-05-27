@@ -10,6 +10,8 @@ import AddIcon from '@material-ui/icons/Add';
 import settings from 'config/settings';
 import AddEmployerDialog from 'components/add-employer-dialog/AddEmployerDialog';
 import Validator from 'helpers/validator/Validator';
+import { resetTopEmployers } from 'modules/topEmployers';
+import { connect } from 'react-redux';
 import 'assets/css/Form.css';
 import './AddReviewForm.css';
 
@@ -56,7 +58,7 @@ class AddReviewForm extends React.Component {
     }
 
     handleTextFieldChange = (event) => {
-        const { name, value } = event.target;
+        const {name, value} = event.target;
         this.updateAttribute(name, value);
     };
 
@@ -72,10 +74,10 @@ class AddReviewForm extends React.Component {
     handleSubmission = (event) => {
         event.preventDefault();
 
-        let { valid, attributes, } = Validator.validateForm(this.state.attributes, this.validationRules);
+        let {valid, attributes,} = Validator.validateForm(this.state.attributes, this.validationRules);
         this.setState({attributes: attributes});
 
-        if(!valid) {
+        if (!valid) {
             return;
         }
 
@@ -89,7 +91,10 @@ class AddReviewForm extends React.Component {
         // TODO: delete this when input implemented (backend require this field)
         formData.review_type = 'EMPLOYEE';
         ExchangeInterface.addReview(formData).then(
-            (data) => this.props.history.push(`/employer/${formData.employer_id}/${data.review_id}`),
+            (data) => {
+                this.props.resetTopEmployers();
+                this.props.history.push(`/employer/${formData.employer_id}/${data.review_id}`);
+            },
             (error) => console.log(error)
         );
     };
@@ -117,7 +122,7 @@ class AddReviewForm extends React.Component {
         }
     };
 
-    render () {
+    render() {
         return (
             <div>
                 <AddEmployerDialog
@@ -140,7 +145,7 @@ class AddReviewForm extends React.Component {
                                         color="primary"
                                         onMouseDown={this.handleAddEmployerClick}
                                     >
-                                        <AddIcon className="button-icon button-icon_left" /> Новая компания
+                                        <AddIcon className="button-icon button-icon_left"/> Новая компания
                                     </Button>
                                 }
                             />
@@ -171,7 +176,7 @@ class AddReviewForm extends React.Component {
                     <Grid container className="form-group">
                         <Grid item md={8}>
                             <Button variant="raised" color="primary" type="submit">
-                                Отправить <SendIcon className="button-icon button-icon_right" />
+                                Отправить <SendIcon className="button-icon button-icon_right"/>
                             </Button>
                         </Grid>
                     </Grid>
@@ -181,4 +186,4 @@ class AddReviewForm extends React.Component {
     }
 }
 
-export default AddReviewForm;
+export default connect(() => {return {};}, { resetTopEmployers })(AddReviewForm);

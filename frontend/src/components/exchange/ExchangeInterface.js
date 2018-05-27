@@ -12,6 +12,14 @@ const ExchangeInterface = {
             }
         }).perform();
     },
+    getTopEmployers: function(size = settings.defaultTopSize) {
+        return new ExchangeRequest({
+            url: settings.apiUrls.bestEmployers,
+            params: {
+                size: size,
+            }
+        }).perform();
+    },
     areaSearch: function (text, page = 0, perPage = settings.defaultPageSize) {
         return new ExchangeRequest({
             url: settings.apiUrls.area,
