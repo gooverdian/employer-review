@@ -64,16 +64,30 @@ HTTP code | type | value | описание
 {
 	"reviews": [
 	  	{
-			"employer_id": 4,
-			"rating": 2,
-			"review_type":"EMPLOYEE",
-			"text": "Review 01"
+			"rating":	2,
+			"text":	"gdfghdfgh\n",
+			"salary":	null,
+			"specializations":	[],
+			"employer_id":	5,
+			"review_id": 2,
+			"review_type":	"EMPLOYEE",
+			"position_id":	null,
+			"employment_duration":	null,
+			"employment_terminated":	null,
+			"created_on":	"2018-05-28T13:27:47MSK"
 		},
 	  	{
-			"employer_id": 4,
-			"rating": 2,
-			"review_type":"INTERVIEWEE",
-			"text": "Review 00"
+			"rating":	4,
+			"text":	"dfghdfghdfh",
+			"salary":	null,
+			"specializations":	[],
+			"employer_id":	5,
+			"review_id":	1,
+			"review_type":	"EMPLOYEE",
+			"position_id":	null,
+			"employment_duration":	null,
+			"employment_terminated":	null,
+			"created_on":	"2018-05-28T13:27:10MSK"
 		}
 	],
 	"page": 2,
@@ -121,3 +135,4 @@ HTTP code | type | value | описание
     "counter":2
 }
 ```
+

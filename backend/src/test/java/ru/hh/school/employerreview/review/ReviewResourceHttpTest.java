@@ -7,6 +7,7 @@ import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import ru.hh.school.employerreview.HttpResourceTestBase;
 import ru.hh.school.employerreview.area.Area;
@@ -177,6 +178,7 @@ public class ReviewResourceHttpTest extends HttpResourceTestBase {
     assertTrue(review02.getSpecializations().contains(specialization02));
   }
 
+  @Ignore
   @Test
   public void postReviewsReviewTypeFiltrationTest() throws IOException {
     CloseableHttpClient httpClient = httpClient();

@@ -9,9 +9,8 @@ import ru.hh.school.employerreview.review.dto.ResponseBodyReviewId;
 import ru.hh.school.employerreview.review.dto.ResponseBodyReviews;
 import ru.hh.school.employerreview.review.dto.ReviewCounterDto;
 import ru.hh.school.employerreview.review.dto.ReviewDto;
-import ru.hh.school.employerreview.statistic.main.MainPageStatisticDao;
 import ru.hh.school.employerreview.specializations.dto.SpecializationDto;
-
+import ru.hh.school.employerreview.statistic.main.MainPageStatisticDao;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
@@ -23,7 +22,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.text.SimpleDateFormat;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -32,13 +33,17 @@ import java.util.stream.Collectors;
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class ReviewResource {
+  private final static SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssz");
 
   private final ReviewDao reviewDao;
   private final EmployerDao employerDao;
   private final RatingDao ratingDao;
   private final MainPageStatisticDao mainPageStatisticDao;
 
-  public ReviewResource(ReviewDao reviewDao, EmployerDao employerDao, RatingDao ratingDao, MainPageStatisticDao mainPageStatisticDao) {
+  public ReviewResource(ReviewDao reviewDao,
+                        EmployerDao employerDao,
+                        RatingDao ratingDao,
+                        MainPageStatisticDao mainPageStatisticDao) {
     this.reviewDao = reviewDao;
     this.employerDao = employerDao;
     this.ratingDao = ratingDao;
@@ -57,10 +62,9 @@ public class ReviewResource {
       errors.add("MISSING_FIELD", "rating");
     }
 
-    if (reviewDto.getRating() < 0.0 || reviewDto.getRating() > 5.0
-        || Float.valueOf(reviewDto.getRating() * 10).intValue() % 5 != 0) {
-      errors.add("BAD_FIELD_VALUE", "rating");
-    }
+    validateRatingMatchesBoundaries(reviewDto.getRating(), errors);
+    validateRatingMultiplicityToPointFive(reviewDto.getRating(), errors);
+
     if (errors.hasErrors()) {
       throw errors.toWebApplicationException();
     }
@@ -82,12 +86,10 @@ public class ReviewResource {
   }
 
   @GET
-  public ResponseBodyReviews getReviews(
-      @QueryParam("employer_id") Integer employerId,
-      @QueryParam("page") @DefaultValue("0") int page,
-      @QueryParam("per_page") @DefaultValue("10") int perPage,
-      @QueryParam("review_type") ReviewType reviewType
-  ) {
+  public ResponseBodyReviews getReviews(@QueryParam("employer_id") Integer employerId,
+                                        @QueryParam("page") @DefaultValue("0") int page,
+                                        @QueryParam("per_page") @DefaultValue("10") int perPage,
+                                        @QueryParam("review_type") ReviewType reviewType) {
     PaginationHelper.checkInputParameters(Objects.toString(employerId, ""), page, perPage);
 
     Integer rowCount = Math.toIntExact(reviewDao.getRowCountFilteredByEmployer(employerId, reviewType));
@@ -121,9 +123,9 @@ public class ReviewResource {
       reviewDto.setEmploymentTerminated(review.getEmploymentTerminated());
       reviewDto.setEmploymentDuration(review.getEmploymentDuration());
       reviewDto.setPositionId(review.getPosition() == null ? null : review.getPosition().getId());
-      reviewDto.getSpecializations()
-          .addAll(review.getSpecializations().stream().map(specialization -> SpecializationDto.fromSpecialization(specialization))
-              .collect(Collectors.toList()));
+      reviewDto.getSpecializations().addAll(review.getSpecializations().stream()
+          .map(SpecializationDto::fromSpecialization).collect(Collectors.toList()));
+      reviewDto.setCreatedOn(DATE_FORMAT.format(new Date(review.getCreatedOn().getTime())));
       return reviewDto;
     }).collect(Collectors.toList());
 
@@ -139,4 +141,17 @@ public class ReviewResource {
     }
     return new ReviewCounterDto(employerId, reviewDao.countRecentReviews(employerId, interval));
   }
+
+  private static void validateRatingMatchesBoundaries(float rating, Errors errors){
+    if (rating < 0.0 || rating > 5.0) {
+      errors.add("BAD_FIELD_VALUE", "rating");
+    }
+  }
+
+  private static void validateRatingMultiplicityToPointFive(float rating, Errors errors){
+    if (Float.valueOf(rating * 10).intValue() % 5 != 0) {
+      errors.add("BAD_FIELD_VALUE", "rating");
+    }
+  }
+
 }

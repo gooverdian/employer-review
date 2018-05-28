@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Root;
 import java.util.Calendar;
 import java.util.List;
@@ -69,7 +70,7 @@ public class ReviewDao {
     CriteriaQuery<Review> criteria = builder.createQuery(Review.class);
     Root<Review> reviewRoot = criteria.from(Review.class);
     criteria.select(reviewRoot);
-    reviewRoot.fetch("specializations");
+    reviewRoot.fetch("specializations", JoinType.LEFT);
     if (reviewType == null) {
       criteria.where(builder.equal(reviewRoot.get("employer").get("id"), employerId));
     } else {
@@ -92,11 +93,14 @@ public class ReviewDao {
 
   @Transactional(readOnly = true)
   public Review getByIdWithSpecializations(int id) {
-    return (Review) getSession().createQuery(
-        "SELECT r FROM Review r " +
-            "JOIN FETCH r.specializations " +
-            "WHERE r.id = :id"
-    ).setParameter("id", id).getSingleResult();
+    CriteriaBuilder builder = getSession().getCriteriaBuilder();
+    CriteriaQuery<Review> criteria = builder.createQuery(Review.class);
+    Root<Review> reviewRoot = criteria.from(Review.class);
+    criteria.select(reviewRoot);
+    reviewRoot.fetch("specializations", JoinType.LEFT);
+    criteria.where(builder.equal(reviewRoot.get("id"), id));
+    Query<Review> query = getSession().createQuery(criteria);
+    return query.uniqueResultOptional().orElse(null);
   }
 
   @Transactional
