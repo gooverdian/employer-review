@@ -22,9 +22,12 @@ import ru.hh.school.employerreview.review.ReviewDao;
 import ru.hh.school.employerreview.specializations.ProfessionalField;
 import ru.hh.school.employerreview.specializations.ProfessionalFieldDao;
 import ru.hh.school.employerreview.specializations.Specialization;
-import ru.hh.school.employerreview.statistic.salary.AverageSalaryEmployerByProffField;
-import ru.hh.school.employerreview.statistic.salary.AverageSalaryEmployerByProffFieldCalculationWorker;
-import ru.hh.school.employerreview.statistic.salary.AverageSalaryEmployerByProffFieldDao;
+import ru.hh.school.employerreview.statistic.employment.DurationByProffField;
+import ru.hh.school.employerreview.statistic.employment.DurationByProffFieldCalculationWorker;
+import ru.hh.school.employerreview.statistic.employment.DurationByProffFieldDao;
+import ru.hh.school.employerreview.statistic.salary.EmployerSalaryStatistics;
+import ru.hh.school.employerreview.statistic.salary.EmployerSalaryStatisticsCalculationWorker;
+import ru.hh.school.employerreview.statistic.salary.EmployerSalaryStatisticsDao;
 
 import javax.sql.DataSource;
 
@@ -36,7 +39,8 @@ public class OfflineCalculationConfig {
   @Bean
   MappingConfig mappingConfig() {
     return new MappingConfig(Employer.class, Area.class, Rating.class, RatingDeviation.class, StarsInRating.class,
-        AverageSalaryEmployerByProffField.class, Review.class, ProfessionalField.class, Specialization.class, Position.class);
+        EmployerSalaryStatistics.class, Review.class, ProfessionalField.class, Specialization.class, Position.class,
+        DurationByProffField.class);
   }
 
   @Bean
@@ -65,8 +69,13 @@ public class OfflineCalculationConfig {
   }
 
   @Bean
-  AverageSalaryEmployerByProffFieldDao averageSalaryEmployerByProffFieldDao(SessionFactory sessionFactory) {
-    return new AverageSalaryEmployerByProffFieldDao(sessionFactory);
+  EmployerSalaryStatisticsDao employerSalaryStatisticsDao(SessionFactory sessionFactory) {
+    return new EmployerSalaryStatisticsDao(sessionFactory);
+  }
+
+  @Bean
+  DurationByProffFieldDao durationByProffFieldDao(SessionFactory sessionFactory) {
+    return new DurationByProffFieldDao(sessionFactory);
   }
 
   @Bean
@@ -80,12 +89,24 @@ public class OfflineCalculationConfig {
   }
 
   @Bean
-  AverageSalaryEmployerByProffFieldCalculationWorker averageSalaryEmployerByProffFieldCalculationWorker(
-        AverageSalaryEmployerByProffFieldDao averageSalaryEmployerByProffFieldDao,
+  EmployerSalaryStatisticsCalculationWorker employerSalaryStatisticsCalculationWorker(
+        EmployerSalaryStatisticsDao employerSalaryStatisticsDao,
         ReviewDao reviewDao,
         ProfessionalFieldDao professionalFieldDao,
         EmployerDao employerDao) {
-    return new AverageSalaryEmployerByProffFieldCalculationWorker(averageSalaryEmployerByProffFieldDao,
+    return new EmployerSalaryStatisticsCalculationWorker(employerSalaryStatisticsDao,
+        reviewDao,
+        professionalFieldDao,
+        employerDao);
+  }
+
+  @Bean
+  DurationByProffFieldCalculationWorker durationByProffFieldCalculationWorker(
+      DurationByProffFieldDao durationByProffFieldDao,
+      ReviewDao reviewDao,
+      ProfessionalFieldDao professionalFieldDao,
+      EmployerDao employerDao) {
+    return new DurationByProffFieldCalculationWorker(durationByProffFieldDao,
         reviewDao,
         professionalFieldDao,
         employerDao);

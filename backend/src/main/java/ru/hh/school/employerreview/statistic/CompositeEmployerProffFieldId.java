@@ -1,4 +1,4 @@
-package ru.hh.school.employerreview.statistic.salary;
+package ru.hh.school.employerreview.statistic;
 
 import ru.hh.school.employerreview.specializations.ProfessionalField;
 
@@ -9,7 +9,7 @@ import javax.persistence.OneToOne;
 import java.io.Serializable;
 
 @Embeddable
-public class AverageSalaryEmployerByProffFieldId implements Serializable {
+public class CompositeEmployerProffFieldId implements Serializable {
 
   @Column(name = "employer_id")
   private Integer employerId;
@@ -18,10 +18,10 @@ public class AverageSalaryEmployerByProffFieldId implements Serializable {
   @JoinColumn(name = "proff_field_id")
   private ProfessionalField proffFieldId;
 
-  public AverageSalaryEmployerByProffFieldId() {
+  public CompositeEmployerProffFieldId() {
   }
 
-  public AverageSalaryEmployerByProffFieldId(Integer employerId, ProfessionalField proffFieldId) {
+  public CompositeEmployerProffFieldId(Integer employerId, ProfessionalField proffFieldId) {
     this.employerId = employerId;
     this.proffFieldId = proffFieldId;
   }

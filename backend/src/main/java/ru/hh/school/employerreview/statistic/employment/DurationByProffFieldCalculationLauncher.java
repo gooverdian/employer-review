@@ -1,4 +1,4 @@
-package ru.hh.school.employerreview.statistic.salary;
+package ru.hh.school.employerreview.statistic.employment;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -6,8 +6,7 @@ import ru.hh.school.employerreview.OfflineCalculationConfig;
 
 import static ru.hh.nab.common.util.PropertiesUtils.setSystemPropertyIfAbsent;
 
-public class AverageSalaryEmployerByProffFieldCalculationLauncher {
-
+public class DurationByProffFieldCalculationLauncher {
   private static ApplicationContext applicationContext;
 
   public static void main(String... args) {
@@ -16,12 +15,11 @@ public class AverageSalaryEmployerByProffFieldCalculationLauncher {
       applicationContext = new AnnotationConfigApplicationContext(OfflineCalculationConfig.class);
     }
 
-    AverageSalaryEmployerByProffFieldCalculationWorker worker = applicationContext
-        .getBean(AverageSalaryEmployerByProffFieldCalculationWorker.class);
+    DurationByProffFieldCalculationWorker worker = applicationContext.getBean(DurationByProffFieldCalculationWorker.class);
     worker.doWork();
   }
 
   public static void setApplicationContext(ApplicationContext applicationContext) {
-    AverageSalaryEmployerByProffFieldCalculationLauncher.applicationContext = applicationContext;
+    DurationByProffFieldCalculationLauncher.applicationContext = applicationContext;
   }
 }

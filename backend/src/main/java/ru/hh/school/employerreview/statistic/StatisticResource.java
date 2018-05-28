@@ -1,9 +1,10 @@
 package ru.hh.school.employerreview.statistic;
 
+import ru.hh.school.employerreview.statistic.employment.DurationByProffFieldDao;
 import ru.hh.school.employerreview.statistic.main.MainPageStatistic;
 import ru.hh.school.employerreview.statistic.main.MainPageStatisticDao;
 import ru.hh.school.employerreview.statistic.main.MainPageStatisticType;
-import ru.hh.school.employerreview.statistic.salary.AverageSalaryEmployerByProffFieldDao;
+import ru.hh.school.employerreview.statistic.salary.EmployerSalaryStatisticsDao;
 
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -17,12 +18,15 @@ import java.util.Map;
 @Produces(MediaType.APPLICATION_JSON)
 public class StatisticResource {
   private final MainPageStatisticDao mainPageStatisticDao;
-  private final AverageSalaryEmployerByProffFieldDao averageSalaryEmployerByProffFieldDao;
+  private final EmployerSalaryStatisticsDao employerSalaryStatisticsDao;
+  private final DurationByProffFieldDao durationByProffFieldDao;
 
   public StatisticResource(MainPageStatisticDao mainPageStatisticDao,
-                           AverageSalaryEmployerByProffFieldDao averageSalaryEmployerByProffFieldDao) {
+                           EmployerSalaryStatisticsDao employerSalaryStatisticsDao,
+                           DurationByProffFieldDao durationByProffFieldDao) {
     this.mainPageStatisticDao = mainPageStatisticDao;
-    this.averageSalaryEmployerByProffFieldDao = averageSalaryEmployerByProffFieldDao;
+    this.employerSalaryStatisticsDao = employerSalaryStatisticsDao;
+    this.durationByProffFieldDao = durationByProffFieldDao;
   }
 
   @GET
@@ -41,6 +45,12 @@ public class StatisticResource {
   @GET
   @Path("/salary/by_proff_field/{employer_id}")
   public Map<String, Float> getAverageSalaryEmployerByProffField(@PathParam("employer_id") Integer employerId) {
-    return averageSalaryEmployerByProffFieldDao.getAverageSalaryEmployerByProffField(employerId);
+    return employerSalaryStatisticsDao.getAverageSalaryMapByProffField(employerId);
+  }
+
+  @GET
+  @Path("/employment_duration/by_proff_field/{employer_id}")
+  public Map<String, Float> getAverageEmploymentDurationEmployerByProffField(@PathParam("employer_id") Integer employerId) {
+    return durationByProffFieldDao.getAverageEmploymentDurationMap(employerId);
   }
 }

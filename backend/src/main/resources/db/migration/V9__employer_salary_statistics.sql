@@ -1,4 +1,4 @@
-CREATE TABLE average_salary_in_employer_by_proff_field(
+CREATE TABLE employer_salary_statistics(
   employer_id     INT NOT NULL REFERENCES employer,
   proff_field_id  INT NOT NULL REFERENCES proff_field,
   salary          FLOAT NOT NULL,

@@ -14,10 +14,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class AverageSalaryEmployerByProffFieldDao {
+public class EmployerSalaryStatisticsDao {
   private final SessionFactory sessionFactory;
 
-  public AverageSalaryEmployerByProffFieldDao(SessionFactory sessionFactory) {
+  public EmployerSalaryStatisticsDao(SessionFactory sessionFactory) {
     this.sessionFactory = sessionFactory;
   }
 
@@ -26,31 +26,31 @@ public class AverageSalaryEmployerByProffFieldDao {
   }
 
   @Transactional
-  public void deleteAllAverageSalaryEmployerByProffField() {
-    getSession().createQuery("delete from AverageSalaryEmployerByProffField").executeUpdate();
+  public void deleteAllAverageSalariesByProffField() {
+    getSession().createQuery("delete from EmployerSalaryStatistics").executeUpdate();
   }
 
   @Transactional
-  public void saveSalaryMaps(List<Employer> employers, List<Map<ProfessionalField, Float>> salaryMaps) {
+  public void saveSalaryMapsByProffField(List<Employer> employers, List<Map<ProfessionalField, Float>> salaryMaps) {
     for (int i = 0; i < employers.size(); i++) {
       for (Map.Entry<ProfessionalField, Float> entry : salaryMaps.get(i).entrySet()) {
-        getSession().save(new AverageSalaryEmployerByProffField(employers.get(i).getId(), entry.getKey(), entry.getValue()));
+        getSession().save(new EmployerSalaryStatistics(employers.get(i).getId(), entry.getKey(), entry.getValue()));
       }
     }
   }
 
   @Transactional(readOnly = true)
-  public Map<String, Float> getAverageSalaryEmployerByProffField(Integer employerId) {
+  public Map<String, Float> getAverageSalaryMapByProffField(Integer employerId) {
     CriteriaBuilder builder = getSession().getCriteriaBuilder();
-    CriteriaQuery<AverageSalaryEmployerByProffField> criteriaQuery = builder.createQuery(AverageSalaryEmployerByProffField.class);
-    Root<AverageSalaryEmployerByProffField> root = criteriaQuery.from(AverageSalaryEmployerByProffField.class);
+    CriteriaQuery<EmployerSalaryStatistics> criteriaQuery = builder.createQuery(EmployerSalaryStatistics.class);
+    Root<EmployerSalaryStatistics> root = criteriaQuery.from(EmployerSalaryStatistics.class);
     criteriaQuery.select(root);
     criteriaQuery.where(builder.equal(root.get("compositeId").get("employerId"), employerId));
-    Query<AverageSalaryEmployerByProffField> query = getSession().createQuery(criteriaQuery);
+    Query<EmployerSalaryStatistics> query = getSession().createQuery(criteriaQuery);
 
     Map<String, Float> salaryMap = new HashMap<>();
-    for (AverageSalaryEmployerByProffField averageSalaryEmployerByProffField : query.list()) {
-      salaryMap.put(averageSalaryEmployerByProffField.getProffField().getName(), averageSalaryEmployerByProffField.getSalary());
+    for (EmployerSalaryStatistics employerSalaryStatistics : query.list()) {
+      salaryMap.put(employerSalaryStatistics.getProffField().getName(), employerSalaryStatistics.getSalary());
     }
     return salaryMap;
   }

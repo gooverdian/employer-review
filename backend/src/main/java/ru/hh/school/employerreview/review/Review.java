@@ -69,7 +69,6 @@ public class Review {
 
   @Column(name = "employment_terminated")
   private Boolean employmentTerminated;
-
   public Review() {
   }
 

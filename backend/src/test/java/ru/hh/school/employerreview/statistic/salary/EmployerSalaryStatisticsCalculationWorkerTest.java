@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 
-public class AverageSalaryEmployerByProffFieldCalculationWorkerTest extends EmployerReviewTestBase {
+public class EmployerSalaryStatisticsCalculationWorkerTest extends EmployerReviewTestBase {
 
   @Inject
   private TestConfig.TestQueryExecutorDao testQueryExecutorDao;
@@ -35,9 +35,6 @@ public class AverageSalaryEmployerByProffFieldCalculationWorkerTest extends Empl
   private StatisticResource statisticResource;
   @Inject
   private SpecializationDao specializationDao;
-
-  private int specialization1Id = 1;
-  private int specialization2Id = 150;
 
   private ReviewDto reviewDtoCreator(List<SpecializationDto> specializationDtos, Integer salary) {
     ReviewDto reviewDto = new ReviewDto();
@@ -54,7 +51,7 @@ public class AverageSalaryEmployerByProffFieldCalculationWorkerTest extends Empl
   public void beforeTest() {
     applicationContext = new AnnotationConfigApplicationContext(TestConfig.class);
 
-    AverageSalaryEmployerByProffFieldCalculationLauncher.setApplicationContext(applicationContext);
+    EmployerSalaryStatisticsCalculationLauncher.setApplicationContext(applicationContext);
 
     AbstractDownloader.setApplicationContext(applicationContext);
     SpecializationsDownloader.main();
@@ -64,6 +61,9 @@ public class AverageSalaryEmployerByProffFieldCalculationWorkerTest extends Empl
 
   @Test
   public void calculateAverageSalaryTest() {
+
+    int specialization1Id = 1;
+    int specialization2Id = 150;
 
     List<SpecializationDto> specializations1 = new ArrayList<>();
     specializations1.add(new SpecializationDto(specialization1Id, "test"));
@@ -85,16 +85,17 @@ public class AverageSalaryEmployerByProffFieldCalculationWorkerTest extends Empl
     reviewResource.postReview(reviewDto5);
     reviewResource.postReview(reviewDto6);
 
-    AverageSalaryEmployerByProffFieldCalculationLauncher.main();
+    EmployerSalaryStatisticsCalculationLauncher.main();
 
     Map<String, Float> result = statisticResource.getAverageSalaryEmployerByProffField(employer.getId());
+    Assert.assertEquals(2, result.size());
     Assert.assertEquals(2000, result.get(specializationDao.getById(specialization1Id).getProfessionalField().getName()).intValue());
     Assert.assertEquals(4000, result.get(specializationDao.getById(specialization2Id).getProfessionalField().getName()).intValue());
   }
 
   @After
   public void afterTest() {
-    testQueryExecutorDao.executeQuery("delete from AverageSalaryEmployerByProffField");
+    testQueryExecutorDao.executeQuery("delete from EmployerSalaryStatistics");
     testQueryExecutorDao.executeQuery("delete from Review");
     testQueryExecutorDao.executeQuery("delete from Specialization");
     testQueryExecutorDao.executeQuery("delete from ProfessionalField");

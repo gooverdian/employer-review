@@ -13,9 +13,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class AverageSalaryEmployerByProffFieldCalculationWorker {
+public class EmployerSalaryStatisticsCalculationWorker {
 
-  private final AverageSalaryEmployerByProffFieldDao averageSalaryEmployerByProffFieldDao;
+  private final EmployerSalaryStatisticsDao employerSalaryStatisticsDao;
   private final ReviewDao reviewDao;
   private final ProfessionalFieldDao professionalFieldDao;
   private final EmployerDao employerDao;
@@ -31,21 +31,21 @@ public class AverageSalaryEmployerByProffFieldCalculationWorker {
     }
   }
 
-  public AverageSalaryEmployerByProffFieldCalculationWorker(
-      AverageSalaryEmployerByProffFieldDao averageSalaryEmployerByProffFieldDao,
+  public EmployerSalaryStatisticsCalculationWorker(
+      EmployerSalaryStatisticsDao employerSalaryStatisticsDao,
       ReviewDao reviewDao,
       ProfessionalFieldDao professionalFieldDao,
       EmployerDao employerDao) {
     this.reviewDao = reviewDao;
     this.professionalFieldDao = professionalFieldDao;
-    this.averageSalaryEmployerByProffFieldDao = averageSalaryEmployerByProffFieldDao;
+    this.employerSalaryStatisticsDao = employerSalaryStatisticsDao;
     this.employerDao = employerDao;
   }
 
   void doWork() {
-    averageSalaryEmployerByProffFieldDao.deleteAllAverageSalaryEmployerByProffField();
+    employerSalaryStatisticsDao.deleteAllAverageSalariesByProffField();
 
-    Integer maxEmployerSize = employerDao.countRows();
+    int maxEmployerSize = employerDao.countRows();
     int page = 0;
     while (PER_PAGE * page < maxEmployerSize) {
       List<Employer> employers = employerDao.findEmployers("", page, PER_PAGE, true);
@@ -53,13 +53,13 @@ public class AverageSalaryEmployerByProffFieldCalculationWorker {
 
       // Employers are ordered by rating, when rating = null, we wont receive any reviews more
       if (!employers.isEmpty() && employers.get(0).getRating() == null) {
-        System.exit(0);
+        return;
       }
 
       for (Employer employer : employers) {
         salaryMaps.add(getAverageSalaryMap(employer));
       }
-      averageSalaryEmployerByProffFieldDao.saveSalaryMaps(employers, salaryMaps);
+      employerSalaryStatisticsDao.saveSalaryMapsByProffField(employers, salaryMaps);
 
       page += 1;
     }
@@ -68,7 +68,7 @@ public class AverageSalaryEmployerByProffFieldCalculationWorker {
   private Map<ProfessionalField, Float> getAverageSalaryMap(Employer employer) {
     Map<Integer, Salary> salaryMap = new HashMap();
 
-    Integer maxReviewSize = reviewDao.getRowCountFilteredByEmployer(employer.getId(), null).intValue();
+    int maxReviewSize = reviewDao.getRowCountFilteredByEmployer(employer.getId(), null).intValue();
 
     int page = 0;
     while (PER_PAGE * page < maxReviewSize) {

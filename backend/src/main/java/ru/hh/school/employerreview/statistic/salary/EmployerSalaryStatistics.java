@@ -1,6 +1,7 @@
 package ru.hh.school.employerreview.statistic.salary;
 
 import ru.hh.school.employerreview.specializations.ProfessionalField;
+import ru.hh.school.employerreview.statistic.CompositeEmployerProffFieldId;
 
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
@@ -8,11 +9,11 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "average_salary_in_employer_by_proff_field")
-public class AverageSalaryEmployerByProffField {
+@Table(name = "employer_salary_statistics")
+public class EmployerSalaryStatistics {
 
   @EmbeddedId
-  private AverageSalaryEmployerByProffFieldId compositeId;
+  private CompositeEmployerProffFieldId compositeId;
 
   @Column(name = "salary")
   private Float salary;
@@ -29,11 +30,11 @@ public class AverageSalaryEmployerByProffField {
     return compositeId.getProffField();
   }
 
-  public AverageSalaryEmployerByProffField() {
+  public EmployerSalaryStatistics() {
   }
 
-  public AverageSalaryEmployerByProffField(Integer employerId, ProfessionalField proffField, Float salary) {
-    compositeId = new AverageSalaryEmployerByProffFieldId(employerId, proffField);
+  public EmployerSalaryStatistics(Integer employerId, ProfessionalField proffField, Float salary) {
+    compositeId = new CompositeEmployerProffFieldId(employerId, proffField);
     this.salary = salary;
   }
 }
