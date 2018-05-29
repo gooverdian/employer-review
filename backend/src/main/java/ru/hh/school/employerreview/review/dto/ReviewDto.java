@@ -35,6 +35,9 @@ public class ReviewDto {
   @JsonProperty("employment_terminated")
   private Boolean employmentTerminated;
 
+  @JsonProperty("created_on")
+  private String createdOn;
+
   private List<SpecializationDto> specializations = new ArrayList<>();
 
   public ReviewDto() {
@@ -124,19 +127,22 @@ public class ReviewDto {
     return specializations;
   }
 
+  public String getCreatedOn() {
+    return createdOn;
+  }
+
+  public void setCreatedOn(String createdOn) {
+    this.createdOn = createdOn;
+  }
+
   public void setSpecializations(List<SpecializationDto> specializations) {
     this.specializations = specializations;
   }
 
   @Override
   public String toString() {
-    return "ReviewDto{" +
-        "employerId=" + employerId +
-        ", reviewId=" + reviewId +
-        ", reviewType=" + reviewType +
-        ", rating=" + rating +
-        ", text='" + text + '\'' +
-        '}';
+    return "ReviewDto{" + "employerId=" + employerId + ", reviewId=" + reviewId
+        + ", reviewType=" + reviewType + ", rating=" + rating + ", text='" + text + '\'' + '}';
   }
 
   public Review toReview() {
@@ -155,8 +161,7 @@ public class ReviewDto {
     }
 
     List<Specialization> specializations = new ArrayList<>();
-    this.specializations.forEach(specializationDto ->
-        specializations.add(new Specialization(specializationDto.getSpecializationId())));
+    this.specializations.forEach(specializationDto -> specializations.add(new Specialization(specializationDto.getSpecializationId())));
     review.getSpecializations().addAll(specializations);
 
     return review;
