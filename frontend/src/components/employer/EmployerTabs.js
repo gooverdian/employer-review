@@ -16,7 +16,7 @@ class EmployerTabs extends React.Component {
     };
 
     render() {
-        console.log(this.props.history);
+        console.log(this.props.match);
         const { activeTabIndex } = this.state;
         return (
             <div>
@@ -30,6 +30,7 @@ class EmployerTabs extends React.Component {
                 <div className="tab-content">
                     {activeTabIndex === 0 && <EmployerReviews
                         employerId={this.props.match.params.employerId}
+                        reviewId={this.props.match.params.reviewId}
                     />}
                     {activeTabIndex === 1 && "Отзывы об интервью"}
                     {activeTabIndex === 2 && ""}

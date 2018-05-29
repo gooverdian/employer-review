@@ -4,11 +4,11 @@
 }
 
 .employer .employer__name {
-    padding: 0 8px;
+    padding: 0 16px;
     display: flex;
     flex-flow: column;
     align-items: flex-start;
-    margin-bottom: 8px;
+    margin-bottom: 16px;
 }
 
 .employer .employer__name-button {
@@ -18,7 +18,7 @@
 .employer .employer__info {
     background: #f5f5f5;
     padding: 12px 12px 4px;
-    margin-bottom: 8px;
+    margin-bottom: 16px;
     box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2),0 4px 5px 0 rgba(0, 0, 0, 0.14),0 1px 10px 0 rgba(0, 0, 0, 0.12);
 }
 

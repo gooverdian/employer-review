@@ -32,19 +32,20 @@ class EmployerReviews extends React.Component {
             );
         }
 
+        console.log(this.props.reviewId);
         return (
-            <List>
-                {this.state.data.reviews.map((item, index) => (
-                    <ListItem
-                        key={index}
-                    >
+            <div>
+                {this.state.data.reviews.map((item, index) => {
+                    console.log(item.review_id);
+                    return (
                         <EmployerReview
+                            key={index}
                             data={item}
-                            highlight={Number(item.reviewId) === Number(this.props.reviewId)}
+                            highlight={Number(item.review_id) === Number(this.props.reviewId)}
                         />
-                    </ListItem>
-                ))}
-            </List>
+                    )})
+                }
+            </div>
         );
     }
 }

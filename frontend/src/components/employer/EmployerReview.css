@@ -1,24 +1,37 @@
 .review {
-    flex: 1;
-    margin: 10px 0;
-    box-shadow: 0 0 5px rgba(0,0,0,0.3);
-    padding: 10px 0;
+   margin-bottom: 24px;
 }
 
 .review_highlighted {
-    background: #ceffdc;
+    background: #deffe2;
 }
 
-.review__star {
+.review .review__rating {
+    display: inline-block;
+    padding: 0 8px;
+    float: left;
+    background: #f5f5ff;
+    margin-right: 5px;
+    margin-top: 2px;
+    border-radius: 4px;
+}
+
+.review .review__time {
+    color: #999;
+}
+
+.review .review__empty-text {
+    color: #999;
+    font-style: italic;
+}
+
+.review .review__star {
     color: #ffd240;
-}
-
-.review__header {
-    margin: 0;
-    padding-left: 10px;
+    font-size: 40px;
+    margin-top: 5px;
+    margin-bottom: -5px;
 }
 
 .review__text {
     white-space: normal;
-    padding: 10px 0;
 }
