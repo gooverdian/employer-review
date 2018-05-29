@@ -2,11 +2,11 @@ import CoreValidators from './CoreValidators';
 
 const Validator = {
     validate: function(rule, value) {
-        if (!CoreValidators[rule]) {
+        if (!CoreValidators[rule.rule]) {
             return false;
         }
 
-        return CoreValidators[rule](value);
+        return CoreValidators[rule.rule](value, rule);
     },
     validateAttribute: function(name, value, rules) {
         let attributeResult = {
@@ -20,7 +20,7 @@ const Validator = {
         let ruleSet = rules[name];
         for (let i = 0; i < ruleSet.length; i++) {
             let rule = ruleSet[i];
-            if (!Validator.validate(rule.rule, value)) {
+            if (!Validator.validate(rule, value)) {
                 attributeResult.valid = false;
                 attributeResult.error = rule.message || `Неправильное значение поля ${name}`;
             }

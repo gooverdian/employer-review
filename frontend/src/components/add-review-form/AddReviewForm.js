@@ -1,7 +1,8 @@
 import React from 'react';
 import Grid from 'material-ui/Grid';
 import TextField from 'material-ui/TextField';
-import RatingInput from 'components/rating-input/RatingInput';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import RatingInput from 'components/add-review-form/RatingInput';
 import SearchSelect from 'components/search-select/SearchSelect';
 import Button from 'material-ui/Button';
 import ExchangeInterface from 'components/exchange/ExchangeInterface';
@@ -10,10 +11,20 @@ import AddIcon from '@material-ui/icons/Add';
 import settings from 'config/settings';
 import AddEmployerDialog from 'components/add-employer-dialog/AddEmployerDialog';
 import Validator from 'helpers/validator/Validator';
+import RadioGroupInput from './RadioGroupInput';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
 import { resetTopEmployers } from 'modules/topEmployers';
 import { connect } from 'react-redux';
+import classNames from 'classnames';
 import 'assets/css/Form.css';
 import './AddReviewForm.css';
+
+const reviewTypes = {
+    'EMPLOYEE' : 'О работе в компании',
+    'INTERVIEWEE' : 'Об интервью в компании'
+};
+const defaultReviewType = 'EMPLOYEE';
 
 class AddReviewForm extends React.Component {
     state = {
@@ -21,6 +32,26 @@ class AddReviewForm extends React.Component {
         attributes: {
             employerId: {
                 value: this.props.employerId || null,
+                valid: undefined,
+                error: undefined
+            },
+            reviewType: {
+                value: defaultReviewType,
+                valid: undefined,
+                error: undefined
+            },
+            salary: {
+                value: '',
+                valid: undefined,
+                error: undefined
+            },
+            employmentDuration: {
+                value: '',
+                valid: undefined,
+                error: undefined
+            },
+            employmentOngoing: {
+                value: undefined,
                 valid: undefined,
                 error: undefined
             },
@@ -41,6 +72,12 @@ class AddReviewForm extends React.Component {
         employerId: [
             {rule: 'required', message: 'Необходимо выбрать компанию'}
         ],
+        salary: [
+            {rule: 'integer', min: 0, message: 'Введите целое положительное число'}
+        ],
+        employmentDuration: [
+            {rule: 'integer', min: 0, message: 'Введите целое положительное число'}
+        ],
         rating: [
             {rule: 'required', message: 'Необходимо выбрать оценку'}
         ]
@@ -60,6 +97,11 @@ class AddReviewForm extends React.Component {
     handleTextFieldChange = (event) => {
         const {name, value} = event.target;
         this.updateAttribute(name, value);
+    };
+
+    handleSwitchFieldChange = (event) => {
+        const {name, checked} = event.target;
+        this.updateAttribute(name, checked);
     };
 
     updateAttribute = (name, value) => {
@@ -85,11 +127,24 @@ class AddReviewForm extends React.Component {
             attributes,
             {
                 employerId: 'employer_id',
+                reviewType: 'review_type',
+                employmentDuration: 'employment_duration',
+                employmentOngoing: 'employment_terminated',
                 reviewText: 'text',
             }
         );
-        // TODO: delete this when input implemented (backend require this field)
-        formData.review_type = 'EMPLOYEE';
+
+        if (formData.review_type === 'INTERVIEWEE') {
+            formData.salary = '';
+            formData.employment_duration = '';
+        } else {
+            if (formData.salary) {
+                formData.salary *= 1000;
+            }
+            if (formData.employment_terminated !== undefined) {
+                formData.employment_terminated = !formData.employment_terminated;
+            }
+        }
         ExchangeInterface.addReview(formData).then(
             (data) => {
                 this.props.resetTopEmployers();
@@ -151,9 +206,64 @@ class AddReviewForm extends React.Component {
                             />
                         </Grid>
                     </Grid>
+                    <div>
+                        <RadioGroupInput
+                            label="Тип отзыва"
+                            name="reviewType"
+                            value={this.state.attributes.reviewType.value}
+                            items={reviewTypes}
+                            onChange={this.handleTextFieldChange}
+                        />
+                    </div>
+                    <Grid container className={
+                        classNames(
+                            'form-group',
+                            {'form-group_hidden': this.state.attributes.reviewType.value === 'INTERVIEWEE'}
+                        )
+                    }>
+                        <Grid item md={6} xs={12}>
+                            <FormControlLabel
+                                className="form-group__field"
+                                control={
+                                    <Checkbox
+                                        name="employmentOngoing"
+                                        checked={this.state.attributes.employmentOngoing.value}
+                                        onChange={this.handleSwitchFieldChange}
+                                        value="checked"
+                                    />
+                                }
+                                label="Я работаю в этой компании в настоящее время"
+                            />
+                            <TextField
+                                className="form-group__field"
+                                label="Заработная плата"
+                                name="salary"
+                                value={this.state.attributes.salary.value}
+                                onChange={this.handleTextFieldChange}
+                                error={Boolean(this.state.attributes.salary.error)}
+                                helperText={this.state.attributes.salary.error}
+                                InputProps={{
+                                    endAdornment: <InputAdornment position="end">тыс. руб.</InputAdornment>,
+                                }}
+                            />
+                            <TextField
+                                className="form-group__field"
+                                label="Опыт работы"
+                                name="employmentDuration"
+                                value={this.state.attributes.employmentDuration.value}
+                                onChange={this.handleTextFieldChange}
+                                error={Boolean(this.state.attributes.employmentDuration.error)}
+                                helperText={this.state.attributes.employmentDuration.error}
+                                InputProps={{
+                                    endAdornment: <InputAdornment position="end">мес.</InputAdornment>,
+                                }}
+                            />
+                        </Grid>
+                    </Grid>
                     <Grid container className="form-group">
                         <Grid item md={8}>
                             <RatingInput
+                                label="Ваша оценка компании"
                                 value={this.state.attributes.rating.value}
                                 onChange={this.updateAttribute.bind(this, 'rating')}
                                 error={this.state.attributes.rating.error}
@@ -176,7 +286,7 @@ class AddReviewForm extends React.Component {
                     <Grid container className="form-group">
                         <Grid item md={8}>
                             <Button variant="raised" color="primary" type="submit">
-                                Отправить <SendIcon className="button-icon button-icon_right"/>
+                                Отправить отзыв <SendIcon className="button-icon button-icon_right"/>
                             </Button>
                         </Grid>
                     </Grid>

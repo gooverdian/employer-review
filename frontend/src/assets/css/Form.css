@@ -1,3 +1,11 @@
 .form-group {
     margin-bottom: 15px;
 }
+
+.form-group.form-group_hidden {
+    display: none;
+}
+
+.form-group .form-group__field {
+    margin-right: 24px;
+}

@@ -1,6 +1,7 @@
 import React from 'react';
 import StarBorderIcon from '@material-ui/icons/StarBorder';
 import Typography from 'material-ui/Typography';
+import ReviewInfoRow from './ReviewInfoRow';
 import classNames from 'classnames';
 import './EmployerReview.css';
 import 'assets/css/RatingPlate.css';
@@ -19,7 +20,6 @@ class EmployerReview extends React.Component {
     };
 
     render () {
-        console.log(this.props.highlight);
         return (
             <div className={classNames('review', {review_highlighted: this.props.highlight})}>
                 <Typography
@@ -38,6 +38,22 @@ class EmployerReview extends React.Component {
                 <Typography variant="body2" className="review__text">
                     {this.renderReviewText()}
                 </Typography>
+                <ReviewInfoRow
+                    title="Заработная плата"
+                    value={this.props.data.salary}
+                    valueSuffix=" руб."
+                />
+                <ReviewInfoRow
+                    title="Стаж работы в компании"
+                    value={this.props.data.employment_duration}
+                    valueSuffix={
+                        ' мес.' + (
+                            this.props.data.employment_terminated !== false
+                            ? ''
+                            : ' по настоящее время'
+                        )
+                    }
+                />
             </div>
         );
     }
