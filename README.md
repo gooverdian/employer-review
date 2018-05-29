@@ -14,6 +14,8 @@ _Учебный проект школы программистов_
 
 [Отзывы](backend/review.md)
 
+[Генерация отзывов](backend/review-generator.md)
+
 [Профф. области и специализации](backend/specializations.md)
 
 [Статистика и аналитика](backend/statistics.md)

@@ -9,6 +9,7 @@ import ru.hh.school.employerreview.TestConfig;
 import ru.hh.school.employerreview.area.AreaDao;
 import ru.hh.school.employerreview.employer.EmployerDao;
 import ru.hh.school.employerreview.statistic.main.MainPageStatisticDao;
+import ru.hh.school.employerreview.review.generator.ReviewGenerationService;
 
 import javax.inject.Inject;
 import javax.ws.rs.core.Response;

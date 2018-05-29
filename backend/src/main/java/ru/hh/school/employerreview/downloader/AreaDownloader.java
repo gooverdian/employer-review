@@ -8,8 +8,10 @@ import ru.hh.school.employerreview.downloader.dto.AreaJson;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -28,35 +30,54 @@ public class AreaDownloader extends AbstractDownloader {
 
     AreaDao areaDao = applicationContext.getBean(AreaDao.class);
 
-    int areaId = 0;
-    if (args.length > 0 && args[0].contains("=") && args[0].contains("area")) {
-      areaId = Integer.parseInt(args[0].substring(args[0].indexOf("=") + 1));
-    } else {
-      areaId = DEFAULT_AREA_ID;
-    }
-
-    Map<Integer, Area> areasIds = new HashMap<>();
-    AreaJson[] areaJsons = OBJECT_MAPPER.readValue(new URL(URL_AREAS), AreaJson[].class);
-    parseNestedAreas(areaJsons, areasIds);
-
-    LinkedList<Area> areaQueue = new LinkedList<>();
-    areaQueue.addLast(areasIds.get(areaId));
-    while (areasIds.get(areaId).getParentId() != 0) {
-      areaId = areasIds.get(areaId).getParentId();
-      areaQueue.addLast(areasIds.get(areaId));
-    }
-
-    int recordsCount = 0;
-    while (!areaQueue.isEmpty()) {
-      Area area = areaQueue.poll();
-      try {
-        areaDao.save(area);
-        recordsCount++;
-      } catch (ConstraintViolationException | DataIntegrityViolationException e) {
-        LOGGER.info("Area duplicate key - " + area.getId());
+    List<Integer> areasIdsToLoad = new ArrayList<>();
+    for (String arg : args) {
+      if (arg.contains("area")) {
+        String[] items = arg.split("=");
+        if (items.length > 1) {
+          try {
+            Integer areaId = Integer.parseInt(items[1]);
+            areasIdsToLoad.add(areaId);
+            LOGGER.info("Area id added - " + areaId);
+          } catch (NumberFormatException e) {
+            LOGGER.warning(e.getMessage());
+          }
+        }
       }
     }
-    LOGGER.info("Areas inserted - " + recordsCount);
+
+    if (areasIdsToLoad.size() == 0) {
+      areasIdsToLoad.add(DEFAULT_AREA_ID);
+    }
+
+    int totalAreasInserted = 0;
+    for (Integer areaId : areasIdsToLoad) {
+
+      Map<Integer, Area> areasIds = new HashMap<>();
+      AreaJson[] areaJsons = OBJECT_MAPPER.readValue(new URL(URL_AREAS), AreaJson[].class);
+      parseNestedAreas(areaJsons, areasIds);
+
+      LinkedList<Area> areaQueue = new LinkedList<>();
+      areaQueue.addLast(areasIds.get(areaId));
+      while (areasIds.get(areaId).getParentId() != 0) {
+        areaId = areasIds.get(areaId).getParentId();
+        areaQueue.addLast(areasIds.get(areaId));
+      }
+
+      int recordsCount = 0;
+      while (!areaQueue.isEmpty()) {
+        Area area = areaQueue.poll();
+        LOGGER.info("Processing area - " + area.getName());
+        try {
+          areaDao.save(area);
+          recordsCount++;
+        } catch (ConstraintViolationException | DataIntegrityViolationException e) {
+          LOGGER.info("Area duplicate key - " + area.getId());
+        }
+      }
+      totalAreasInserted += recordsCount;
+    }
+    LOGGER.info("Areas inserted - " + totalAreasInserted);
   }
 
   private static void parseNestedAreas(AreaJson[] areaJsons, Map<Integer, Area> areasIds) {

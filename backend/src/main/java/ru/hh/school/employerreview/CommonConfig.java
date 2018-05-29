@@ -22,8 +22,9 @@ import ru.hh.school.employerreview.rating.deviation.RatingDeviation;
 import ru.hh.school.employerreview.rating.stars.StarsInRating;
 import ru.hh.school.employerreview.review.Review;
 import ru.hh.school.employerreview.review.ReviewDao;
-import ru.hh.school.employerreview.review.ReviewGenerationService;
 import ru.hh.school.employerreview.review.ReviewResource;
+import ru.hh.school.employerreview.review.generator.ReviewGenerationService;
+import ru.hh.school.employerreview.review.generator.ReviewsGenerator;
 import ru.hh.school.employerreview.specializations.ProfessionalField;
 import ru.hh.school.employerreview.specializations.ProfessionalFieldDao;
 import ru.hh.school.employerreview.specializations.Specialization;
@@ -38,6 +39,8 @@ import ru.hh.school.employerreview.statistic.StatisticResource;
 import ru.hh.school.employerreview.statistic.salary.EmployerSalaryStatistics;
 import ru.hh.school.employerreview.statistic.salary.EmployerSalaryStatisticsCalculationWorker;
 import ru.hh.school.employerreview.statistic.salary.EmployerSalaryStatisticsDao;
+import ru.hh.school.employerreview.webextractor.ExternalReview;
+import ru.hh.school.employerreview.webextractor.ExternalReviewDao;
 
 @Configuration
 @Import({HibernateCommonConfig.class, FileSettingsConfig.class})
@@ -76,12 +79,16 @@ public class CommonConfig {
   @Bean
   MappingConfig mappingConfig() {
     return new MappingConfig(Employer.class, Review.class, Area.class, Rating.class, MainPageStatistic.class,
-        StarsInRating.class, ProfessionalField.class, Specialization.class, EmployerVisit.class, Position.class, RatingDeviation.class,
-        EmployerSalaryStatistics.class, DurationByProffField.class);
+        StarsInRating.class, ProfessionalField.class, Specialization.class, EmployerVisit.class, Position.class,
+        RatingDeviation.class, ExternalReview.class, EmployerSalaryStatistics.class, DurationByProffField.class);
+
   }
 
   @Bean
-  ReviewResource reviewResource(ReviewDao reviewDao, EmployerDao employerDao, RatingDao ratingDao, MainPageStatisticDao mainPageStatisticDao) {
+  ReviewResource reviewResource(ReviewDao reviewDao,
+                                EmployerDao employerDao,
+                                RatingDao ratingDao,
+                                MainPageStatisticDao mainPageStatisticDao) {
     return new ReviewResource(reviewDao, employerDao, ratingDao, mainPageStatisticDao);
   }
 
@@ -95,9 +102,8 @@ public class CommonConfig {
   }
 
   @Bean
-  ReviewGenerationService reviewGenerationService(ReviewDao reviewDao, EmployerDao employerDao,
-                                                  RatingDao ratingDao, MainPageStatisticDao mainPageStatisticDao) {
-    return new ReviewGenerationService(reviewDao, employerDao, ratingDao, mainPageStatisticDao);
+  ReviewGenerationService reviewGenerationService(ReviewsGenerator reviewsGenerator) {
+    return new ReviewGenerationService(reviewsGenerator);
   }
 
   @Bean
@@ -146,6 +152,7 @@ public class CommonConfig {
         ReviewDao reviewDao,
         ProfessionalFieldDao professionalFieldDao,
         EmployerDao employerDao) {
+
     return new EmployerSalaryStatisticsCalculationWorker(employerSalaryStatisticsDao,
         reviewDao,
         professionalFieldDao,
@@ -162,5 +169,16 @@ public class CommonConfig {
         reviewDao,
         professionalFieldDao,
         employerDao);
+  }
+
+  @Bean
+  ReviewsGenerator reviewsGenerator(EmployerDao employerDao, MainPageStatisticDao mainPageStatisticDao, ReviewDao reviewDao,
+                                    RatingDao ratingDao, ExternalReviewDao externalReviewDao, SpecializationDao specializationDao) {
+    return new ReviewsGenerator(employerDao, mainPageStatisticDao, reviewDao, ratingDao, externalReviewDao, specializationDao);
+  }
+
+  @Bean
+  ExternalReviewDao externalReviewDao(SessionFactory sessionFactory) {
+    return new ExternalReviewDao(sessionFactory);
   }
 }
