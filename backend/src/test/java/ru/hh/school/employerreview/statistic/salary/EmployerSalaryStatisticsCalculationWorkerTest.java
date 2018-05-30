@@ -96,10 +96,21 @@ public class EmployerSalaryStatisticsCalculationWorkerTest extends EmployerRevie
     Assert.assertEquals(2, result.size());
     Assert.assertEquals(2000, result.get(specializationDao.getById(specialization1Id).getProfessionalField().getName()).intValue());
     Assert.assertEquals(4000, result.get(specializationDao.getById(specialization2Id).getProfessionalField().getName()).intValue());
+
+    Map<String, Integer> reviewCounterMap = statisticResource.getReviewCounterByProffField();
+    Assert.assertEquals(2, reviewCounterMap.size());
+    Assert.assertEquals(3, reviewCounterMap.get(specializationDao.getById(specialization1Id).getProfessionalField().getName()).intValue());
+    Assert.assertEquals(3, reviewCounterMap.get(specializationDao.getById(specialization2Id).getProfessionalField().getName()).intValue());
+
+    reviewCounterMap = statisticResource.getEmployerReviewCounterByProffField(employer.getId());
+    Assert.assertEquals(2, reviewCounterMap.size());
+    Assert.assertEquals(3, reviewCounterMap.get(specializationDao.getById(specialization1Id).getProfessionalField().getName()).intValue());
+    Assert.assertEquals(3, reviewCounterMap.get(specializationDao.getById(specialization2Id).getProfessionalField().getName()).intValue());
   }
 
   @After
   public void afterTest() {
+    testQueryExecutorDao.executeQuery("delete from MainPageReviewCounter");
     testQueryExecutorDao.executeQuery("delete from MainPageSalary");
     testQueryExecutorDao.executeQuery("delete from EmployerSalaryStatistics");
     testQueryExecutorDao.executeQuery("delete from Review");

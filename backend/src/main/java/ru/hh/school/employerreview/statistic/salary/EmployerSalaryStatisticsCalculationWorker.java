@@ -48,8 +48,11 @@ public class EmployerSalaryStatisticsCalculationWorker {
 
   void doWork() {
     employerSalaryStatisticsDao.deleteAllAverageSalariesByProffField();
+    mainPageStatisticDao.deleteAllMainPageReviewCounter();
+    mainPageStatisticDao.deleteAllMainPageSalary();
 
     Map<Integer, Salary> mainPageSalaryMap = new HashMap<>();
+    Map<Integer, Integer> mainPageReviewCounterMap = new HashMap<>();
     int maxEmployerSize = employerDao.countRows();
     int page = 0;
     while (PER_PAGE * page < maxEmployerSize) {
@@ -62,7 +65,7 @@ public class EmployerSalaryStatisticsCalculationWorker {
       }
 
       for (Employer employer : employers) {
-        salaryMaps.add(getAverageSalaryMap(employer, mainPageSalaryMap));
+        salaryMaps.add(getAverageSalaryMap(employer, mainPageSalaryMap, mainPageReviewCounterMap));
       }
       employerSalaryStatisticsDao.saveSalaryMapsByProffField(employers, salaryMaps);
       mainPageStatisticDao.saveMainPageSalaryMap(mainPageSalaryMap.entrySet().stream()
@@ -70,12 +73,19 @@ public class EmployerSalaryStatisticsCalculationWorker {
               s -> professionalFieldDao.getById(s.getKey()),
               s -> s.getValue().salarySum / s.getValue().counter
           )));
+      mainPageStatisticDao.saveMainPageReviewCounterMap(mainPageReviewCounterMap.entrySet().stream()
+          .collect(Collectors.toMap(
+              s -> professionalFieldDao.getById(s.getKey()),
+              s -> s.getValue()
+          )));
 
       page += 1;
     }
   }
 
-  private Map<ProfessionalField, Float> getAverageSalaryMap(Employer employer, Map<Integer, Salary> mainPageSalaryMap) {
+  private Map<ProfessionalField, Float> getAverageSalaryMap(Employer employer,
+                                                            Map<Integer, Salary> mainPageSalaryMap,
+                                                            Map<Integer, Integer> mainPageReviewCounterMap) {
     Map<Integer, Salary> salaryMap = new HashMap();
 
     int maxReviewSize = reviewDao.getRowCountFilteredByEmployer(employer.getId(), null).intValue();
@@ -83,7 +93,7 @@ public class EmployerSalaryStatisticsCalculationWorker {
     int page = 0;
     while (PER_PAGE * page < maxReviewSize) {
       calculateSalaryMap(reviewDao.getPaginatedFilteredByEmployerWithSpecializations(employer.getId(), page, PER_PAGE, null),
-          salaryMap, mainPageSalaryMap);
+          salaryMap, mainPageSalaryMap, mainPageReviewCounterMap);
       page += 1;
     }
     return salaryMap.entrySet().stream()
@@ -95,15 +105,24 @@ public class EmployerSalaryStatisticsCalculationWorker {
 
   private static void calculateSalaryMap(List<Review> reviews,
                                          Map<Integer, Salary> salaryMap,
-                                         Map<Integer, Salary> mainPageSalaryMap) {
+                                         Map<Integer, Salary> mainPageSalaryMap,
+                                         Map<Integer, Integer> mainPageReviewCounterMap) {
     for (Review review : reviews) {
-      if (!review.getSpecializations().isEmpty() && review.getSalary() != null) {
+      if (!review.getSpecializations().isEmpty()) {
 
         // it is supposed - all specialization are from one prof. field
         ProfessionalField professionalField = review.getSpecializations().get(0).getProfessionalField();
 
-        addOrIncrement(salaryMap, review, professionalField);
-        addOrIncrement(mainPageSalaryMap, review, professionalField);
+        if (review.getSalary() != null) {
+          addOrIncrement(salaryMap, review, professionalField);
+          addOrIncrement(mainPageSalaryMap, review, professionalField);
+        }
+
+        if (!mainPageReviewCounterMap.containsKey(professionalField.getId())) {
+          mainPageReviewCounterMap.put(professionalField.getId(), 1);
+        } else {
+          mainPageReviewCounterMap.put(professionalField.getId(), mainPageReviewCounterMap.get(professionalField.getId()) + 1);
+        }
       }
     }
   }

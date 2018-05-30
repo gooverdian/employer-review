@@ -47,6 +47,7 @@ public class DurationByProffFieldCalculationWorker {
 
   void doWork() {
     employmentDurationDao.deleteAllAverageEmploymentDuration();
+    mainPageStatisticDao.deleteAllMainPageEmployment();
 
     Map<Integer, Duration> mainPageDurationMap = new HashMap<>();
     int maxEmployerSize = employerDao.countRows();

@@ -26,6 +26,7 @@ import ru.hh.school.employerreview.statistic.employment.DurationByProffField;
 import ru.hh.school.employerreview.statistic.employment.DurationByProffFieldCalculationWorker;
 import ru.hh.school.employerreview.statistic.employment.DurationByProffFieldDao;
 import ru.hh.school.employerreview.statistic.main.MainPageEmployment;
+import ru.hh.school.employerreview.statistic.main.MainPageReviewCounter;
 import ru.hh.school.employerreview.statistic.main.MainPageSalary;
 import ru.hh.school.employerreview.statistic.main.MainPageStatisticDao;
 import ru.hh.school.employerreview.statistic.salary.EmployerSalaryStatistics;
@@ -43,7 +44,7 @@ public class OfflineCalculationConfig {
   MappingConfig mappingConfig() {
     return new MappingConfig(Employer.class, Area.class, Rating.class, RatingDeviation.class, StarsInRating.class,
         EmployerSalaryStatistics.class, Review.class, ProfessionalField.class, Specialization.class, Position.class,
-        DurationByProffField.class, MainPageEmployment.class, MainPageSalary.class);
+        DurationByProffField.class, MainPageEmployment.class, MainPageSalary.class, MainPageReviewCounter.class);
   }
 
   @Bean

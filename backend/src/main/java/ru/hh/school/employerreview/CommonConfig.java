@@ -37,6 +37,7 @@ import ru.hh.school.employerreview.statistic.main.MainPageEmployment;
 import ru.hh.school.employerreview.statistic.main.MainPageSalary;
 import ru.hh.school.employerreview.statistic.main.MainPageStatistic;
 import ru.hh.school.employerreview.statistic.main.MainPageStatisticDao;
+import ru.hh.school.employerreview.statistic.main.MainPageReviewCounter;
 import ru.hh.school.employerreview.statistic.StatisticResource;
 import ru.hh.school.employerreview.statistic.salary.EmployerSalaryStatistics;
 import ru.hh.school.employerreview.statistic.salary.EmployerSalaryStatisticsCalculationWorker;
@@ -83,7 +84,7 @@ public class CommonConfig {
     return new MappingConfig(Employer.class, Review.class, Area.class, Rating.class, MainPageStatistic.class,
         StarsInRating.class, ProfessionalField.class, Specialization.class, EmployerVisit.class, Position.class,
         RatingDeviation.class, ExternalReview.class, EmployerSalaryStatistics.class, DurationByProffField.class,
-        MainPageEmployment.class, MainPageSalary.class);
+        MainPageEmployment.class, MainPageSalary.class, MainPageReviewCounter.class);
   }
 
   @Bean
