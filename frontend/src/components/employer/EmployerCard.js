@@ -30,42 +30,40 @@ class EmployerCard extends React.Component {
         const employer = this.state.employer;
         return (
             <Grid container className="employer">
-                <Grid item xs={12} sm={6} md={4} lg={3}>
-                    <div className="employer__info">
-                        <div className="employer__info-row">
-                            <img className="employer__logo" alt="" src={employer.logo_url} />
-                        </div>
-                        {
-                            employer.rating ? (
-                                <div>
-                                    <Typography variant="subheading" className="employer__info-row">
-                                        <span className="employer__info-row-name">Рейтинг</span>
-                                        <span className="employer__info-row-value">
-                                            <Typography
-                                                className="rating-plate"
-                                                variant="display1"
-                                                gutterBottom={false}
-                                            >
-                                                <span className="rating-plate__rating">
-                                                    <StarBorderIcon classes={{root: 'rating-plate__rating-icon'}}/>
-                                                    {employer.rating ? employer.rating.toFixed(1) : ''}
-                                                </span>
-                                            </Typography>
-                                        </span>
-                                    </Typography>
-                                    <Typography variant="subheading" className="employer__info-row">
-                                        <span className="employer__info-row-name">Отзывов</span>
-                                        <span className="employer__info-row-value">{employer.people_rated}</span>
-                                    </Typography>
-                                </div>
-                            ) : ''
-                        }
-                        <Typography variant="subheading" className="employer__info-row">
-                            <a href={employer.url} className="employer__info-row-item">
-                                Веб-сайт компании
-                            </a>
-                        </Typography>
+                <Grid className="employer__info" item xs={12} sm={6} md={4} lg={3}>
+                    <div className="employer__info-row">
+                        <img className="employer__logo" alt="" src={employer.logo_url} />
                     </div>
+                    {
+                        employer.rating ? (
+                            <div>
+                                <Typography variant="subheading" className="employer__info-row">
+                                    <span className="employer__info-row-name">Рейтинг</span>
+                                    <span className="employer__info-row-value">
+                                        <Typography
+                                            className="rating-plate"
+                                            variant="display1"
+                                            gutterBottom={false}
+                                        >
+                                            <span className="rating-plate__rating">
+                                                <StarBorderIcon classes={{root: 'rating-plate__rating-icon'}}/>
+                                                {employer.rating ? employer.rating.toFixed(1) : ''}
+                                            </span>
+                                        </Typography>
+                                    </span>
+                                </Typography>
+                                <Typography variant="subheading" className="employer__info-row">
+                                    <span className="employer__info-row-name">Отзывов</span>
+                                    <span className="employer__info-row-value">{employer.people_rated}</span>
+                                </Typography>
+                            </div>
+                        ) : ''
+                    }
+                    <Typography variant="subheading" className="employer__info-row employer__info-row_last">
+                        <a href={employer.url} className="employer__info-row-item">
+                            Веб-сайт компании
+                        </a>
+                    </Typography>
                 </Grid>
                 <Grid item xs={12} sm={6} md={8} lg={9} className="employer__name">
                     <Typography variant="display1" className="section-title">

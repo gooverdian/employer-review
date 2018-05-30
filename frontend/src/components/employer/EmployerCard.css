@@ -1,6 +1,7 @@
 .employer {
     display: flex;
     align-items: stretch;
+    margin-bottom: 16px;
 }
 
 .employer .employer__name {
@@ -8,7 +9,6 @@
     display: flex;
     flex-flow: column;
     align-items: flex-start;
-    margin-bottom: 16px;
 }
 
 .employer .employer__name-button {
@@ -17,8 +17,7 @@
 
 .employer .employer__info {
     background: #f5f5f5;
-    padding: 12px 12px 4px;
-    margin-bottom: 16px;
+    padding: 12px;
     box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2),0 4px 5px 0 rgba(0, 0, 0, 0.14),0 1px 10px 0 rgba(0, 0, 0, 0.12);
 }
 
@@ -26,6 +25,10 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+}
+
+.employer__info-row.employer__info-row_last {
+    margin-top: auto;
 }
 
 .employer__info-row-name {
