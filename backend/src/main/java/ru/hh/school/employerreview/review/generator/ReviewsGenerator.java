@@ -207,6 +207,10 @@ public class ReviewsGenerator {
     int specializationsNumber = randomGenerator.nextInt(SPECIALIZATIONS_THRESHOLD);
 
     Specialization specialization = specializationDao.getById(id);
+    if (specialization == null || specialization.getProfessionalField() == null
+        || specialization.getProfessionalField().getSpecializations() == null) {
+      return new ArrayList<>();
+    }
     List<Specialization> specializations = specialization.getProfessionalField().getSpecializations();
 
     Set<Specialization> result = new HashSet<>();
