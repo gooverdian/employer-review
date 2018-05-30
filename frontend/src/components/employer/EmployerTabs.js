@@ -3,7 +3,8 @@ import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import { withRouter } from 'react-router-dom';
-import EmployerReviews from "./EmployerReviews";
+import EmployerReviews from './EmployerReviews';
+import settings from 'config/settings';
 import './EmployerTabs.css';
 
 class EmployerTabs extends React.Component {
@@ -16,7 +17,6 @@ class EmployerTabs extends React.Component {
     };
 
     render() {
-        console.log(this.props.match);
         const { activeTabIndex } = this.state;
         return (
             <div>
@@ -29,10 +29,15 @@ class EmployerTabs extends React.Component {
                 </AppBar>
                 <div className="tab-content">
                     {activeTabIndex === 0 && <EmployerReviews
+                        reviewType={settings.reviewTypes.employee}
                         employerId={this.props.match.params.employerId}
                         reviewId={this.props.match.params.reviewId}
                     />}
-                    {activeTabIndex === 1 && "Отзывы об интервью"}
+                    {activeTabIndex === 1 && <EmployerReviews
+                        reviewType={settings.reviewTypes.interviewee}
+                        employerId={this.props.match.params.employerId}
+                        reviewId={this.props.match.params.reviewId}
+                    />}
                     {activeTabIndex === 2 && ""}
                 </div>
             </div>

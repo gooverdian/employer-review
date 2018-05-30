@@ -8,6 +8,7 @@ import { getTopEmployers } from 'modules/topEmployers';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import './TopEmployers.css';
+import 'assets/css/RatingPlate.css';
 
 class TopEmployers extends React.Component {
     state = {};

@@ -8,6 +8,10 @@ const settings = {
     paginationMaxButtonsCount: 9,
     paginationMaxPagesCount: 15,
     defaultTopSize: 10,
+    reviewTypes: {
+        employee: 'EMPLOYEE',
+        interviewee: 'INTERVIEWEE',
+    },
     apiUrls: {
         employer: DEFAULT_API_HOST + 'employers/',
         bestEmployers: DEFAULT_API_HOST + 'employers/best/',

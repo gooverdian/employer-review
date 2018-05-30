@@ -1,28 +1,28 @@
 import React from 'react';
 import List, { ListItem, ListItemText } from 'material-ui/List';
-import ExchangeInterface from 'components/exchange/ExchangeInterface';
 import EmployerReview from './EmployerReview';
+import { getEmployerReviews } from 'modules/employerReviews';
+import { connect } from 'react-redux';
+
 
 class EmployerReviews extends React.Component {
     state = {
         data: {}
     };
 
-    componentDidMount() {
-        if (this.props.employerId) {
-            ExchangeInterface.getReviews(this.props.employerId).then(
-                (data) => {
-                    this.setState({data: data});
-                },
-                function(error) {
-                    console.log(error);
-                }
-            )
+    static getDerivedStateFromProps(nextProps) {
+        console.log(nextProps);
+        if (!nextProps.data) {
+            nextProps.getEmployerReviews(nextProps.employerId, nextProps.reviewType);
+            return null;
         }
+
+        return { data: nextProps.data };
     }
 
-    render() {
-        if (!this.state.data.reviews || this.state.data.reviews.length === 0) {
+    render () {
+        const { reviews } = this.state.data;
+        if (!reviews || reviews.length === 0) {
             return (
                 <List>
                     <ListItem className="nothing-found">
@@ -32,16 +32,14 @@ class EmployerReviews extends React.Component {
             );
         }
 
-        console.log(this.props.reviewId);
         return (
             <div>
-                {this.state.data.reviews.map((item, index) => {
-                    console.log(item.review_id);
+                {reviews.map((item, index) => {
                     return (
                         <EmployerReview
                             key={index}
                             data={item}
-                            highlight={Number(item.review_id) === Number(this.props.reviewId)}
+                            highlight={Number(item.reviewId) === Number(this.props.reviewId)}
                         />
                     )})
                 }
@@ -50,4 +48,6 @@ class EmployerReviews extends React.Component {
     }
 }
 
-export default EmployerReviews;
+const mapStateToProps = (state, ownProps) => ({ data: state.employerReviews[ownProps.reviewType] });
+
+export default connect(mapStateToProps, { getEmployerReviews })(EmployerReviews);

@@ -15,16 +15,18 @@ import RadioGroupInput from './RadioGroupInput';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import { resetTopEmployers } from 'modules/topEmployers';
+import { resetEmployerReviews } from 'modules/employerReviews';
+import { resetEmployer } from 'modules/employers';
 import { connect } from 'react-redux';
 import classNames from 'classnames';
 import 'assets/css/Form.css';
 import './AddReviewForm.css';
 
 const reviewTypes = {
-    'EMPLOYEE' : 'О работе в компании',
-    'INTERVIEWEE' : 'Об интервью в компании'
+    [settings.reviewTypes.employee] : 'О работе в компании',
+    [settings.reviewTypes.interviewee] : 'Об интервью в компании'
 };
-const defaultReviewType = 'EMPLOYEE';
+const defaultReviewType = settings.reviewTypes.employee;
 
 class AddReviewForm extends React.Component {
     state = {
@@ -134,7 +136,7 @@ class AddReviewForm extends React.Component {
             }
         );
 
-        if (formData.review_type === 'INTERVIEWEE') {
+        if (formData.review_type === settings.reviewTypes.interviewee) {
             formData.salary = '';
             formData.employment_duration = '';
         } else {
@@ -148,6 +150,8 @@ class AddReviewForm extends React.Component {
         ExchangeInterface.addReview(formData).then(
             (data) => {
                 this.props.resetTopEmployers();
+                this.props.resetEmployerReviews();
+                this.props.resetEmployer(formData.employer_id);
                 this.props.history.push(`/employer/${formData.employer_id}/${data.review_id}`);
             },
             (error) => console.log(error)
@@ -296,4 +300,8 @@ class AddReviewForm extends React.Component {
     }
 }
 
-export default connect(() => {return {};}, { resetTopEmployers })(AddReviewForm);
+export default connect(() => {return {};}, {
+    resetTopEmployers,
+    resetEmployerReviews,
+    resetEmployer
+})(AddReviewForm);

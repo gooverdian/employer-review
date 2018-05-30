@@ -33,7 +33,7 @@ class EmployerReview extends React.Component {
                     </span>
                 </Typography>
                 <Typography variant="body2" className="review__time">
-                    {new Date(this.props.data.created_on.substr(0, this.props.data.created_on.length - 3)).toLocaleDateString()}
+                    {new Date(this.props.data.createdOn.substr(0, this.props.data.createdOn.length - 3)).toLocaleDateString()}
                 </Typography>
                 <Typography variant="body2" className="review__text">
                     {this.renderReviewText()}
@@ -45,10 +45,10 @@ class EmployerReview extends React.Component {
                 />
                 <ReviewInfoRow
                     title="Стаж работы в компании"
-                    value={this.props.data.employment_duration}
+                    value={this.props.data.employmentDuration}
                     valueSuffix={
                         ' мес.' + (
-                            this.props.data.employment_terminated !== false
+                            this.props.data.employmentTerminated !== false
                             ? ''
                             : ' по настоящее время'
                         )

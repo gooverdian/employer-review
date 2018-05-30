@@ -1,10 +1,11 @@
 import React from 'react';
-import ExchangeInterface from 'components/exchange/ExchangeInterface';
 import Button from 'material-ui/Button';
 import { Link } from 'react-router-dom';
 import Grid from 'material-ui/Grid';
 import Typography from 'material-ui/Typography';
 import StarBorderIcon from '@material-ui/icons/StarBorder';
+import { getEmployer } from 'modules/employers';
+import { connect } from 'react-redux';
 import './EmployerCard.css';
 import 'components/top-employers/TopEmployers.css';
 
@@ -13,17 +14,13 @@ class EmployerCard extends React.Component {
         employer: {}
     };
 
-    componentDidMount() {
-        if (this.props.employerId) {
-            ExchangeInterface.getEmployer(this.props.employerId).then(
-                (data) => {
-                    this.setState({employer: data});
-                },
-                function(error) {
-                    console.log(error);
-                }
-            )
+    static getDerivedStateFromProps(nextProps) {
+        if (!nextProps.employer) {
+            nextProps.getEmployer(nextProps.employerId);
+            return null;
         }
+
+        return { employer: nextProps.employer };
     }
 
     render () {
@@ -32,7 +29,7 @@ class EmployerCard extends React.Component {
             <Grid container className="employer">
                 <Grid className="employer__info" item xs={12} sm={6} md={4} lg={3}>
                     <div className="employer__info-row">
-                        <img className="employer__logo" alt="" src={employer.logo_url} />
+                        <img className="employer__logo" alt="" src={employer.logoUrl} />
                     </div>
                     {
                         employer.rating ? (
@@ -54,7 +51,7 @@ class EmployerCard extends React.Component {
                                 </Typography>
                                 <Typography variant="subheading" className="employer__info-row">
                                     <span className="employer__info-row-name">Отзывов</span>
-                                    <span className="employer__info-row-value">{employer.people_rated}</span>
+                                    <span className="employer__info-row-value">{employer.peopleRated}</span>
                                 </Typography>
                             </div>
                         ) : ''
@@ -70,7 +67,7 @@ class EmployerCard extends React.Component {
                         {employer.name}
                     </Typography>
                     <Typography variant="subheading">
-                        {employer.area_name}
+                        {employer.areaName}
                     </Typography>
                     <Button
                         className="employer__name-button"
@@ -87,4 +84,6 @@ class EmployerCard extends React.Component {
     }
 }
 
-export default EmployerCard;
+const mapStateToProps = (state, ownProps) => ({ employer: state.employers[ownProps.employerId] });
+
+export default connect(mapStateToProps, { getEmployer })(EmployerCard);

@@ -30,10 +30,11 @@ const ExchangeInterface = {
             }
         }).perform();
     },
-    getReviews: function (employerId, page = 0, perPage = settings.defaultPageSize) {
+    getReviews: function (employerId, reviewType = undefined, page = 0, perPage = settings.defaultPageSize) {
         return new ExchangeRequest({
             url: settings.apiUrls.review,
             params: {
+                review_type: reviewType,
                 employer_id: employerId,
                 page: page,
                 per_page: perPage,
