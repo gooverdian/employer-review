@@ -46,7 +46,7 @@ const Validator = {
     getFormData: function(attributes, namesMapping) {
         let formData = {};
         Object.keys(attributes).forEach((attributeName) => {
-            if (namesMapping[attributeName]) {
+            if (namesMapping && namesMapping[attributeName]) {
                 formData[namesMapping[attributeName]] = attributes[attributeName].value;
             } else {
                 formData[attributeName] = attributes[attributeName].value;

@@ -89,7 +89,9 @@ class SearchSelect extends React.Component {
     }
 
     selectHighlighted() {
-        this.handleSelection(this.state.results.items[this.state.highlightedIndex]);
+        if (this.state.results.items) {
+            this.handleSelection(this.state.results.items[this.state.highlightedIndex]);
+        }
     }
 
     invalidateSelection = () => {
