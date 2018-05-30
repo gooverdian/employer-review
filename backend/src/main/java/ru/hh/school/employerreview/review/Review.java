@@ -57,6 +57,7 @@ public class Review {
   @Column(name = "review_type")
   private ReviewType reviewType;
 
+
   @ManyToOne
   @JoinColumn(name = "position_id")
   private Position position;

@@ -2,8 +2,10 @@ package ru.hh.school.employerreview.specializations;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.query.Query;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import java.util.List;
@@ -49,6 +51,16 @@ public class SpecializationDao {
   @Transactional(readOnly = true)
   public Specialization getById(Integer id) {
     return getSession().get(Specialization.class, id);
+  }
+
+  @Transactional(readOnly = true)
+  public int getMaxId() {
+    CriteriaBuilder builder = getSession().getCriteriaBuilder();
+    CriteriaQuery<Integer> criteria = builder.createQuery(Integer.class);
+    Root<Specialization> reviewRoot = criteria.from(Specialization.class);
+    criteria.select(builder.max(reviewRoot.get("id").as(Integer.class)));
+    Query<Integer> query = getSession().createQuery(criteria);
+    return query.uniqueResultOptional().orElse(0);
   }
 
   private Session getSession() {

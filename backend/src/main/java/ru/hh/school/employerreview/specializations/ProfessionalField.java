@@ -3,6 +3,7 @@ package ru.hh.school.employerreview.specializations;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -25,7 +26,7 @@ public class ProfessionalField {
   @Column(name = "name")
   private String name;
 
-  @OneToMany(mappedBy = "professionalField", cascade = CascadeType.ALL, orphanRemoval = true)
+  @OneToMany(mappedBy = "professionalField", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
   private List<Specialization> specializations = new ArrayList<>();
 
   public ProfessionalField() {

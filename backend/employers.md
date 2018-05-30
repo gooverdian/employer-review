@@ -35,7 +35,7 @@
 
 **GET**
 
-**URL** /employers/<employer_id> 
+**URL** /employers/<employer_id>
 
 параметры: `add_visit_counter` (по умолчанию false), счетчик посещения компании автоматически инкрементируется `add_visit_counter=true`
 
@@ -55,13 +55,13 @@
 }
 ```
 
-# Добавление новой компании не из базы hh 
+# Добавление новой компании не из базы hh
 
 **POST**
 
 **URL** /employers
 
-пример входного json 
+пример входного json
 ```json
 {
 	"name":"test",
@@ -92,7 +92,7 @@
 
 **GET**
 
-**URL** /employers/best 
+**URL** /employers/best
 
 параметры: `size` (по умолчанию - 20) - размер топа компаний
 
@@ -102,7 +102,7 @@
     {
         "id":870,
         "name":"22Стиля",
-        "url":"https://api.hh.ru/employers/677383", 
+        "url":"https://api.hh.ru/employers/677383",
         "stars":{"4.0":1,"4.5":2,"5.0":16},
         "rating":4.894737,
         "hh_id":677383,
@@ -129,7 +129,7 @@
 
 **GET**
 
-**URL** /employers/worst 
+**URL** /employers/worst
 
 параметры: `size` (по умолчанию - 20) - размер топа компаний
 
@@ -139,7 +139,7 @@
     {
         "id":870,
         "name":"22Стиля",
-        "url":"https://api.hh.ru/employers/677383", 
+        "url":"https://api.hh.ru/employers/677383",
         "stars":{"4.0":19},
         "rating":4.0,
         "hh_id":677383,
@@ -189,7 +189,7 @@
 
 **GET**
 
-**URL** /employers/balanced 
+**URL** /employers/balanced
 
 параметры: `size` (по умолчанию - 20) - размер топа компаний
 
@@ -199,7 +199,7 @@
     {
         "id":870,
         "name":"22Стиля",
-        "url":"https://api.hh.ru/employers/677383", 
+        "url":"https://api.hh.ru/employers/677383",
         "stars":{"4.0":19},
         "rating":4.0,
         "hh_id":677383,
@@ -227,7 +227,7 @@
 
 **GET**
 
-**URL** /employers/disbalanced 
+**URL** /employers/disbalanced
 
 параметры: `size` (по умолчанию - 20) - размер топа компаний
 
@@ -249,7 +249,7 @@
     {
         "id":870,
         "name":"22Стиля",
-        "url":"https://api.hh.ru/employers/677383", 
+        "url":"https://api.hh.ru/employers/677383",
         "stars":{"4.0":19},
         "rating":4.0,
         "hh_id":677383,
