@@ -3,11 +3,14 @@ package ru.hh.school.employerreview.statistic.main;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.transaction.annotation.Transactional;
+import ru.hh.school.employerreview.specializations.ProfessionalField;
 
 import javax.persistence.NoResultException;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class MainPageStatisticDao {
 
@@ -106,6 +109,50 @@ public class MainPageStatisticDao {
     } catch (NoResultException e) {
       throw new RuntimeException();
     }
+  }
+
+  @Transactional
+  public void saveMainPageEmploymentMap(Map<ProfessionalField, Float> employmentMap) {
+    for (Map.Entry<ProfessionalField, Float> entry : employmentMap.entrySet()) {
+      getSession().save(new MainPageEmployment(entry.getKey(), entry.getValue()));
+    }
+  }
+
+  @Transactional
+  public void saveMainPageSalaryMap(Map<ProfessionalField, Float> salaryMap) {
+    for (Map.Entry<ProfessionalField, Float> entry : salaryMap.entrySet()) {
+      getSession().save(new MainPageSalary(entry.getKey(), entry.getValue()));
+    }
+  }
+
+  @Transactional
+  public void deleteAllMainPageSalary() {
+    getSession().createQuery("delete from MainPageSalary").executeUpdate();
+  }
+
+  @Transactional
+  public void deleteAllMainPageEmployment() {
+    getSession().createQuery("delete from MainPageEmployment").executeUpdate();
+  }
+
+  @Transactional(readOnly = true)
+  public Map<String, Float> getMainPageEmploymentMap() {
+    CriteriaBuilder builder = getSession().getCriteriaBuilder();
+    CriteriaQuery<MainPageEmployment> criteria = builder.createQuery(MainPageEmployment.class);
+    Root<MainPageEmployment> root = criteria.from(MainPageEmployment.class);
+    criteria.select(root);
+    return getSession().createQuery(criteria).getResultList()
+        .stream().collect(Collectors.toMap(s -> s.getProfessionalField().getName(), s -> s.getDuration()));
+  }
+
+  @Transactional(readOnly = true)
+  public Map<String, Float> getMainPageSalary() {
+    CriteriaBuilder builder = getSession().getCriteriaBuilder();
+    CriteriaQuery<MainPageSalary> criteria = builder.createQuery(MainPageSalary.class);
+    Root<MainPageSalary> root = criteria.from(MainPageSalary.class);
+    criteria.select(root);
+    return getSession().createQuery(criteria).getResultList()
+        .stream().collect(Collectors.toMap(s -> s.getProfessionalField().getName(), s -> s.getSalary()));
   }
 
   private Session getSession() {

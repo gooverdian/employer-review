@@ -33,6 +33,8 @@ import ru.hh.school.employerreview.specializations.SpecializationsResource;
 import ru.hh.school.employerreview.statistic.employment.DurationByProffField;
 import ru.hh.school.employerreview.statistic.employment.DurationByProffFieldCalculationWorker;
 import ru.hh.school.employerreview.statistic.employment.DurationByProffFieldDao;
+import ru.hh.school.employerreview.statistic.main.MainPageEmployment;
+import ru.hh.school.employerreview.statistic.main.MainPageSalary;
 import ru.hh.school.employerreview.statistic.main.MainPageStatistic;
 import ru.hh.school.employerreview.statistic.main.MainPageStatisticDao;
 import ru.hh.school.employerreview.statistic.StatisticResource;
@@ -80,8 +82,8 @@ public class CommonConfig {
   MappingConfig mappingConfig() {
     return new MappingConfig(Employer.class, Review.class, Area.class, Rating.class, MainPageStatistic.class,
         StarsInRating.class, ProfessionalField.class, Specialization.class, EmployerVisit.class, Position.class,
-        RatingDeviation.class, ExternalReview.class, EmployerSalaryStatistics.class, DurationByProffField.class);
-
+        RatingDeviation.class, ExternalReview.class, EmployerSalaryStatistics.class, DurationByProffField.class,
+        MainPageEmployment.class, MainPageSalary.class);
   }
 
   @Bean
@@ -151,12 +153,13 @@ public class CommonConfig {
         EmployerSalaryStatisticsDao employerSalaryStatisticsDao,
         ReviewDao reviewDao,
         ProfessionalFieldDao professionalFieldDao,
-        EmployerDao employerDao) {
-
+        EmployerDao employerDao,
+        MainPageStatisticDao mainPageStatisticDao) {
     return new EmployerSalaryStatisticsCalculationWorker(employerSalaryStatisticsDao,
         reviewDao,
         professionalFieldDao,
-        employerDao);
+        employerDao,
+        mainPageStatisticDao);
   }
 
   @Bean
@@ -164,11 +167,13 @@ public class CommonConfig {
       DurationByProffFieldDao durationByProffFieldDao,
       ReviewDao reviewDao,
       ProfessionalFieldDao professionalFieldDao,
-      EmployerDao employerDao) {
+      EmployerDao employerDao,
+      MainPageStatisticDao mainPageStatisticDao) {
     return new DurationByProffFieldCalculationWorker(durationByProffFieldDao,
         reviewDao,
         professionalFieldDao,
-        employerDao);
+        employerDao,
+        mainPageStatisticDao);
   }
 
   @Bean

@@ -53,4 +53,16 @@ public class StatisticResource {
   public Map<String, Float> getAverageEmploymentDurationEmployerByProffField(@PathParam("employer_id") Integer employerId) {
     return durationByProffFieldDao.getAverageEmploymentDurationMap(employerId);
   }
+
+  @GET
+  @Path("/salary/by_proff_field")
+  public Map<String, Float> getAverageSalaryByProffField() {
+    return mainPageStatisticDao.getMainPageSalary();
+  }
+
+  @GET
+  @Path("/employment_duration/by_proff_field")
+  public Map<String, Float> getAverageEmploymentDurationByProffField() {
+    return mainPageStatisticDao.getMainPageEmploymentMap();
+  }
 }

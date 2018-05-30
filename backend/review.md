@@ -11,7 +11,7 @@
 	"rating":2.5,
 	"review_type":"INTERVIEWEE",
 	"text":"ReviewText 01",
-	"salary":100000,
+	"duration":100000,
 	"specializations":[{"name":"Specialization 01","specialization_id":0},{"name":"Specialization 02","specialization_id":1}],
 	"review_id":null,
 	"position_id":0,
@@ -66,7 +66,7 @@ HTTP code | type | value | описание
 	  	{
 			"rating":	2,
 			"text":	"gdfghdfgh\n",
-			"salary":	null,
+			"duration":	null,
 			"specializations":	[],
 			"employer_id":	5,
 			"review_id": 2,
@@ -79,7 +79,7 @@ HTTP code | type | value | описание
 	  	{
 			"rating":	4,
 			"text":	"dfghdfghdfh",
-			"salary":	null,
+			"duration":	null,
 			"specializations":	[],
 			"employer_id":	5,
 			"review_id":	1,

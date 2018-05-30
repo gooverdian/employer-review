@@ -17,10 +17,10 @@ public class RatingDeviation implements Serializable {
   @Id
   @OneToOne
   @JoinColumn(name = "employer_id")
-  Employer employer;
+  private Employer employer;
 
   @Column(name = "deviation")
-  Float deviation;
+  private Float deviation;
 
   RatingDeviation() {
   }

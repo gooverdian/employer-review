@@ -25,6 +25,9 @@ import ru.hh.school.employerreview.specializations.Specialization;
 import ru.hh.school.employerreview.statistic.employment.DurationByProffField;
 import ru.hh.school.employerreview.statistic.employment.DurationByProffFieldCalculationWorker;
 import ru.hh.school.employerreview.statistic.employment.DurationByProffFieldDao;
+import ru.hh.school.employerreview.statistic.main.MainPageEmployment;
+import ru.hh.school.employerreview.statistic.main.MainPageSalary;
+import ru.hh.school.employerreview.statistic.main.MainPageStatisticDao;
 import ru.hh.school.employerreview.statistic.salary.EmployerSalaryStatistics;
 import ru.hh.school.employerreview.statistic.salary.EmployerSalaryStatisticsCalculationWorker;
 import ru.hh.school.employerreview.statistic.salary.EmployerSalaryStatisticsDao;
@@ -40,7 +43,7 @@ public class OfflineCalculationConfig {
   MappingConfig mappingConfig() {
     return new MappingConfig(Employer.class, Area.class, Rating.class, RatingDeviation.class, StarsInRating.class,
         EmployerSalaryStatistics.class, Review.class, ProfessionalField.class, Specialization.class, Position.class,
-        DurationByProffField.class);
+        DurationByProffField.class, MainPageEmployment.class, MainPageSalary.class);
   }
 
   @Bean
@@ -89,15 +92,22 @@ public class OfflineCalculationConfig {
   }
 
   @Bean
+  MainPageStatisticDao mainPageStatisticDao(SessionFactory sessionFactory) {
+    return new MainPageStatisticDao(sessionFactory);
+  }
+
+  @Bean
   EmployerSalaryStatisticsCalculationWorker employerSalaryStatisticsCalculationWorker(
-        EmployerSalaryStatisticsDao employerSalaryStatisticsDao,
-        ReviewDao reviewDao,
-        ProfessionalFieldDao professionalFieldDao,
-        EmployerDao employerDao) {
+      EmployerSalaryStatisticsDao employerSalaryStatisticsDao,
+      ReviewDao reviewDao,
+      ProfessionalFieldDao professionalFieldDao,
+      EmployerDao employerDao,
+      MainPageStatisticDao mainPageStatisticDao) {
     return new EmployerSalaryStatisticsCalculationWorker(employerSalaryStatisticsDao,
         reviewDao,
         professionalFieldDao,
-        employerDao);
+        employerDao,
+        mainPageStatisticDao);
   }
 
   @Bean
@@ -105,10 +115,12 @@ public class OfflineCalculationConfig {
       DurationByProffFieldDao durationByProffFieldDao,
       ReviewDao reviewDao,
       ProfessionalFieldDao professionalFieldDao,
-      EmployerDao employerDao) {
+      EmployerDao employerDao,
+      MainPageStatisticDao mainPageStatisticDao) {
     return new DurationByProffFieldCalculationWorker(durationByProffFieldDao,
         reviewDao,
         professionalFieldDao,
-        employerDao);
+        employerDao,
+        mainPageStatisticDao);
   }
 }

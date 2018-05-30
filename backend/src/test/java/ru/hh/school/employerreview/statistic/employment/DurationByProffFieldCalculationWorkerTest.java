@@ -91,10 +91,16 @@ public class DurationByProffFieldCalculationWorkerTest extends EmployerReviewTes
     Assert.assertEquals(2, result.size());
     Assert.assertEquals(20, result.get(specializationDao.getById(specialization1Id).getProfessionalField().getName()).intValue());
     Assert.assertEquals(40, result.get(specializationDao.getById(specialization2Id).getProfessionalField().getName()).intValue());
+
+    result = statisticResource.getAverageEmploymentDurationByProffField();
+    Assert.assertEquals(2, result.size());
+    Assert.assertEquals(20, result.get(specializationDao.getById(specialization1Id).getProfessionalField().getName()).intValue());
+    Assert.assertEquals(40, result.get(specializationDao.getById(specialization2Id).getProfessionalField().getName()).intValue());
   }
 
   @After
   public void afterTest() {
+    testQueryExecutorDao.executeQuery("delete from MainPageEmployment");
     testQueryExecutorDao.executeQuery("delete from DurationByProffField");
     testQueryExecutorDao.executeQuery("delete from Review");
     testQueryExecutorDao.executeQuery("delete from Specialization");
