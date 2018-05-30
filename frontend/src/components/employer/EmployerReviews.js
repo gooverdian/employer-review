@@ -4,7 +4,6 @@ import EmployerReview from './EmployerReview';
 import { getEmployerReviews } from 'modules/employerReviews';
 import { connect } from 'react-redux';
 
-
 class EmployerReviews extends React.Component {
     state = {
         data: {}

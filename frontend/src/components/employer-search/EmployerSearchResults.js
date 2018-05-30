@@ -1,14 +1,16 @@
 import React from 'react';
 import List, { ListItem, ListItemSecondaryAction, ListItemText } from 'material-ui/List';
-import { Link } from "react-router-dom";
-import Avatar from 'material-ui/Avatar';
+import { Link } from 'react-router-dom';
 import PaginationWidget from 'components/pagination/PaginationWidget';
 import IconButton from 'material-ui/IconButton';
 import CommentIcon from '@material-ui/icons/Comment';
-import './EmployerSearchResults.css';
 import { searchEmployers } from 'modules/employerSearch';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
+import EmployerAvatar from 'components/employer/EmployerAvatar';
+import StarBorderIcon from '@material-ui/icons/StarBorder';
+import Typography from 'material-ui/Typography';
+import './EmployerSearchResults.css';
 
 class EmployerSearchResults extends React.Component {
     state = {};
@@ -62,16 +64,30 @@ class EmployerSearchResults extends React.Component {
                     <ListItem
                         key={item.id}
                         button
+                        className="employer-search-results__action"
                         component={Link}
                         to={"/employer/" + item.id}
                     >
-                    <Avatar alt="" src={item.logoUrl} />
-                    <ListItemText primary={item.name} />
-                    <ListItemSecondaryAction>
-                        <IconButton component={Link} title="Оставить отзыв о компании" to={"/review/add/" + item.id}>
-                            <CommentIcon />
-                        </IconButton>
-                    </ListItemSecondaryAction>
+                        <ListItemText primary={item.name} secondary={item.areaName} />
+                        <EmployerAvatar src={item.logoUrl} />
+                        {
+                            item.rating ? (
+                                <Typography className="rating-plate" variant="display1" gutterBottom={false}>
+                                        <span className="rating-plate__rating">
+                                            <StarBorderIcon classes={{root: 'rating-plate__rating-icon'}}/>
+                                            {item.rating.toFixed(1)}
+                                        </span>
+                                    <span className="rating-plate__count">
+                                            {item.peopleRated}
+                                        </span>
+                                </Typography>
+                            ) : ''
+                        }
+                        <ListItemSecondaryAction className="">
+                            <IconButton component={Link} title="Оставить отзыв о компании" to={"/review/add/" + item.id}>
+                                <CommentIcon />
+                            </IconButton>
+                        </ListItemSecondaryAction>
                     </ListItem>
                 ))}
             </List>
