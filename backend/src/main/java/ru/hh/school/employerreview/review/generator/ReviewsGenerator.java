@@ -173,6 +173,11 @@ public class ReviewsGenerator {
 
     ExternalReview externalReview = new ExternalReview();
     if (externalReview.getExternalReviewPositivity() == null) {
+      int id = randomGenerator.nextInt(maxExternalReviewId);
+      externalReview = externalReviewDao.getById(id);
+      if (externalReview != null) {
+        return externalReview.getText();
+      }
       return new String();
     }
     while (positivity != externalReview.getExternalReviewPositivity()) {
