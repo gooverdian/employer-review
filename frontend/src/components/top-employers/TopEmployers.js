@@ -27,37 +27,32 @@ class TopEmployers extends React.Component {
         }
 
         return (
-            <div>
-                <Typography variant="title">
-                    Лучшие компании
-                </Typography>
-                <List>
-                    {this.props.items.map((item) => (
-                        <ListItem
-                            key={item.id}
-                            button
-                            component={Link}
-                            to={"/employer/" + item.id}
-                        >
-                            <ListItemText primary={item.name} secondary={item.areaName} />
-                            <EmployerAvatar src={item.logoUrl} />
-                            {
-                                item.rating ? (
-                                    <Typography className="rating-plate" variant="display1" gutterBottom={false}>
-                                        <span className="rating-plate__rating">
-                                            <StarBorderIcon classes={{root: 'rating-plate__rating-icon'}}/>
-                                            {item.rating.toFixed(1)}
-                                        </span>
-                                        <span className="rating-plate__count">
-                                            {item.peopleRated}
-                                        </span>
-                                    </Typography>
-                                ) : ''
-                            }
-                        </ListItem>
-                    ))}
-                </List>
-            </div>
+            <List>
+                {this.props.items.map((item) => (
+                    <ListItem
+                        key={item.id}
+                        button
+                        component={Link}
+                        to={"/employer/" + item.id}
+                    >
+                        <ListItemText primary={item.name} secondary={item.areaName} />
+                        <EmployerAvatar src={item.logoUrl} />
+                        {
+                            item.rating ? (
+                                <Typography className="rating-plate" variant="display1" gutterBottom={false}>
+                                    <span className="rating-plate__rating">
+                                        <StarBorderIcon classes={{root: 'rating-plate__rating-icon'}}/>
+                                        {item.rating.toFixed(1)}
+                                    </span>
+                                    <span className="rating-plate__count">
+                                        {item.peopleRated}
+                                    </span>
+                                </Typography>
+                            ) : ''
+                        }
+                    </ListItem>
+                ))}
+            </List>
         );
     }
 }

@@ -3,11 +3,13 @@ import EmployerSearchResults from 'components/employer-search/EmployerSearchResu
 
 const EmployerSearchView = function({match, history}) {
     return (
-        <EmployerSearchResults
-            history={history}
-            search={match.params.search}
-            page={match.params.page}
-        />
+        <div className="container container_content">
+            <EmployerSearchResults
+                history={history}
+                search={match.params.search}
+                page={match.params.page}
+            />
+        </div>
     );
 };
 

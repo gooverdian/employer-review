@@ -1,0 +1,47 @@
+.about {
+    background: #fff url('./about-us-backdrop.jpg') no-repeat center bottom;
+    background-size: cover;
+}
+
+.about__container {
+    text-align: center;
+    padding: 80px;
+}
+
+.about__wrapper {
+    padding: 10px;
+    background: rgba(0, 0, 0, .6);
+}
+
+.about_suffix .about__container {
+    padding-bottom: 70px;
+    padding-top: 80px;
+}
+
+.about__description, .about__suffix {
+    color: #c5c5c5;
+    text-shadow: 0 0 4px rgba(0, 0, 0, .8);
+}
+
+.about__suffix {
+    margin-top: -10px;
+    line-height: 10px;
+}
+
+.about .about__value {
+    color: #4ebc53;
+    margin-top: -10px;
+    text-shadow: 0 0 15px rgba(0, 0, 0, .8);
+}
+
+@media only screen and (max-width: 959px) {
+    .about__container {
+        padding: 40px;
+    }
+
+    .about_suffix {
+        padding-bottom: 30px;
+        padding-top: 30px;
+    }
+}
+

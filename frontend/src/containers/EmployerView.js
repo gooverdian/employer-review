@@ -5,7 +5,7 @@ import EmployerTabs from 'components/employer/EmployerTabs';
 
 const EmployerView = function({match, history}) {
     return (
-        <div>
+        <div className="container container_content">
             <Grid container>
                 <Grid item xs>
                     <EmployerCard

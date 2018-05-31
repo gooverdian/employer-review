@@ -28,18 +28,26 @@ class App extends React.Component {
             <JssProvider generateClassName={generateClassName}>
                 <MuiThemeProvider theme={theme}>
                     <NavigationBar />
-                    <div className="container container_content">
-                        <Switch>
-                            {routeMap.map((item, index) => (
-                                <Route
-                                    key={index}
-                                    exact={item.exact}
-                                    path={item.path}
-                                    component={item.component}
-                                />
-                            ))}
-                        </Switch>
-                    </div>
+                    <Switch>
+                        {routeMap.map((item, index) => (
+                            <Route
+                                key={index}
+                                exact={item.exact}
+                                path={item.path}
+                                component={item.component}
+                            />
+                        ))}
+                    </Switch>
+                    <footer className="footer">
+                        <div className="container footer__wrapper">
+                            <div className="footer__left-side">
+                                © Не оформили, права не защитили, 2018
+                            </div>
+                            <div className="footer__right-side">
+                                Школьники ШП ХХ
+                            </div>
+                        </div>
+                    </footer>
                     <ErrorSnackbar />
                 </MuiThemeProvider>
             </JssProvider>
