@@ -44,9 +44,6 @@ class TopEmployers extends React.Component {
                                         <StarBorderIcon classes={{root: 'rating-plate__rating-icon'}}/>
                                         {item.rating.toFixed(1)}
                                     </span>
-                                    <span className="rating-plate__count">
-                                        {item.peopleRated}
-                                    </span>
                                 </Typography>
                             ) : ''
                         }

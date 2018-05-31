@@ -61,21 +61,6 @@ class EmployerSearchForm extends React.Component {
                     value={this.state.searchValue}
                     onChange={this.handleTextChange}
                 />
-                <TextField
-                    key="region"
-                    size="large"
-                    InputProps={{
-                        disableUnderline: true,
-                        classes: {
-                            root: "header-form__search",
-                            input: "header-form__input header-form_middle",
-                        },
-                    }}
-                    type="text"
-                    placeholder="регион"
-                    name="searchValue"
-                    value="Москва"
-                />
                 <Button className="header-form__button" variant="raised" color="secondary" size="large" type="submit">
                     <SearchIcon className="header-form__button-icon" />
                 </Button>
