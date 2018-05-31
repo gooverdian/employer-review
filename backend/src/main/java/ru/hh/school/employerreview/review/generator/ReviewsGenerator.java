@@ -161,7 +161,7 @@ public class ReviewsGenerator {
   private String getText(Float rating) {
 
     if (maxExternalReviewId == 0) {
-      return null;
+      return new String();
     }
 
     ExternalReviewPositivity positivity;
@@ -172,6 +172,9 @@ public class ReviewsGenerator {
     }
 
     ExternalReview externalReview = new ExternalReview();
+    if (externalReview.getExternalReviewPositivity() == null) {
+      return new String();
+    }
     while (positivity != externalReview.getExternalReviewPositivity()) {
       int id = randomGenerator.nextInt(maxExternalReviewId);
       externalReview = externalReviewDao.getById(id);
