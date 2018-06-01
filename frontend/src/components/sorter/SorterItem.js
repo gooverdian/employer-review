@@ -1,7 +1,7 @@
 import React from 'react';
 import { ListItem } from 'material-ui/List';
 
-const minWidthPercentage = 20;
+const minWidthPercentage = 10;
 
 class SorterItem extends React.Component {
     getItemWidth() {
@@ -9,7 +9,7 @@ class SorterItem extends React.Component {
         const percentage = (
             ((this.props.value - this.props.minValue) / deviation * (100 - minWidthPercentage)) + minWidthPercentage
         ).toFixed(2);
-        console.log(this.props.value, this.props.maxValue);
+
         return `${percentage}%`;
     }
 

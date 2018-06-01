@@ -5,6 +5,7 @@ import { topEmployers } from './topEmployers';
 import { employers } from './employers';
 import { employerReviews } from './employerReviews';
 import { mainStatistics } from './mainStatistics';
+import { employerStatistics } from './employerStatistics';
 
 const rootReducer = combineReducers({
     employerSearch,
@@ -13,6 +14,7 @@ const rootReducer = combineReducers({
     employers,
     employerReviews,
     mainStatistics,
+    employerStatistics,
 });
 
 export default rootReducer;

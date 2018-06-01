@@ -5,6 +5,10 @@ import Tab from '@material-ui/core/Tab';
 import { withRouter } from 'react-router-dom';
 import EmployerReviews from './EmployerReviews';
 import settings from 'config/settings';
+import EmployerSalarySorter from 'components/sorter/EmployerSalarySorter';
+import EmployerDurationSorter from 'components/sorter/EmployerDurationSorter';
+import EmployerReviewsSorter from 'components/sorter/EmployerReviewsSorter';
+import Typography from 'material-ui/Typography';
 import './EmployerTabs.css';
 
 export const reviewTypesUrls = {
@@ -24,7 +28,6 @@ class EmployerTabs extends React.Component {
 
     constructor(props) {
         super(props);
-        console.log(props.match.params.reviewTypeUrl);
         if (props.match.params.reviewTypeUrl && tabIndexByUrl[props.match.params.reviewTypeUrl]) {
             this.state = {
                 activeTabIndex: tabIndexByUrl[props.match.params.reviewTypeUrl]
@@ -41,10 +44,17 @@ class EmployerTabs extends React.Component {
         return (
             <div>
                 <AppBar position="static" color="default">
-                    <Tabs value={activeTabIndex} onChange={this.handleTabChange}>
+                    <Tabs
+                        value={activeTabIndex}
+                        onChange={this.handleTabChange}
+                        scrollable
+                        scrollButtons="on"
+                    >
                         <Tab label="Отзывы сотрудников" />
                         <Tab label="Отзывы об интервью" />
                         <Tab label="Заработная плата" />
+                        <Tab label="Кадры" />
+                        <Tab label="Количество отзывов" />
                     </Tabs>
                 </AppBar>
                 <div className="tab-content">
@@ -58,7 +68,30 @@ class EmployerTabs extends React.Component {
                         employerId={this.props.match.params.employerId}
                         reviewId={this.props.match.params.reviewId}
                     />}
-                    {activeTabIndex === 2 && ""}
+                    {activeTabIndex === 2 && <div>
+                        <Typography variant="title">
+                            Средние зарплаты по профессиональным областям
+                        </Typography>
+                        <EmployerSalarySorter
+                            employerId={this.props.match.params.employerId}
+                        />
+                    </div>}
+                    {activeTabIndex === 3 && <div>
+                        <Typography variant="title">
+                            Среднее время работы в компании по профобластям
+                        </Typography>
+                        <EmployerDurationSorter
+                            employerId={this.props.match.params.employerId}
+                        />
+                    </div>}
+                    {activeTabIndex === 4 && <div>
+                        <Typography variant="title">
+                            Количество отзывов, оставленное представителями разных профобластей
+                        </Typography>
+                        <EmployerReviewsSorter
+                            employerId={this.props.match.params.employerId}
+                        />
+                    </div>}
                 </div>
             </div>
         );

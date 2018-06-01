@@ -19,7 +19,8 @@ const settings = {
         review: DEFAULT_API_HOST + 'review/',
         generalStatistics: DEFAULT_API_HOST + 'statistic/',
         salaryByProfFields: DEFAULT_API_HOST + 'statistic/salary/by_proff_field/',
-        employmentDurationByProfField: DEFAULT_API_HOST + '/statistic/employment_duration/by_proff_field/'
+        employmentDurationByProfField: DEFAULT_API_HOST + 'statistic/employment_duration/by_proff_field/',
+        reviewCountByProfFields: DEFAULT_API_HOST + 'statistic/review_counter/by_proff_field/',
     },
 };
 

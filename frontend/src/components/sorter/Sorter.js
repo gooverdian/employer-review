@@ -50,12 +50,16 @@ class Sorter extends React.Component {
         const normalizedItems = this.getNormalizedItems(this.props.sortAscending);
         const firstValue = normalizedItems[0].value;
         const lastValue = normalizedItems[normalizedItems.length - 1].value;
+        let minValue = this.props.minValue;
+        if (isNaN(minValue)) {
+            minValue = this.props.sortAscending ? firstValue : lastValue;
+        }
         return (
             <List className="sorter">
                 {normalizedItems.map((item, index) => (
                     <SorterItem
                         maxValue={this.props.sortAscending ? lastValue : firstValue}
-                        minValue={this.props.sortAscending ? firstValue : lastValue}
+                        minValue={minValue}
                         value={item.value}
                         key={index}
                     >
