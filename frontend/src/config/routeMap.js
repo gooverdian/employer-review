@@ -15,7 +15,7 @@ const routeMap = [
         component: EmployerSearchView
     },
     {
-        path: '/employer/:employerId/:reviewId?',
+        path: '/employer/:employerId/:reviewTypeUrl?/:reviewId?',
         component: EmployerView
     },
     {

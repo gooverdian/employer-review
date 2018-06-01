@@ -15,7 +15,7 @@ export const getEmployerReviews = (employerId, reviewType) => {
                 dispatch({
                     type: GET_EMPLOYER_REVIEWS_SUCCESS,
                     payload: {
-                        employerId: employerId,
+                        employerId: Number(employerId),
                         reviewType: reviewType,
                         response: camelizeKeys(response),
                     },

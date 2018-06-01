@@ -7,10 +7,30 @@ import EmployerReviews from './EmployerReviews';
 import settings from 'config/settings';
 import './EmployerTabs.css';
 
+export const reviewTypesUrls = {
+    [settings.reviewTypes.employee]: 'employee-reviews',
+    [settings.reviewTypes.interviewee]: 'interviewee-reviews',
+};
+
+const tabIndexByUrl = {
+    'employee-reviews': 0,
+    'interviewee-reviews': 1,
+};
+
 class EmployerTabs extends React.Component {
     state = {
         activeTabIndex: 0
     };
+
+    constructor(props) {
+        super(props);
+        console.log(props.match.params.reviewTypeUrl);
+        if (props.match.params.reviewTypeUrl && tabIndexByUrl[props.match.params.reviewTypeUrl]) {
+            this.state = {
+                activeTabIndex: tabIndexByUrl[props.match.params.reviewTypeUrl]
+            };
+        }
+    }
 
     handleTabChange = (event, value) => {
         this.setState({ activeTabIndex: value });
@@ -24,7 +44,7 @@ class EmployerTabs extends React.Component {
                     <Tabs value={activeTabIndex} onChange={this.handleTabChange}>
                         <Tab label="Отзывы сотрудников" />
                         <Tab label="Отзывы об интервью" />
-                        <Tab label="Какой-то таб" />
+                        <Tab label="Заработная плата" />
                     </Tabs>
                 </AppBar>
                 <div className="tab-content">

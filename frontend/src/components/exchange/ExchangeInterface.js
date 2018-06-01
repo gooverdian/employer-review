@@ -30,6 +30,21 @@ const ExchangeInterface = {
             }
         }).perform();
     },
+    getGeneralStatistics: function() {
+        return new ExchangeRequest({
+            url: settings.apiUrls.generalStatistics,
+        }).perform();
+    },
+    getSalaryByProfFields: function(employerId = undefined) {
+        return new ExchangeRequest({
+            url: settings.apiUrls.salaryByProfFields + (employerId ? employerId : ''),
+        }).perform();
+    },
+    getEmploymentDurationByProfField: function(employerId = undefined) {
+        return new ExchangeRequest({
+            url: settings.apiUrls.employmentDurationByProfField + (employerId ? employerId : ''),
+        }).perform();
+    },
     getReviews: function (employerId, reviewType = undefined, page = 0, perPage = settings.defaultPageSize) {
         return new ExchangeRequest({
             url: settings.apiUrls.review,

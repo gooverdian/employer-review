@@ -10,8 +10,7 @@ class EmployerReviews extends React.Component {
     };
 
     static getDerivedStateFromProps(nextProps) {
-        console.log(nextProps);
-        if (!nextProps.data) {
+        if (!nextProps.data || nextProps.stateEmployerId !== Number(nextProps.employerId)) {
             nextProps.getEmployerReviews(nextProps.employerId, nextProps.reviewType);
             return null;
         }
@@ -47,6 +46,9 @@ class EmployerReviews extends React.Component {
     }
 }
 
-const mapStateToProps = (state, ownProps) => ({ data: state.employerReviews[ownProps.reviewType] });
+const mapStateToProps = (state, ownProps) => ({
+    data: state.employerReviews[ownProps.reviewType],
+    stateEmployerId: state.employerReviews.employerId
+});
 
 export default connect(mapStateToProps, { getEmployerReviews })(EmployerReviews);

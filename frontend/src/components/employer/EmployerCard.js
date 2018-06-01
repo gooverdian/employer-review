@@ -7,7 +7,6 @@ import StarBorderIcon from '@material-ui/icons/StarBorder';
 import { getEmployer } from 'modules/employers';
 import { connect } from 'react-redux';
 import './EmployerCard.css';
-import 'components/top-employers/TopEmployers.css';
 
 class EmployerCard extends React.Component {
     state = {

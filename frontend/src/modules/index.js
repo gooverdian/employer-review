@@ -4,6 +4,7 @@ import { errorMessage } from './errorMessage';
 import { topEmployers } from './topEmployers';
 import { employers } from './employers';
 import { employerReviews } from './employerReviews';
+import { mainStatistics } from './mainStatistics';
 
 const rootReducer = combineReducers({
     employerSearch,
@@ -11,6 +12,7 @@ const rootReducer = combineReducers({
     errorMessage,
     employers,
     employerReviews,
+    mainStatistics,
 });
 
 export default rootReducer;

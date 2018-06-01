@@ -19,6 +19,7 @@ import { resetEmployerReviews } from 'modules/employerReviews';
 import { resetEmployer } from 'modules/employers';
 import { connect } from 'react-redux';
 import classNames from 'classnames';
+import { reviewTypesUrls } from 'components/employer/EmployerTabs';
 import 'assets/css/Form.css';
 import './AddReviewForm.css';
 
@@ -140,9 +141,6 @@ class AddReviewForm extends React.Component {
             formData.salary = '';
             formData.employment_duration = '';
         } else {
-            if (formData.salary) {
-                formData.salary *= 1000;
-            }
             if (formData.employment_terminated !== undefined) {
                 formData.employment_terminated = !formData.employment_terminated;
             }
@@ -152,7 +150,9 @@ class AddReviewForm extends React.Component {
                 this.props.resetTopEmployers();
                 this.props.resetEmployerReviews();
                 this.props.resetEmployer(formData.employer_id);
-                this.props.history.push(`/employer/${formData.employer_id}/${data.review_id}`);
+                this.props.history.push(
+                    `/employer/${formData.employer_id}/${reviewTypesUrls[formData.review_type]}/${data.review_id}/`
+                );
             },
             (error) => console.log(error)
         );
@@ -247,7 +247,7 @@ class AddReviewForm extends React.Component {
                                 error={Boolean(this.state.attributes.salary.error)}
                                 helperText={this.state.attributes.salary.error}
                                 InputProps={{
-                                    endAdornment: <InputAdornment position="end">тыс. руб.</InputAdornment>,
+                                    endAdornment: <InputAdornment position="end">руб.</InputAdornment>,
                                 }}
                             />
                             <TextField

@@ -16,7 +16,10 @@ const settings = {
         employer: DEFAULT_API_HOST + 'employers/',
         bestEmployers: DEFAULT_API_HOST + 'employers/best/',
         area: DEFAULT_API_HOST + 'areas/',
-        review: DEFAULT_API_HOST + 'review/'
+        review: DEFAULT_API_HOST + 'review/',
+        generalStatistics: DEFAULT_API_HOST + 'statistic/',
+        salaryByProfFields: DEFAULT_API_HOST + 'statistic/salary/by_proff_field/',
+        employmentDurationByProfField: DEFAULT_API_HOST + '/statistic/employment_duration/by_proff_field/'
     },
 };
 

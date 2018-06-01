@@ -4,7 +4,7 @@ import App from './App';
 
 const Root = ({ store }) => (
     <Provider store={store}>
-        <div>
+        <div className="page">
             <App />
         </div>
     </Provider>

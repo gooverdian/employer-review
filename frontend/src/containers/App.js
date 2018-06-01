@@ -27,17 +27,19 @@ class App extends React.Component {
         return (
             <JssProvider generateClassName={generateClassName}>
                 <MuiThemeProvider theme={theme}>
-                    <NavigationBar />
-                    <Switch>
-                        {routeMap.map((item, index) => (
-                            <Route
-                                key={index}
-                                exact={item.exact}
-                                path={item.path}
-                                component={item.component}
-                            />
-                        ))}
-                    </Switch>
+                    <div className="content">
+                        <NavigationBar />
+                        <Switch>
+                            {routeMap.map((item, index) => (
+                                <Route
+                                    key={index}
+                                    exact={item.exact}
+                                    path={item.path}
+                                    component={item.component}
+                                />
+                            ))}
+                        </Switch>
+                    </div>
                     <footer className="footer">
                         <div className="container footer__wrapper">
                             <div className="footer__left-side">

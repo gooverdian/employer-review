@@ -19,7 +19,7 @@
 }
 
 .about__description, .about__suffix {
-    color: #c5c5c5;
+    color: #BDBDBD;
     text-shadow: 0 0 4px rgba(0, 0, 0, .8);
 }
 
@@ -29,7 +29,7 @@
 }
 
 .about .about__value {
-    color: #4ebc53;
+    color: #66BB6A;
     margin-top: -10px;
     text-shadow: 0 0 15px rgba(0, 0, 0, .8);
 }

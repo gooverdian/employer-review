@@ -12,7 +12,26 @@
     padding-bottom: 0;
 }
 
+.page, .content {
+    height: 100%;
+}
+
+.page > .content {
+    height: auto;
+    min-height: 100%;
+}
+
+.content {
+    height: 100%;
+    padding-bottom: 60px;
+    box-sizing: border-box;
+}
+
 .footer {
+    position: relative;
+    margin-top: -60px;
+    height: 60px;
+    clear: both;
     background: #212121;
     color: #9e9e9e;
 }
