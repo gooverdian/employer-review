@@ -3,10 +3,13 @@ import Grid from 'material-ui/Grid';
 import Typography from 'material-ui/Typography';
 import { connect } from 'react-redux';
 import { getGeneralStatistics } from 'modules/mainStatistics';
+import { dispatchError } from 'modules/errorMessage';
 import './AboutUs.css';
 
 class AboutUs extends React.Component {
-    state = {};
+    state = {
+        bugCount: 0,
+    };
 
     static getDerivedStateFromProps(nextProps) {
         if (typeof nextProps.REVIEW_COUNT === 'undefined') {
@@ -19,6 +22,11 @@ class AboutUs extends React.Component {
             employerWithReviews: nextProps.EMPLOYER_WITH_REVIEW_COUNT,
         };
     }
+
+    handleBugCounterClick = () => {
+        this.props.dispatchError(`${this.state.bugCount + 1}? ¯\\_(ツ)_/¯`);
+        this.setState({bugCount: this.state.bugCount + 1});
+    };
 
     render() {
         return (
@@ -50,7 +58,14 @@ class AboutUs extends React.Component {
                         <Grid className="about__container about_suffix" item xs={12} md={6}>
                             <div className="about__wrapper">
                                 <div className="about__description">багов</div>
-                                <Typography className="about__value" variant="display3">0</Typography>
+                                <Typography
+                                    className="about__value about__bug-counter"
+                                    variant="display3"
+                                    ripple
+                                    onClick={this.handleBugCounterClick}
+                                >
+                                    {this.state.bugCount}
+                                </Typography>
                                 <div className="about__suffix">(но это не точно)</div>
                             </div>
                         </Grid>
@@ -63,4 +78,4 @@ class AboutUs extends React.Component {
 
 const mapStateToProps = (state) => state.mainStatistics.general;
 
-export default connect(mapStateToProps, { getGeneralStatistics })(AboutUs);
+export default connect(mapStateToProps, { getGeneralStatistics, dispatchError })(AboutUs);

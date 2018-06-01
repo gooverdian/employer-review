@@ -12,6 +12,10 @@ export const setErrorMessage = (error) => ({
     error
 });
 
+export const dispatchError = (error) => {
+    return (dispatch) => dispatch(setErrorMessage(error));
+};
+
 export const errorMessage = (state = defaultState, action) => {
     switch (action.type) {
         case RESET_ERROR_MESSAGE:

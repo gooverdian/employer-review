@@ -18,6 +18,7 @@ class ErrorSnackbar extends React.Component {
 
 
     static getDerivedStateFromProps(nextProps, prevState) {
+        console.log('handling');
         if (nextProps.errorMessage) {
             const newMessageInfo = {
                 message: nextProps.errorMessage,

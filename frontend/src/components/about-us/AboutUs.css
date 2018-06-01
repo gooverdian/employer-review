@@ -34,6 +34,10 @@
     text-shadow: 0 0 15px rgba(0, 0, 0, .8);
 }
 
+.about__bug-counter {
+    cursor: help;
+}
+
 @media only screen and (max-width: 959px) {
     .about__container {
         padding: 40px;
